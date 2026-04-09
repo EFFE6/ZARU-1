@@ -48,7 +48,7 @@
 .gestion-header {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 32px;
 }
 
 /* Fila 1: breadcrumb izq | campana der */
@@ -77,20 +77,22 @@
 
 .search-wrapper {
   display: flex;
-  align-items: stretch;
+  align-items: center;
+  background: #F4F6F8;
+  border: 1.5px solid #dde8f0;
+  border-radius: 12px;
+  padding: 5px;
+  height: 46px;
+  box-sizing: border-box;
 }
 
 .search-container {
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.80);
-  border: 1.5px solid rgba(180, 200, 220, 0.7);
-  border-right: none;
-  border-radius: 10px 0 0 10px;
-  padding: 0 14px;
-  width: 300px;
-  height: 42px;
-  backdrop-filter: blur(8px);
+  background: transparent;
+  border: none;
+  padding: 0 16px;
+  width: 400px;
 }
 
 .search-input {
@@ -98,32 +100,34 @@
   background: transparent;
   outline: none;
   width: 100%;
-  font-size: 13px;
+  font-size: 14px;
+  font-family: 'Work Sans', sans-serif;
   color: #1e3a52;
 }
 
 .search-input::placeholder {
-  color: #94a3b8;
+  color: #3f607d;
+  font-weight: 500;
 }
 
 .search-btn {
-  background: rgba(255, 255, 255, 0.80);
-  border: 1.5px solid rgba(28, 62, 87, 0.4);
-  border-left: none;
-  color: #1e3a52;
-  width: 42px;
-  height: 42px;
-  border-radius: 0 10px 10px 0;
+  background: #ffffff;
+  border: 1.5px solid #002c4d;
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  backdrop-filter: blur(8px);
-  transition: background 0.18s;
+  flex-shrink: 0;
+  margin-right: 2px;
+  transition: all 0.18s ease;
 }
 
 .search-btn:hover {
-  background: white;
+  background: #eef2f6;
+  transform: scale(1.02);
 }
 
 /* ─── GRUPO TABS + CARD (sin gap entre ellos) ────────────── */
@@ -137,7 +141,7 @@
   display: flex;
   gap: 6px;
   overflow-x: auto;
-  padding: 0 2px;
+  padding: 0;
   align-items: flex-end;
   scrollbar-width: none;
   position: relative;
@@ -148,51 +152,75 @@
   display: none;
 }
 
-/* Inactivo: óvalo flotante */
+/* Inactivo: float like a pill */
 .tab-pill {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 9px 18px;
-  border-radius: 22px;
+  padding: 10px 18px;
+  border-radius: 20px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  border: 1.5px solid #d0dfe8;
+  border: none;
   transition: all 0.18s ease;
-  background: rgba(255, 255, 255, 0.75);
-  color: #7a91a6;
+  background: #ffffff;
+  color: #5c7a90;
   user-select: none;
-  backdrop-filter: blur(6px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+  margin-bottom: 6px;
 }
 
 .tab-pill:hover:not(.active) {
-  color: #2d5a7a;
-  background: rgba(255, 255, 255, 0.95);
+  color: #1e3a52;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+  transform: translateY(-1px);
 }
 
 /* Activo: se fusiona con el card */
 .tab-pill.active {
   background: #ffffff;
-  color: #1e3a52;
-  font-weight: 700;
-  border: 1.5px solid #d0dfe8;
-  border-bottom-color: #ffffff;
-  /* borde inf blanco = invisible → fusión */
-  border-radius: 14px 14px 0 0;
-  padding-bottom: 13px;
-  /* extiende hacia abajo sobre el card */
-  box-shadow: -2px -2px 8px rgba(28, 62, 87, 0.05),
-    2px -2px 8px rgba(28, 62, 87, 0.05);
+  color: #002c4d;
+  font-weight: 800;
+  border: none;
+  border-radius: 20px 20px 0 0;
+  padding-bottom: 14px;
+  margin-bottom: 0px;
   position: relative;
   z-index: 3;
+  box-shadow: none;
+}
+
+/* Curvaturas inversas para dar ese efecto de solapa unida */
+.tab-pill.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: -20px;
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(circle at 100% 0%, transparent 20px, #ffffff 20.5px);
+}
+
+.tab-pill.active::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: -20px;
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(circle at 0% 0%, transparent 20px, #ffffff 20.5px);
+}
+
+.tab-pill.active:first-child::before {
+  display: none;
 }
 
 .active-tab-icon {
   width: 24px;
   height: 24px;
-  background: #1e3a52;
+  background: linear-gradient(135deg, #0165B0, #013156);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -204,34 +232,37 @@
 /* ─── CARD PRINCIPAL ──────────────────────────────────────── */
 .gestion-content-card {
   background: #ffffff;
-  border-radius: 0 20px 20px 20px;
-  overflow: hidden;
+  border-radius: 20px;
   box-shadow: 0 4px 30px rgba(28, 62, 87, 0.08);
-  border: 1.5px solid #d0dfe8;
+  border: none;
   position: relative;
   z-index: 1;
+  padding: 26px 32px 32px 32px;
 }
 
-/* ─── TOOLBAR ─────────────────────────────────────────────── */
+.gestion-content-card.first-tab-active {
+  border-radius: 0 20px 20px 20px;
+}
+
 .content-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 20px;
-  margin: 16px 20px;
-  background: #f8fafc;
-  border-radius: 14px;
-  border: 1px solid #edf2f7;
+  padding: 0 0 20px 0;
+  margin: 0;
+  background: transparent;
+  border: none;
 }
 
 .stat-select {
+  font-family: 'Work Sans', sans-serif;
   padding: 9px 38px 9px 14px;
   border-radius: 10px;
   border: 1.5px solid #dde8f0;
-  background: #f8fafc;
+  background: #ffffff;
   font-size: 14px;
   color: #1e3a52;
-  font-weight: 600;
+  font-weight: 500;
   outline: none;
   min-width: 200px;
   cursor: pointer;
@@ -243,7 +274,7 @@
 }
 
 .btn-new-resolution {
-  background: #1e3a52;
+  background: linear-gradient(135deg, #0165B0, #013156);
   color: white;
   border: none;
   border-radius: 10px;
@@ -271,22 +302,32 @@
 
 .resoluciones-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
 .resoluciones-table thead tr {
-  background: #f2f6fa;
+  background: #E5E7EB;
 }
 
 .resoluciones-table th {
   text-align: left;
-  padding: 13px 24px;
-  font-size: 11.5px;
-  font-weight: 800;
-  color: #2d5a7a;
+  padding: 18px 24px;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #002c4d;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.04em;
   white-space: nowrap;
+}
+
+.resoluciones-table th:first-child {
+  border-top-left-radius: 16px;
+}
+
+.resoluciones-table th:last-child {
+  border-top-right-radius: 16px;
 }
 
 .sort-icon {
@@ -296,12 +337,19 @@
 }
 
 .resoluciones-table tbody tr {
-  border-top: 1px solid #f0f4f8;
-  transition: background 0.13s;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.resoluciones-table tbody tr:nth-child(even) {
+  background-color: #F6F6F6;
+}
+
+.resoluciones-table tbody tr:nth-child(odd) {
+  background-color: #FFFFFF;
 }
 
 .resoluciones-table tbody tr:hover {
-  background: #fafcff;
+  background: #f1f5f9;
 }
 
 .resoluciones-table td {
@@ -401,24 +449,28 @@
   transition: all 0.16s;
 }
 
+/* Editar: borde azul oscuro */
 .icon-btn.edit {
-  color: #5a7d9a;
+  color: #1e3a52;
+  background: #ffffff;
+  border: 1.5px solid #1e3a52;
 }
 
 .icon-btn.edit:hover {
   background: #f0f4f8;
   color: #1e3a52;
+  transform: translateY(-1px);
 }
 
-/* Eliminar: fondo rosa claro */
+/* Eliminar: borde rojo */
 .icon-btn.delete {
   color: #e11d48;
-  background: #fff1f2;
-  border: 1px solid #fecdd3;
+  background: #ffffff;
+  border: 1.5px solid #e11d48;
 }
 
 .icon-btn.delete:hover {
-  background: #ffe4e6;
+  background: #fff1f2;
   transform: translateY(-1px);
 }
 
@@ -427,7 +479,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 24px;
+  padding: 20px 0 0 0;
   border-top: 1px solid #f0f4f8;
 }
 

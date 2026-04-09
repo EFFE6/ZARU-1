@@ -14,7 +14,8 @@ import {
   ChevronsRight,
   Stethoscope,
   User,
-  Clock
+  Clock,
+  MinusCircle
 } from 'lucide-react';
 import '../App.css';
 import '../styles/Dashboard.css';
@@ -232,23 +233,23 @@ const CitaCard: React.FC<CitaCardProps> = ({ cita }) => (
       <div className="cita-top">
         <h3 className="cita-type">Consulta médica</h3>
         <span className="active-badge">
-          <div className="badge-dot"></div>
+          <MinusCircle size={12} strokeWidth={2.5} />
           Activo
         </span>
       </div>
       <div className="cita-details">
         <div className="detail-item">
-          <Stethoscope size={14} color="#1C3E57" />
+          <Stethoscope size={16} color="#002C4D" />
           <span className="detail-label">Médico:</span>
           <span className="detail-value">{cita.medico}</span>
         </div>
         <div className="detail-item">
-          <User size={14} color="#1C3E57" />
+          <User size={16} color="#002C4D" />
           <span className="detail-label">Beneficiario:</span>
           <span className="detail-value">{cita.beneficiario}</span>
         </div>
         <div className="detail-item">
-          <Clock size={14} color="#1C3E57" />
+          <Clock size={16} color="#002C4D" />
           <span className="detail-label">Hora de la consulta:</span>
           <span className="detail-value">{cita.hora}</span>
         </div>

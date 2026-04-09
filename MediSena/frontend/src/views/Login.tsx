@@ -14,6 +14,9 @@ import hombreDr from '../assets/img/login/hombre.png';
 import estetoscopio from '../assets/img/login/estetocopio.png';
 import termometro from '../assets/img/login/termometro.png';
 import adn from '../assets/img/login/adn.png';
+import linea1 from '../assets/img/login/linea1.png';
+import linea2 from '../assets/img/login/linea2.png';
+import linea3 from '../assets/img/login/linea3.png';
 
 import '../styles/Login.css';
 
@@ -52,17 +55,10 @@ const Login = () => {
     <div className="login-wrapper">
       <div className="login-main-content">
 
-        {/* Background SVG Lines */}
-        <svg className="login-bg-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
-          {/* Línea izquierda */}
-          <path d="M 18 0 Q 5 40 0 70" fill="none" stroke="rgba(59, 130, 246, 0.4)" strokeWidth="0.25" />
-
-          {/* Línea central curvada cruzando el estetoscopio y adn */}
-          <path d="M 80 0 C 40 10, 35 65, 75 100" fill="none" stroke="rgba(59, 130, 246, 0.4)" strokeWidth="0.25" />
-
-          {/* Línea inferior sobre el SENA */}
-          <path d="M 0 85 Q 22 70 45 100" fill="none" stroke="rgba(59, 130, 246, 0.4)" strokeWidth="0.25" />
-        </svg>
+        {/* Background Lines - PNG images from Figma */}
+        <img src={linea1} alt="" className="login-bg-line login-line1" />
+        <img src={linea2} alt="" className="login-bg-line login-line2" />
+        <img src={linea3} alt="" className="login-bg-line login-line3" />
 
         {/* Left Side: Form */}
         <div className="login-left">

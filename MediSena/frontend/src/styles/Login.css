@@ -16,14 +16,39 @@
   overflow: hidden;
 }
 
-/* Background Lines */
-.login-bg-lines {
+/* Background Lines (PNG images) */
+.login-bg-line {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
   z-index: 0;
+  pointer-events: none;
+  object-fit: contain;
+}
+
+/* Línea 1 - Borde izquierdo, corre verticalmente por todo el lado izquierdo */
+.login-line1 {
+  top: -38%;
+  height: 100%;
+  width: auto;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* Línea 2 - Zona inferior izquierda, debajo y alrededor del logo SENA */
+.login-line2 {
+  bottom: -5%;
+  height: 34.5%;
+  width: auto;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* Línea 3 - Zona central-derecha, corre verticalmente de arriba abajo al 43% del ancho */
+.login-line3 {
+  top: 0;
+  left: 42%;
+  height: 100%;
+  width: auto;
+  opacity: 0.9;
   pointer-events: none;
 }
 
@@ -276,7 +301,7 @@
 
 .login-estetoscopio {
   top: 22%;
-  left: 15%;
+  left: 25%;
   /* Más cerca del doctor */
   width: 180px;
   animation-delay: 0s;
@@ -292,7 +317,8 @@
 
 .login-adn {
   bottom: 12%;
-  left: 5%;
+  top: 83%;
+  left: 17%;
   /* Más cerca del doctor */
   width: 200px;
   animation-delay: 2s;

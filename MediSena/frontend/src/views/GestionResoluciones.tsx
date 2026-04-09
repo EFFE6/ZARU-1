@@ -12,9 +12,13 @@ import {
   Home,
   Copy,
   FileText,
+  Files,
   Bell
 } from 'lucide-react';
 import '../styles/GestionResoluciones.css';
+import ResolucionesIcon from '../assets/img/icons/resoluciones-tags.png';
+import LupaBusquedaIcon from '../assets/img/icons/lupa-busqueda.png';
+import CampanaSvg from '../assets/img/icons/campana.svg';
 
 export interface Resolucion {
   id: number;
@@ -131,7 +135,12 @@ const GestionResoluciones: React.FC = () => {
                 <div className="breadcrumb-sep"><ChevronRight size={13} /></div>
                 <div className="breadcrumb-item active">{activeTab}</div>
               </nav>
-              <Bell size={26} color="#F59E0B" fill="#F59E0B" style={{ cursor: 'pointer', flexShrink: 0 }} />
+              <img 
+                src={CampanaSvg} 
+                alt="Notificaciones" 
+                style={{ width: 28, height: 28, cursor: 'pointer', flexShrink: 0 }} 
+                className="notification-bell" 
+              />
             </div>
 
             {/* Fila 2: título | búsqueda */}
@@ -147,8 +156,11 @@ const GestionResoluciones: React.FC = () => {
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
-                <button className="search-btn">
-                  <Search size={17} />
+                <button className="search-btn" type="button">
+                  <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="7" cy="7" r="4.2" stroke="#002c4d" strokeWidth="2"/>
+                    <line x1="10.2" y1="10.5" x2="15.5" y2="15.8" stroke="#002c4d" strokeWidth="2" strokeLinecap="round"/>
+                  </svg>
                 </button>
               </div>
             </div>
@@ -165,7 +177,7 @@ const GestionResoluciones: React.FC = () => {
                 >
                   {activeTab === tab && (
                     <div className="active-tab-icon">
-                      <FileText size={14} />
+                      <img src={ResolucionesIcon} alt="Icon" width={14} height={14} />
                     </div>
                   )}
                   {tab}
@@ -174,7 +186,7 @@ const GestionResoluciones: React.FC = () => {
             </div>
 
             {/* ── Card principal ── */}
-            <div className="gestion-content-card">
+            <div className={`gestion-content-card ${activeTab === 'Resoluciones' ? 'first-tab-active' : ''}`}>
 
               {/* Toolbar */}
               <div className="content-toolbar">
