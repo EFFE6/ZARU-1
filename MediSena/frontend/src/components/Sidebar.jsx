@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
-  LayoutDashboard,
-  Settings,
-  FileText,
-  RefreshCcw,
-  BadgeDollarSign,
-  Search,
-  ClipboardList,
-  Globe,
-  LogOut,
   Menu,
   X,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  LogOut
 } from 'lucide-react';
+import {
+  DashboardIcon,
+  MaestrasIcon,
+  DatosBasicosIcon,
+  MovimientosIcon,
+  ExcedentesIcon,
+  ConsultasIcon,
+  ReportesIcon,
+  ReportesNacionalesIcon
+} from './SidebarIcons';
 import '../styles/Sidebar.css';
 
 import logo from '../assets/img/Sidebar.png';
@@ -27,14 +29,14 @@ const Sidebar = () => {
   const location = useLocation();
 
   const navItems = [
-    { id: 'Dashboard',           icon: LayoutDashboard,   label: 'Dashboard',           path: '/' },
-    { id: 'Maestras',            icon: Settings,          label: 'Maestras',            path: '/gestion' },
-    { id: 'Datos básicos',       icon: FileText,          label: 'Datos básicos',       path: '/datos-basicos' },
-    { id: 'Movimientos',         icon: RefreshCcw,        label: 'Movimientos',         path: '/movimientos' },
-    { id: 'Excedentes',          icon: BadgeDollarSign,   label: 'Excedentes',          path: '/excedentes' },
-    { id: 'Consultas',           icon: Search,            label: 'Consultas',           path: '/consultas' },
-    { id: 'Reportes',            icon: ClipboardList,     label: 'Reportes',            path: '/reportes' },
-    { id: 'Reportes nacionales', icon: Globe,             label: 'Reportes nacionales', path: '/reportes-nacionales' },
+    { id: 'Dashboard',           icon: DashboardIcon,          label: 'Dashboard',           path: '/' },
+    { id: 'Maestras',            icon: MaestrasIcon,           label: 'Maestras',            path: '/gestion' },
+    { id: 'Datos básicos',       icon: DatosBasicosIcon,       label: 'Datos básicos',       path: '/datos-basicos' },
+    { id: 'Movimientos',         icon: MovimientosIcon,        label: 'Movimientos',         path: '/movimientos' },
+    { id: 'Excedentes',          icon: ExcedentesIcon,         label: 'Excedentes',          path: '/excedentes' },
+    { id: 'Consultas',           icon: ConsultasIcon,          label: 'Consultas',           path: '/consultas' },
+    { id: 'Reportes',            icon: ReportesIcon,           label: 'Reportes',            path: '/reportes' },
+    { id: 'Reportes nacionales', icon: ReportesNacionalesIcon, label: 'Reportes nacionales', path: '/reportes-nacionales' },
   ];
 
   useEffect(() => {
