@@ -101,7 +101,6 @@
   outline: none;
   width: 100%;
   font-size: 14px;
-  font-family: 'Work Sans', sans-serif;
   color: #1e3a52;
 }
 
@@ -255,7 +254,6 @@
 }
 
 .stat-select {
-  font-family: 'Work Sans', sans-serif;
   padding: 9px 38px 9px 14px;
   border-radius: 10px;
   border: 1.5px solid #dde8f0;
@@ -313,7 +311,6 @@
 .resoluciones-table th {
   text-align: left;
   padding: 18px 24px;
-  font-family: 'Work Sans', sans-serif;
   font-size: 14px;
   font-weight: 700;
   color: #002c4d;

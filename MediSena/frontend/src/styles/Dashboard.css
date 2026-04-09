@@ -55,30 +55,19 @@
   margin: 2px 0 0 0;
 }
 
-.notification-bell {
+.notification-wrapper {
   margin-left: auto;
-  width: 40px;
-  height: 40px;
-  background-color: #326177;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 3px 12px rgba(50, 97, 119, 0.32);
   cursor: pointer;
   flex-shrink: 0;
   position: relative;
+  transition: transform 0.2s ease;
 }
 
-.notification-dot {
-  position: absolute;
-  top: 9px;
-  right: 10px;
-  width: 8px;
-  height: 8px;
-  background-color: #FF0000;
-  border-radius: 50%;
-  box-shadow: 0 0 0 2px #326177;
+.notification-wrapper:hover {
+  transform: scale(1.05);
 }
 
 /* ── Stats Grid ── */
@@ -135,7 +124,7 @@
 }
 
 .stat-subtitle {
-  font-size: 0.90rem;
+  font-size: 1.09rem;
   color: #5C768D;
   font-weight: 400;
 }

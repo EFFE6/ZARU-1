@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
   --sidebar-bg: #EBEFF8;
@@ -9,7 +9,9 @@
   --bg-app: #F0F4FA;
   --primary-blue: #1a365d;
   
-  --sans: 'Outfit', system-ui, -apple-system, sans-serif;
+  --sans: 'Work Sans', system-ui, -apple-system, sans-serif;
+  --heading: 'Work Sans', sans-serif;
+  --mono: 'JetBrains Mono', 'Fira Code', monospace;
   
   font-family: var(--sans);
   /* background-color eliminado para que cada vista controle su propio fondo */

@@ -2,21 +2,24 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import api from '../api/api';
 import {
-  Users,
-  Calendar,
-  FileText,
-  UserPlus,
   Loader2,
-  Bell,
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
-  Stethoscope,
-  User,
-  Clock,
   MinusCircle
 } from 'lucide-react';
+import {
+  MedicoIcon,
+  BeneficiarioCitaIcon,
+  RelojIcon,
+  BeneficiariosActivosIcon,
+  CitasProgramadasIcon,
+  CitasProgramadasIcon2,
+  OrdenesMedicasIcon,
+  ProfesionalesIcon
+} from '../components/Icons';
+import CampanaSvg from '../assets/img/icons/campana.svg';
 import '../App.css';
 import '../styles/Dashboard.css';
 
@@ -113,9 +116,12 @@ const Dashboard: React.FC = () => {
               <p className="header-date">{getFormattedDate()}</p>
             </div>
           </div>
-          <div className="notification-bell">
-            <Bell size={20} color="#EFA00B" fill="#F4B41A" />
-            <div className="notification-dot"></div>
+          <div className="notification-wrapper">
+            <img
+              src={CampanaSvg}
+              alt="Notificaciones"
+              style={{ width: 64, height: 64, cursor: 'pointer', flexShrink: 0 }}
+            />
           </div>
         </header>
 
@@ -125,32 +131,32 @@ const Dashboard: React.FC = () => {
             title="Beneficiarios activos"
             value="14.623"
             subtitle="Beneficiarios activos"
-            icon={<Users size={16} />}
+            icon={<BeneficiariosActivosIcon size={20} />}
           />
           <StatCard
             title="Citas programadas"
             value="1'144.146"
             subtitle="0 hoy"
-            icon={<Calendar size={16} />}
+            icon={<CitasProgramadasIcon size={20} />}
           />
           <StatCard
             title="Órdenes médicas"
             value="3'155.732"
             subtitle="687.646 cuentas de cobro"
-            icon={<FileText size={16} />}
+            icon={<OrdenesMedicasIcon size={20} />}
           />
           <StatCard
             title="Profesionales"
             value="232"
             subtitle="6493 contratistas"
-            icon={<UserPlus size={16} />}
+            icon={<ProfesionalesIcon size={20} />}
           />
         </div>
 
         {/* ── Título Citas (FUERA del contenedor blanco) ── */}
         <div className="citas-header">
           <div className="citas-header-icon">
-            <Calendar size={15} color="white" />
+            <CitasProgramadasIcon2 size={15} color="white" />
           </div>
           <h2 className="citas-title">Citas programadas</h2>
         </div>
@@ -239,17 +245,17 @@ const CitaCard: React.FC<CitaCardProps> = ({ cita }) => (
       </div>
       <div className="cita-details">
         <div className="detail-item">
-          <Stethoscope size={16} color="#002C4D" />
+          <MedicoIcon size={16} color="#002C4D" />
           <span className="detail-label">Médico:</span>
           <span className="detail-value">{cita.medico}</span>
         </div>
         <div className="detail-item">
-          <User size={16} color="#002C4D" />
+          <BeneficiarioCitaIcon size={16} color="#002C4D" />
           <span className="detail-label">Beneficiario:</span>
           <span className="detail-value">{cita.beneficiario}</span>
         </div>
         <div className="detail-item">
-          <Clock size={16} color="#002C4D" />
+          <RelojIcon size={16} color="#002C4D" />
           <span className="detail-label">Hora de la consulta:</span>
           <span className="detail-value">{cita.hora}</span>
         </div>
