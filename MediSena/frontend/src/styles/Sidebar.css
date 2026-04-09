@@ -213,69 +213,77 @@
   padding: 12px 6px 10px 6px;
 }
 
-@media (max-width: 768px) {
-  .desktop-collapse-toggle {
-    display: none;
-  }
-}
-
 /* ── Mobile toggle ── */
 .mobile-menu-toggle {
   display: none;
   position: fixed;
   top: 15px;
   left: 15px;
-  z-index: 1000;
-  background-color: #1C3E57;
+  z-index: 999;
+  background-color: #1a365d;
   color: white;
   border: none;
-  border-radius: 12px;
-  width: 42px;
-  height: 42px;
+  border-radius: 10px;
+  width: 44px;
+  height: 44px;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
 .mobile-menu-close {
   display: none;
 }
 
-/* ── Responsive ── */
-@media (max-width: 768px) {
-  .mobile-menu-toggle {
-    display: flex;
-  }
-
+/* ── Responsive Rules ── */
+@media (max-width: 900px) {
   .sidebar {
     position: fixed;
     top: 0;
-    left: -200px;
+    left: -280px; 
     height: 100vh;
-    z-index: 1001;
-    transition: left 0.3s ease;
-    border-radius: 0;
-    width: 200px;
+    z-index: 2000;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 0 24px 24px 0;
+    width: 280px;
+    min-width: 280px;
+    background: #EDF0F9;
+    padding-top: 60px;
   }
 
   .sidebar.mobile-open {
-    left: 0;
+    transform: translateX(280px);
+    box-shadow: 0 0 0 100vw rgba(0, 0, 0, 0.4);
+  }
+
+  .mobile-menu-toggle {
+    display: flex;
   }
 
   .mobile-menu-close {
     display: flex;
     position: absolute;
-    top: 16px;
-    right: 16px;
-    background: transparent;
+    top: 15px;
+    right: 15px;
+    background: #DEE4F4;
     border: none;
     color: #1C3E57;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
   }
 
-  .sidebar-logo {
-    margin-bottom: 24px;
-    padding-top: 16px;
+  .nav-item-text {
+    font-size: 0.95rem;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .desktop-collapse-toggle {
+    display: none;
   }
 }
