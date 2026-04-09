@@ -29,13 +29,13 @@ const Sidebar = () => {
   const location = useLocation();
 
   const navItems = [
-    { id: 'Dashboard',           icon: DashboardIcon,          label: 'Dashboard',           path: '/' },
-    { id: 'Maestras',            icon: MaestrasIcon,           label: 'Maestras',            path: '/gestion' },
-    { id: 'Datos básicos',       icon: DatosBasicosIcon,       label: 'Datos básicos',       path: '/datos-basicos' },
-    { id: 'Movimientos',         icon: MovimientosIcon,        label: 'Movimientos',         path: '/movimientos' },
-    { id: 'Excedentes',          icon: ExcedentesIcon,         label: 'Excedentes',          path: '/excedentes' },
-    { id: 'Consultas',           icon: ConsultasIcon,          label: 'Consultas',           path: '/consultas' },
-    { id: 'Reportes',            icon: ReportesIcon,           label: 'Reportes',            path: '/reportes' },
+    { id: 'Dashboard', icon: DashboardIcon, label: 'Dashboard', path: '/' },
+    { id: 'Gestion', icon: MaestrasIcon, label: 'Gestión', path: '/gestion' },
+    { id: 'Datos básicos', icon: DatosBasicosIcon, label: 'Datos básicos', path: '/datos-basicos' },
+    { id: 'Movimientos', icon: MovimientosIcon, label: 'Movimientos', path: '/movimientos' },
+    { id: 'Excedentes', icon: ExcedentesIcon, label: 'Excedentes', path: '/excedentes' },
+    { id: 'Consultas', icon: ConsultasIcon, label: 'Consultas', path: '/consultas' },
+    { id: 'Reportes', icon: ReportesIcon, label: 'Reportes', path: '/reportes' },
     { id: 'Reportes nacionales', icon: ReportesNacionalesIcon, label: 'Reportes nacionales', path: '/reportes-nacionales' },
   ];
 
@@ -100,7 +100,7 @@ const Sidebar = () => {
               </div>
               {!isCollapsed && (
                 <div className="profile-text">
-                  <span className="profile-name">Paula<br/>Chaparro</span>
+                  <span className="profile-name">Paula<br />Chaparro</span>
                 </div>
               )}
             </div>
