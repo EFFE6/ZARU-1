@@ -175,15 +175,34 @@ const EMPTY_NIVEL_FORM = {
 const TIPOS_BENEFICIARIO = ['Todos los beneficiarios', 'Beneficiario titular', 'Beneficiario dependiente'];
 const NIVELES_OPTS = ['Nivel 1', 'Nivel 2', 'Nivel 3', 'Nivel 4', 'Libre'];
 
+/* ─── Type & Mock Parentesco ────────────────────────────── */
+export interface Parentesco {
+  id: number;
+  orden: number;
+  nombre: string;
+  tipo: string;
+  activo: boolean;
+}
+
+const MOCK_PARENTESCOS: Parentesco[] = [
+  { id: 1, orden: 1, nombre: 'Madre-Padre',     tipo: 'Nacional', activo: true },
+  { id: 2, orden: 2, nombre: 'Cónyuge',         tipo: 'Nacional', activo: true },
+  { id: 3, orden: 3, nombre: 'Hijo',            tipo: 'Nacional', activo: true },
+  { id: 4, orden: 4, nombre: 'Hermano',         tipo: 'Nacional', activo: true },
+  { id: 5, orden: 5, nombre: 'Hijos entenados', tipo: 'Nacional', activo: true },
+  { id: 6, orden: 6, nombre: 'Otros',           tipo: 'Nacional', activo: true },
+];
+
 /* ═══════════════════════════════════════════════════════════
    COMPONENTE PRINCIPAL
    ═══════════════════════════════════════════════════════════ */
 const GestionResoluciones: React.FC = () => {
   /* ── Data ── */
   const [resoluciones, setResoluciones] = useState<Resolucion[]>([]);
-  const [usuarios, setUsuarios] = useState<UsuarioExtended[]>(MOCK_USUARIOS);
-  const [niveles, setNiveles] = useState<Nivel[]>(MOCK_NIVELES);
-  const [topes, setTopes] = useState<Tope[]>(MOCK_TOPES);
+  const [usuarios, setUsuarios] = useState<UsuarioExtended[]>([]);
+  const [niveles, setNiveles] = useState<Nivel[]>([]);
+  const [topes, setTopes] = useState<Tope[]>([]);
+  const [parentescos, setParentescos] = useState<Parentesco[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('Resoluciones');
 
@@ -223,6 +242,10 @@ const GestionResoluciones: React.FC = () => {
   const [editNivelTarget, setEditNivelTarget] = useState<Nivel | null>(null);
   const [nivelForm, setNivelForm] = useState({ ...EMPTY_NIVEL_FORM });
 
+  /* ── Modal Ver Tope ── */
+  const [isViewTopeOpen, setIsViewTopeOpen] = useState(false);
+  const [selectedTope, setSelectedTope] = useState<Tope | null>(null);
+
   /* ── Tooltip regional ── */
   const [tooltip, setTooltip] = useState<{ id: number; text: string } | null>(null);
 
@@ -239,8 +262,19 @@ const GestionResoluciones: React.FC = () => {
         if (activeTab === 'Resoluciones') {
           const res = await api.get('/resoluciones');
           setResoluciones(res.data);
+        } else if (activeTab === 'Usuarios') {
+          const res = await api.get('/usuarios');
+          setUsuarios(res.data);
+        } else if (activeTab === 'Niveles') {
+          const res = await api.get('/niveles');
+          setNiveles(res.data);
+        } else if (activeTab === 'Topes') {
+          const res = await api.get('/topes');
+          setTopes(res.data);
+        } else if (activeTab === 'Parentescos') {
+          const res = await api.get('/parentescos');
+          setParentescos(res.data);
         }
-        // Usuarios usa mock (ya inicializado)
       } catch (err) {
         console.error('Error fetching data:', err);
       } finally {
@@ -286,8 +320,13 @@ const GestionResoluciones: React.FC = () => {
         t.nivel.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
+    if (activeTab === 'Parentescos') {
+      return parentescos.filter(p =>
+        p.nombre.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
     return [];
-  }, [activeTab, resoluciones, usuarios, niveles, topes, searchQuery, statusFilter, activeFilterTag]);
+  }, [activeTab, resoluciones, usuarios, niveles, topes, parentescos, searchQuery, statusFilter, activeFilterTag]);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage) || 1;
   const currentItems = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -306,12 +345,14 @@ const GestionResoluciones: React.FC = () => {
     else if (activeTab === 'Usuarios') setUsuarios(u => u.filter(x => x.id !== itemToDelete.id));
     else if (activeTab === 'Niveles') setNiveles(n => n.filter(x => x.id !== itemToDelete.id));
     else if (activeTab === 'Topes') setTopes(t => t.filter(x => x.id !== itemToDelete.id));
+    else if (activeTab === 'Parentescos') setParentescos(p => p.filter(x => x.id !== itemToDelete.id));
     setIsDeleteModalOpen(false); setItemToDelete(null);
   };
 
   const deleteModalLabel = () => {
     if (activeTab === 'Niveles') return 'Nivel';
     if (activeTab === 'Topes') return 'Tope';
+    if (activeTab === 'Parentescos') return 'Parentesco';
     if (activeTab === 'Usuarios') return 'usuario';
     return 'elemento';
   };
@@ -674,7 +715,7 @@ const GestionResoluciones: React.FC = () => {
           </td>
           <td>
             <div className="row-actions">
-              <button className="icon-btn view" title="Ver tope"><Eye size={15} /></button>
+              <button className="icon-btn view" title="Ver tope" onClick={() => { setSelectedTope(t); setIsViewTopeOpen(true); }}><Eye size={15} /></button>
               <button className="icon-btn delete" onClick={() => handleDeleteClick(t)}><Trash2 size={15} /></button>
             </div>
           </td>
@@ -683,6 +724,36 @@ const GestionResoluciones: React.FC = () => {
     }
 
     return <tr><td colSpan={8} className="table-empty">Sin datos.</td></tr>;
+  };
+
+  const renderParentescosBody = () => {
+    if (loading) return <div className="table-empty">Cargando datos...</div>;
+    if (currentItems.length === 0) return <div className="table-empty">No se encontraron resultados.</div>;
+
+    return (
+      <div className="parentescos-list">
+        {(currentItems as Parentesco[]).map(p => (
+          <div className="parentesco-card" key={p.id}>
+            <div className="par-left">
+              <div className="par-number">{String(p.orden).padStart(2, '0')}</div>
+              <div className="par-name">{p.nombre}</div>
+            </div>
+            <div className="par-right">
+              <div className="par-pill-nacional">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                {p.tipo}
+              </div>
+              <div className="par-pill-activo">
+                <div className="status-dot vigente"></div>
+                {p.activo ? 'Activo' : 'Inactivo'}
+              </div>
+              <button className="icon-btn edit"><Edit2 size={15} /></button>
+              <button className="icon-btn delete" onClick={() => handleDeleteClick(p)}><Trash2 size={15} /></button>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
   };
 
   /* ═══════════════════════════════════════════════ RENDER ═══ */
@@ -744,13 +815,19 @@ const GestionResoluciones: React.FC = () => {
               {/* Toolbar */}
               {renderToolbar()}
 
-              {/* Tabla */}
-              <div className="table-wrapper">
-                <table className="resoluciones-table">
-                  <thead>{renderTableHead()}</thead>
-                  <tbody>{renderTableBody()}</tbody>
-                </table>
-              </div>
+              {/* Contenido principal */}
+              {activeTab === 'Parentescos' ? (
+                <div className="parentescos-wrapper">
+                  {renderParentescosBody()}
+                </div>
+              ) : (
+                <div className="table-wrapper">
+                  <table className="resoluciones-table">
+                    <thead>{renderTableHead()}</thead>
+                    <tbody>{renderTableBody()}</tbody>
+                  </table>
+                </div>
+              )}
 
               {/* Paginación */}
               <div className="pagination-footer">
@@ -812,10 +889,9 @@ const GestionResoluciones: React.FC = () => {
                   {/* Fila 1: Tipo Beneficiario | Nivel */}
                   <div className="ue-row">
                     <div className="ue-field">
-                      <label className="ue-label">Tipo de Beneficiario* <HelpCircle size={13} className="rm-help" /></label>
+                      <label className="ue-label">Tipo de Beneficiario<span className="rm-req">*</span> <HelpCircle size={13} className="rm-help" /></label>
                       <select
-                        className="ue-input"
-                        style={{ cursor: 'pointer', appearance: 'auto' }}
+                        className="ue-input ue-select"
                         value={nivelForm.tipoBeneficiario}
                         onChange={e => setNivelForm(p => ({ ...p, tipoBeneficiario: e.target.value }))}
                       >
@@ -823,10 +899,9 @@ const GestionResoluciones: React.FC = () => {
                       </select>
                     </div>
                     <div className="ue-field">
-                      <label className="ue-label">Nivel* <HelpCircle size={13} className="rm-help" /></label>
+                      <label className="ue-label">Nivel<span className="rm-req">*</span> <HelpCircle size={13} className="rm-help" /></label>
                       <select
-                        className="ue-input"
-                        style={{ cursor: 'pointer', appearance: 'auto' }}
+                        className="ue-input ue-select"
                         value={nivelForm.nivel}
                         onChange={e => setNivelForm(p => ({ ...p, nivel: e.target.value }))}
                       >
@@ -837,7 +912,7 @@ const GestionResoluciones: React.FC = () => {
                   {/* Fila 2: Tope Máximo | Periodo */}
                   <div className="ue-row">
                     <div className="ue-field">
-                      <label className="ue-label">Tope Máximo ($)* <HelpCircle size={13} className="rm-help" /></label>
+                      <label className="ue-label">Tope Máximo ($)<span className="rm-req">*</span> <HelpCircle size={13} className="rm-help" /></label>
                       <input
                         className="ue-input"
                         placeholder="$ 1.000.000"
@@ -846,7 +921,7 @@ const GestionResoluciones: React.FC = () => {
                       />
                     </div>
                     <div className="ue-field">
-                      <label className="ue-label">Periodo de Vigencia* <HelpCircle size={13} className="rm-help" /></label>
+                      <label className="ue-label">Periodo de Vigencia<span className="rm-req">*</span> <HelpCircle size={13} className="rm-help" /></label>
                       <input
                         className="ue-input"
                         placeholder="2024 - 2025"
@@ -857,7 +932,7 @@ const GestionResoluciones: React.FC = () => {
                   </div>
                   {/* Descripción */}
                   <div className="ue-field" style={{ gridColumn: '1 / -1' }}>
-                    <label className="ue-label">Descripción* <HelpCircle size={13} className="rm-help" /></label>
+                    <label className="ue-label">Descripción<span className="rm-req">*</span> <HelpCircle size={13} className="rm-help" /></label>
                     <textarea
                       className="nm-textarea"
                       placeholder="Nivel 1 de atención médica"
@@ -875,6 +950,81 @@ const GestionResoluciones: React.FC = () => {
                       Guardar cambios
                     </button>
                   </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ══ MODAL: Ver Tope ══ */}
+          {isViewTopeOpen && selectedTope && (
+            <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setIsViewTopeOpen(false)}>
+              <div className="resolucion-modal tope-view-modal">
+                <div className="resolucion-modal-header" style={{ paddingBottom: '16px' }}>
+                  <h2 className="resolucion-modal-title">{selectedTope.grupo}</h2>
+                  <button className="resolucion-modal-close" onClick={() => setIsViewTopeOpen(false)}><X size={18} /></button>
+                </div>
+                <div className="resolucion-modal-body tope-view-body" style={{ padding: '0 32px 32px 32px' }}>
+                  
+                  {/* Alerta */}
+                  <div className="tope-alert">
+                    <div className="alert-icon"><AlertTriangle size={18} color="#d97706" /></div>
+                    <div className="alert-content">
+                      <h4>Información del Sistema Original</h4>
+                      <p>Esta vista muestra los Topes de Grupos. El sistema original incluía subgrupos e ítems con configuraciones adicionales, no disponibles en esta versión.</p>
+                    </div>
+                  </div>
+
+                  {/* Info general */}
+                  <div className="tope-info-box">
+                    <div className="ti-col">
+                      <div className="ti-label">Código</div>
+                      <div className="ti-val">{selectedTope.codigo}</div>
+                    </div>
+                    <div className="ti-col">
+                      <div className="ti-label">Nombre</div>
+                      <div className="ti-val">{selectedTope.grupo}</div>
+                    </div>
+                    <div className="ti-col">
+                      <div className="ti-label">Nivel</div>
+                      <div className="ti-val ti-n4">N4</div>
+                    </div>
+                    <div className="ti-col">
+                      <div className="ti-label">Vigencia</div>
+                      <div className="ti-val">{selectedTope.vigencia}</div>
+                    </div>
+                    <div className="ti-col">
+                      <div className="ti-label">Resolución</div>
+                      <div className="ti-val">{selectedTope.resolucion}</div>
+                    </div>
+                    <div className="ti-col">
+                      <div className="ti-label">Estado</div>
+                      <div className="ti-val"><span className="ti-badge-history">Histórico</span></div>
+                    </div>
+                  </div>
+
+                  {/* Categorías Normales */}
+                  <div className="tope-section">
+                    <div className="ts-header ts-blue">Topes Máximos - Categorías Normales</div>
+                    <div className="ts-row"><span>Tope máximo del grupo en categoría A Normal</span><strong>$ 0</strong></div>
+                    <div className="ts-row"><span>Tope máximo del grupo en categoría B Normal</span><strong>$ 0</strong></div>
+                    <div className="ts-row"><span>Tope máximo del grupo en categoría C Normal</span><strong>$ 0</strong></div>
+                    <div className="ts-row"><span>Tope máximo del grupo en categoría D Normal</span><strong>$ 0</strong></div>
+                  </div>
+
+                  {/* Categorías Especiales */}
+                  <div className="tope-section">
+                    <div className="ts-header ts-yellow">Topes Máximos - Categorías Especiales</div>
+                    <div className="ts-row"><span>Tope máximo del grupo en categoría A Especial</span><strong>$ 0</strong></div>
+                    <div className="ts-row"><span>Tope máximo del grupo en categoría B Especial</span><strong>$ 0</strong></div>
+                    <div className="ts-row"><span>Tope máximo del grupo en categoría C Especial</span><strong>$ 0</strong></div>
+                    <div className="ts-row"><span>Tope máximo del grupo en categoría D Especial</span><strong>$ 0</strong></div>
+                  </div>
+
+                </div>
+                <div className="resolucion-modal-footer" style={{ borderTop: 'none', padding: '0 32px 32px 32px', justifyContent: 'flex-end' }}>
+                  <button className="rm-btn-primary" onClick={() => setIsViewTopeOpen(false)} style={{ minWidth: '140px', justifyContent: 'center' }}>
+                    Cerrar
+                  </button>
                 </div>
               </div>
             </div>

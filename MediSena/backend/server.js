@@ -94,11 +94,12 @@ app.get('/api/dashboard/citas', authenticateToken, (req, res) => {
 // 👥 Usuarios Data
 // ──────────────────────────────────────────────
 
-app.get('/api/usuarios', authenticateToken, (req, res) => {
+app.get('/api/usuarios', (req, res) => {
   const usuarios = [
-    { id: 1, nombre: "Admin", rol: "Administrador", email: "admin@medisena.com" },
-    { id: 2, nombre: "Paula Chaparro", rol: "Enfermera", email: "paula@medisena.com" },
-    { id: 3, nombre: "Carlos Sanchez", rol: "Médico", email: "carlos@medisena.com" }
+    { id: 1, nombre: 'Paulette Goya', username: 'PGoya', rol: 'Administrador', email: 'Pgoya@example.com', regional: '63 - Dirección Regional Centro de Comercio y Servicios', ultimoAcceso: '31 dic 2025', activo: true, tipoUsuario: 'T', fechaCreacion: '01 ene 2026', fechaModificacion: '31 dic 2026', codigoDependencia: '1000', telefono: '000', avatarInitials: 'PG' },
+    { id: 2, nombre: 'Paulette Goya', username: 'PGoya2', rol: 'Usuario', email: 'Pgoya@example.com', regional: '63', ultimoAcceso: '31 dic 2025', activo: false, tipoUsuario: 'U', fechaCreacion: '01 ene 2026', fechaModificacion: '31 dic 2026', codigoDependencia: '1001', telefono: '000', avatarInitials: 'PG' },
+    { id: 3, nombre: 'Paulette Goya', username: 'PGoya3', rol: 'Administrador', email: 'Pgoya@example.com', regional: '63 - Dirección Regional Centro de Comercio y Servicios', ultimoAcceso: '31 dic 2025', activo: true, tipoUsuario: 'T', fechaCreacion: '01 ene 2026', fechaModificacion: '31 dic 2026', codigoDependencia: '1002', telefono: '000', avatarInitials: 'PG' },
+    { id: 4, nombre: 'Paulette Goya', username: 'PGoya4', rol: 'Usuario', email: 'Pgoya@example.com', regional: '63', ultimoAcceso: '31 dic 2025', activo: false, tipoUsuario: 'U', fechaCreacion: '01 ene 2026', fechaModificacion: '31 dic 2026', codigoDependencia: '1003', telefono: '000', avatarInitials: 'PG' },
   ];
   res.json(usuarios);
 });
@@ -107,7 +108,7 @@ app.get('/api/usuarios', authenticateToken, (req, res) => {
 // 📄 Resoluciones Data
 // ──────────────────────────────────────────────
 
-app.get('/api/resoluciones', authenticateToken, (req, res) => {
+app.get('/api/resoluciones', (req, res) => {
   const resoluciones = [
     { 
       id: 1, 
@@ -159,6 +160,92 @@ app.get('/api/resoluciones', authenticateToken, (req, res) => {
     }
   ];
   res.json(resoluciones);
+});
+
+// ──────────────────────────────────────────────
+// 📐 Niveles Data
+// ──────────────────────────────────────────────
+let nivelesData = [
+  { id: 1, tipoBeneficiario: 'Todos los beneficiarios', nivel: 'Nivel 1', topeMaximo: '$ 1.000.000', descripcion: 'Nivel 1 de Atención Médica', periodo: '31 dic 2026', estado: 'Vigente' },
+  { id: 2, tipoBeneficiario: 'Todos los beneficiarios', nivel: 'Nivel 2', topeMaximo: '$ 1.000.000', descripcion: 'Nivel 2 de Atención Médica', periodo: '31 dic 2026', estado: 'Vigente' },
+  { id: 3, tipoBeneficiario: 'Todos los beneficiarios', nivel: 'Nivel 3', topeMaximo: '$ 1.000.000', descripcion: 'Nivel 3 de Atención Médica', periodo: '31 dic 2026', estado: 'Vigente' },
+  { id: 4, tipoBeneficiario: 'Todos los beneficiarios', nivel: 'Nivel 4', topeMaximo: '$ 1.000.000', descripcion: 'Nivel 4 de Atención Médica', periodo: '31 dic 2026', estado: 'Vigente' },
+  { id: 5, tipoBeneficiario: 'Todos los beneficiarios', nivel: 'Libre',   topeMaximo: '$ 1.000.000', descripcion: 'Sin límite de Tope - Casos especiales', periodo: '31 dic 2026', estado: 'Vigente' },
+  { id: 6, tipoBeneficiario: 'Todos los beneficiarios', nivel: 'Libre',   topeMaximo: '$ 1.000.000', descripcion: 'Sin límite de Tope - Casos especiales', periodo: '31 dic 2026', estado: 'Vigente' },
+];
+
+app.get('/api/niveles', (req, res) => res.json(nivelesData));
+app.post('/api/niveles', authenticateToken, (req, res) => {
+  const nuevo = { id: Date.now(), ...req.body };
+  nivelesData.push(nuevo);
+  res.status(201).json(nuevo);
+});
+app.put('/api/niveles/:id', authenticateToken, (req, res) => {
+  const id = Number(req.params.id);
+  nivelesData = nivelesData.map(n => n.id === id ? { ...n, ...req.body } : n);
+  res.json(nivelesData.find(n => n.id === id));
+});
+app.delete('/api/niveles/:id', authenticateToken, (req, res) => {
+  const id = Number(req.params.id);
+  nivelesData = nivelesData.filter(n => n.id !== id);
+  res.json({ message: 'Nivel eliminado' });
+});
+
+// ──────────────────────────────────────────────
+// 🏦 Topes Data
+// ──────────────────────────────────────────────
+let topesData = [
+  { id: 1, codigo: 6, grupo: 'Ortopedia Maxilar',      nivel: 'Nivel 1', vigencia: '2026', valorPromedio: 'Sin tope',     resolucion: 'Res. 824', estado: 'Vigente' },
+  { id: 2, codigo: 7, grupo: 'Honorarios',             nivel: 'Nivel 1', vigencia: '2026', valorPromedio: 'Sin tope',     resolucion: 'Res. 824', estado: 'Vigente' },
+  { id: 3, codigo: 6, grupo: 'Otros reconocimientos',  nivel: 'Nivel 1', vigencia: '2026', valorPromedio: 'Sin tope',     resolucion: 'Res. 824', estado: 'Vigente' },
+  { id: 4, codigo: 7, grupo: 'Tratamiento ambulatorio',nivel: 'Nivel 4', vigencia: '2026', valorPromedio: '$ 5.748.720',  resolucion: 'Res. 824', estado: 'Vigente' },
+  { id: 5, codigo: 6, grupo: 'Hospitalización',        nivel: 'Nivel 1', vigencia: '2026', valorPromedio: 'Sin tope',     resolucion: 'Res. 824', estado: 'Vigente' },
+];
+
+app.get('/api/topes', (req, res) => res.json(topesData));
+app.post('/api/topes', authenticateToken, (req, res) => {
+  const nuevo = { id: Date.now(), ...req.body };
+  topesData.push(nuevo);
+  res.status(201).json(nuevo);
+});
+app.put('/api/topes/:id', authenticateToken, (req, res) => {
+  const id = Number(req.params.id);
+  topesData = topesData.map(t => t.id === id ? { ...t, ...req.body } : t);
+  res.json(topesData.find(t => t.id === id));
+});
+app.delete('/api/topes/:id', authenticateToken, (req, res) => {
+  const id = Number(req.params.id);
+  topesData = topesData.filter(t => t.id !== id);
+  res.json({ message: 'Tope eliminado' });
+});
+
+// ──────────────────────────────────────────────
+// 👨‍👩‍👧 Parentescos Data
+// ──────────────────────────────────────────────
+let parentescosData = [
+  { id: 1, orden: 1, nombre: 'Madre-Padre',     tipo: 'Nacional', activo: true },
+  { id: 2, orden: 2, nombre: 'Cónyuge',         tipo: 'Nacional', activo: true },
+  { id: 3, orden: 3, nombre: 'Hijo',            tipo: 'Nacional', activo: true },
+  { id: 4, orden: 4, nombre: 'Hermano',         tipo: 'Nacional', activo: true },
+  { id: 5, orden: 5, nombre: 'Hijos entenados', tipo: 'Nacional', activo: true },
+  { id: 6, orden: 6, nombre: 'Otros',           tipo: 'Nacional', activo: true },
+];
+
+app.get('/api/parentescos', (req, res) => res.json(parentescosData));
+app.post('/api/parentescos', authenticateToken, (req, res) => {
+  const nuevo = { id: Date.now(), orden: parentescosData.length + 1, ...req.body };
+  parentescosData.push(nuevo);
+  res.status(201).json(nuevo);
+});
+app.put('/api/parentescos/:id', authenticateToken, (req, res) => {
+  const id = Number(req.params.id);
+  parentescosData = parentescosData.map(p => p.id === id ? { ...p, ...req.body } : p);
+  res.json(parentescosData.find(p => p.id === id));
+});
+app.delete('/api/parentescos/:id', authenticateToken, (req, res) => {
+  const id = Number(req.params.id);
+  parentescosData = parentescosData.filter(p => p.id !== id);
+  res.json({ message: 'Parentesco eliminado' });
 });
 
 // ──────────────────────────────────────────────
