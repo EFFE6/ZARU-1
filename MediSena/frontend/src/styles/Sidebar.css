@@ -1,30 +1,75 @@
+/* =============================================
+   SIDEBAR - MediSENA
+   Fiel a la imagen de referencia
+   ============================================= */
+
 .sidebar {
-  width: 280px;
-  background-color: #E6EEF5;
-  /* Light blue/grey from screenshot */
+  width: 240px;
+  min-width: 240px;
+  background: #EDF0F9;
   height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 30px 20px;
+  padding: 24px 12px 20px 12px;
   position: relative;
-  border-top-right-radius: 40px;
-  border-bottom-right-radius: 40px;
-  box-shadow: 10px 0 30px rgba(0, 0, 0, 0.05);
+  border-top-right-radius: 32px;
+  border-bottom-right-radius: 32px;
+  box-shadow: 6px 0 24px rgba(28, 62, 87, 0.10);
   z-index: 100;
+  flex-shrink: 0;
+  transition: width 0.3s ease, min-width 0.3s ease;
 }
 
+.sidebar.collapsed {
+  width: 80px;
+  min-width: 80px;
+}
+
+.desktop-collapse-toggle {
+  position: absolute;
+  top: 24px;
+  right: -14px;
+  width: 28px;
+  height: 28px;
+  background-color: #5EA9B9;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 102;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.desktop-collapse-toggle:hover {
+  background-color: #4A8C99;
+}
+
+/* ── Logo ── */
 .sidebar-logo {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 50px;
+  margin-bottom: 28px;
+  padding: 0 4px;
 }
 
 .sidebar-logo img {
-  width: 160px;
+  width: 130px;
   height: auto;
+  object-fit: contain;
 }
 
+.logo-collapsed-text {
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: #1C3E57;
+}
+
+/* ── Nav ── */
 .nav-container {
   flex: 1;
 }
@@ -35,70 +80,86 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 
 .nav-item {
   display: flex;
   align-items: center;
-  padding: 14px 20px;
-  border-radius: 16px;
+  padding: 10px 14px;
+  border-radius: 14px;
   cursor: pointer;
-  color: #5C768D;
-  /* Grayish blue */
+  color: #3b5c7a;
   font-weight: 600;
+  font-size: 0.82rem;
   transition: all 0.2s ease;
-  gap: 15px;
+  gap: 10px;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .nav-item:hover {
-  background-color: rgba(45, 106, 159, 0.05);
-  color: #1a365d;
+  background-color: rgba(28, 62, 87, 0.08);
+  color: #1C3E57;
 }
 
 .nav-item.active {
   background-color: #1C3E57;
-  /* Darker blue from mockup */
-  color: #FFFFFF;
-  /* White text for active state */
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(28, 62, 87, 0.25);
 }
 
 .nav-item.active .nav-item-icon {
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .nav-item-icon {
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 
 .nav-item-text {
-  font-size: 0.95rem;
+  font-size: 0.82rem;
+  line-height: 1.2;
+  transition: opacity 0.2s ease;
 }
 
+.sidebar.collapsed .nav-item-text {
+  opacity: 0;
+  width: 0;
+  visibility: hidden;
+}
+
+.sidebar.collapsed .nav-item {
+  justify-content: center;
+  padding: 10px;
+}
+
+/* ── Perfil de usuario ── */
 .user-profile-section {
   margin-top: auto;
-  padding-top: 20px;
+  padding-top: 16px;
 }
 
 .profile-card {
-  background-color: #D6E4F0;
-  border-radius: 20px;
-  padding: 15px;
+  background-color: #b8d0e8;
+  border-radius: 18px;
+  padding: 12px 12px 10px 12px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .profile-info {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .profile-avatar {
-  width: 44px;
-  height: 44px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   overflow: hidden;
   background-color: white;
@@ -106,6 +167,7 @@
   align-items: center;
   justify-content: center;
   border: 2px solid white;
+  flex-shrink: 0;
 }
 
 .profile-avatar img {
@@ -121,32 +183,44 @@
 
 .profile-name {
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 0.80rem;
   color: #1C3E57;
+  line-height: 1.3;
 }
 
 .logout-button {
-  background-color: #5EABDB;
-  /* Bright blue from screenshot */
+  background-color: #5EA9B9;
   color: white;
   border: none;
-  border-radius: 12px;
-  padding: 10px;
+  border-radius: 20px;
+  padding: 8px 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 7px;
   cursor: pointer;
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   transition: background-color 0.2s ease;
+  width: 100%;
 }
 
 .logout-button:hover {
-  background-color: #4a90c0;
+  background-color: #4A8C99;
 }
 
-/* Mobile styles */
+.sidebar.collapsed .profile-card {
+  align-items: center;
+  padding: 12px 6px 10px 6px;
+}
+
+@media (max-width: 768px) {
+  .desktop-collapse-toggle {
+    display: none;
+  }
+}
+
+/* ── Mobile toggle ── */
 .mobile-menu-toggle {
   display: none;
   position: fixed;
@@ -157,18 +231,19 @@
   color: white;
   border: none;
   border-radius: 12px;
-  width: 45px;
-  height: 45px;
+  width: 42px;
+  height: 42px;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .mobile-menu-close {
   display: none;
 }
 
+/* ── Responsive ── */
 @media (max-width: 768px) {
   .mobile-menu-toggle {
     display: flex;
@@ -177,12 +252,12 @@
   .sidebar {
     position: fixed;
     top: 0;
-    left: -280px;
+    left: -200px;
     height: 100vh;
     z-index: 1001;
     transition: left 0.3s ease;
     border-radius: 0;
-    width: 280px;
+    width: 200px;
   }
 
   .sidebar.mobile-open {
@@ -192,8 +267,8 @@
   .mobile-menu-close {
     display: flex;
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 16px;
+    right: 16px;
     background: transparent;
     border: none;
     color: #1C3E57;
@@ -201,7 +276,7 @@
   }
 
   .sidebar-logo {
-    margin-bottom: 30px;
-    padding-top: 20px;
+    margin-bottom: 24px;
+    padding-top: 16px;
   }
 }

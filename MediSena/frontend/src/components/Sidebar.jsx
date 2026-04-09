@@ -9,39 +9,38 @@ import {
   Search,
   ClipboardList,
   Globe,
-  ChevronLeft,
-  ChevronRight,
   LogOut,
   Menu,
-  X
+  X,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import '../styles/Sidebar.css';
 
-// Using the logo from assets/img/Sidebar.png as per user instruction
 import logo from '../assets/img/Sidebar.png';
 
 const Sidebar = () => {
   const [activeItem, setActiveItem] = useState('Dashboard');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   const navItems = [
-    { id: 'Dashboard', icon: LayoutDashboard, label: 'Dashboard', path: '/' },
-    { id: 'Maestras', icon: Settings, label: 'Gestión', path: '/gestion' },
-    { id: 'Datos básicos', icon: FileText, label: 'Datos básicos', path: '/datos-basicos' },
-    { id: 'Movimientos', icon: RefreshCcw, label: 'Movimientos', path: '/movimientos' },
-    { id: 'Excedentes', icon: BadgeDollarSign, label: 'Excedentes', path: '/excedentes' },
-    { id: 'Consultas', icon: Search, label: 'Consultas', path: '/consultas' },
-    { id: 'Reportes', icon: ClipboardList, label: 'Reportes', path: '/reportes' },
-    { id: 'Reportes nacionales', icon: Globe, label: 'Reportes nacionales', path: '/reportes-nacionales' },
+    { id: 'Dashboard',           icon: LayoutDashboard,   label: 'Dashboard',           path: '/' },
+    { id: 'Maestras',            icon: Settings,          label: 'Maestras',            path: '/gestion' },
+    { id: 'Datos básicos',       icon: FileText,          label: 'Datos básicos',       path: '/datos-basicos' },
+    { id: 'Movimientos',         icon: RefreshCcw,        label: 'Movimientos',         path: '/movimientos' },
+    { id: 'Excedentes',          icon: BadgeDollarSign,   label: 'Excedentes',          path: '/excedentes' },
+    { id: 'Consultas',           icon: Search,            label: 'Consultas',           path: '/consultas' },
+    { id: 'Reportes',            icon: ClipboardList,     label: 'Reportes',            path: '/reportes' },
+    { id: 'Reportes nacionales', icon: Globe,             label: 'Reportes nacionales', path: '/reportes-nacionales' },
   ];
 
-  // Actualizar item activo basado en la ruta actual
   useEffect(() => {
     const currentItem = navItems.find(item => item.path === location.pathname);
     if (currentItem) setActiveItem(currentItem.id);
-    setIsMobileMenuOpen(false); // Cerrar menú al navegar
+    setIsMobileMenuOpen(false);
   }, [location.pathname]);
 
   const handleLogout = () => {
@@ -49,24 +48,29 @@ const Sidebar = () => {
     navigate('/login');
   };
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
   return (
     <>
-      <button className="mobile-menu-toggle" onClick={toggleMobileMenu}>
-        <Menu size={24} />
+      <button className="mobile-menu-toggle" onClick={() => setIsMobileMenuOpen(true)}>
+        <Menu size={22} />
       </button>
 
-      <div className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
-        <button className="mobile-menu-close" onClick={toggleMobileMenu}>
-          <X size={24} />
+      <div className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''} ${isCollapsed ? 'collapsed' : ''}`}>
+        <button className="mobile-menu-close" onClick={() => setIsMobileMenuOpen(false)}>
+          <X size={22} />
         </button>
+
+        {/* Botón de retraer menú en la parte superior derecha */}
+        <button className="desktop-collapse-toggle" onClick={() => setIsCollapsed(!isCollapsed)}>
+          {isCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+        </button>
+
+        {/* Logo */}
         <div className="sidebar-logo">
-          <img src={logo} alt="MediSENA Logo" />
+          {!isCollapsed && <img src={logo} alt="MediSENA Logo" />}
+          {isCollapsed && <span className="logo-collapsed-text">MS</span>}
         </div>
 
+        {/* Navegación */}
         <nav className="nav-container">
           <ul className="nav-list">
             {navItems.map((item) => (
@@ -85,19 +89,22 @@ const Sidebar = () => {
           </ul>
         </nav>
 
+        {/* Perfil */}
         <div className="user-profile-section">
           <div className="profile-card">
             <div className="profile-info">
               <div className="profile-avatar">
                 <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Paula" alt="Paula" />
               </div>
-              <div className="profile-text">
-                <span className="profile-name">Paula Chaparro</span>
-              </div>
+              {!isCollapsed && (
+                <div className="profile-text">
+                  <span className="profile-name">Paula<br/>Chaparro</span>
+                </div>
+              )}
             </div>
-            <button className="logout-button" onClick={handleLogout}>
-              <LogOut size={16} />
-              <span>Cerrar sesión</span>
+            <button className="logout-button" onClick={handleLogout} title="Cerrar sesión">
+              <LogOut size={isCollapsed ? 18 : 14} style={{ margin: isCollapsed ? '0 auto' : '0' }} />
+              {!isCollapsed && <span>Cerrar sesión</span>}
             </button>
           </div>
         </div>

@@ -5,7 +5,6 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #e4effb 0%, #c4dbf4 100%);
   font-family: 'Inter', sans-serif;
   overflow-x: hidden;
 }
