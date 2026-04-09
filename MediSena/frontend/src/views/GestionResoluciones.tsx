@@ -13,7 +13,13 @@ import {
   Copy,
   FileText,
   Files,
-  Bell
+  Bell,
+  HelpCircle,
+  X,
+  Check,
+  Paperclip,
+  Filter,
+  Calendar
 } from 'lucide-react';
 import '../styles/GestionResoluciones.css';
 import ResolucionesIcon from '../assets/img/icons/resoluciones-tags.png';
@@ -50,6 +56,30 @@ const GestionResoluciones: React.FC = () => {
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<any>(null);
+
+  // Estados para el Modal de Formulario (Crear/Editar)
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
+  const [editFormData, setEditFormData] = useState<any>({
+    tipo: 'VIGENTE',
+    numero: '',
+    fecha: '',
+    inicioVigencia: '',
+    finVigencia: '',
+    descripcion: '',
+    regionales: []
+  });
+  const [regionalSearch, setRegionalSearch] = useState('');
+
+  // Mock de regionales
+  const allRegionales = [
+    { id: '001', nombre: 'Regional 001' },
+    { id: '002', nombre: 'Regional 002' },
+    { id: '003', nombre: 'Regional 003' },
+    { id: '004', nombre: 'Regional 004' },
+    { id: '005', nombre: 'Regional 005' },
+    { id: '006', nombre: 'Regional 006' },
+  ];
 
   const tabs = [
     'Resoluciones', 'Usuarios', 'Niveles', 'Topes',
@@ -108,6 +138,31 @@ const GestionResoluciones: React.FC = () => {
     }
     setIsDeleteModalOpen(false);
     setItemToDelete(null);
+  };
+
+  const handleEditClick = (item: any) => {
+    if (activeTab === 'Resoluciones') {
+      setModalMode('edit');
+      setEditFormData({
+        ...item,
+        inicioVigencia: item.vigencia?.split(' - ')[0] || '',
+        finVigencia: item.vigencia?.split(' - ')[1] || '',
+        regionales: ['001', '002', '005'] // Mocked selection for demo
+      });
+      setIsFormModalOpen(true);
+    }
+  };
+
+  const toggleRegional = (id: string) => {
+    setEditFormData((prev: any) => {
+      const isSelected = prev.regionales.includes(id);
+      return {
+        ...prev,
+        regionales: isSelected 
+          ? prev.regionales.filter((rId: string) => rId !== id)
+          : [...prev.regionales, id]
+      };
+    });
   };
 
   /* Páginas visibles: máx 5 alrededor de la actual */
@@ -201,7 +256,7 @@ const GestionResoluciones: React.FC = () => {
                     <option value="Vencido">Vencido</option>
                   </select>
                 </div>
-                <button className="btn-new-resolution">
+                <button className="btn-new-resolution" onClick={() => { setModalMode('create'); setIsFormModalOpen(true); setEditFormData({tipo: 'VIGENTE', numero: '', fecha: '', inicioVigencia: '', finVigencia: '', descripcion: '', regionales: [] }); }}>
                   <Plus size={18} />
                   Nueva {activeTab === 'Resoluciones' ? 'Resolución' : 'Entrada'}
                 </button>
@@ -258,7 +313,7 @@ const GestionResoluciones: React.FC = () => {
                             <td className="col-vigencia">{res.vigencia}</td>
                             <td>
                               <div className="row-actions">
-                                <button className="icon-btn edit"><Edit2 size={16} /></button>
+                                <button className="icon-btn edit" onClick={() => handleEditClick(res)}><Edit2 size={16} /></button>
                                 <button className="icon-btn delete" onClick={() => handleDeleteClick(res)}>
                                   <Trash2 size={16} />
                                 </button>
@@ -350,8 +405,8 @@ const GestionResoluciones: React.FC = () => {
           {/* Modal eliminar */}
           {isDeleteModalOpen && (
             <div className="modal-overlay">
-              <div className="modal-content">
-                <div className="modal-icon-container">
+              <div className="modal-content-delete">
+                <div className="modal-icon-container-delete">
                   <Trash2 size={26} />
                 </div>
                 <h2 className="modal-title">¿Quieres eliminar esta Resolución?</h2>
@@ -367,6 +422,173 @@ const GestionResoluciones: React.FC = () => {
                     Eliminar Resolución
                   </button>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* Modal Crear / Editar Resolución */}
+          {isFormModalOpen && (
+            <div className="modal-overlay">
+              <div className="form-modal-container">
+                <header className="form-modal-header">
+                  <h2 className="form-modal-title">
+                    {modalMode === 'create' ? 'Crear resolución' : 'Editar resolución'}
+                  </h2>
+                  <button className="btn-close-modal" onClick={() => setIsFormModalOpen(false)}>
+                    <X size={20} />
+                  </button>
+                </header>
+
+                <div className="form-modal-body">
+                  <div className="form-grid">
+                    {/* Tipo de resolución */}
+                    <div className="form-group">
+                      <label>
+                        Tipo de resolución <HelpCircle size={14} className="label-help" />
+                      </label>
+                      <div className="custom-select-wrapper">
+                        <select 
+                          value={editFormData.tipo} 
+                          onChange={(e) => setEditFormData({...editFormData, tipo: e.target.value})}
+                        >
+                          <option value="VIGENTE">VIGENTE</option>
+                          <option value="VENCIDA">VENCIDA</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Nº de resolución */}
+                    <div className="form-group">
+                      <label>
+                        Nº de resolución <HelpCircle size={14} className="label-help" />
+                      </label>
+                      <div className="custom-select-wrapper">
+                        <select 
+                          value={editFormData.numero} 
+                          onChange={(e) => setEditFormData({...editFormData, numero: e.target.value})}
+                        >
+                          <option value="">Seleccione...</option>
+                          <option value="824">824</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Fecha de resolución */}
+                    <div className="form-group">
+                      <label>
+                        Fecha de resolución <HelpCircle size={14} className="label-help" />
+                      </label>
+                      <div className="input-with-icon">
+                        <input 
+                          type="text" 
+                          placeholder="01/01/2026"
+                          value={editFormData.fecha}
+                          onChange={(e) => setEditFormData({...editFormData, fecha: e.target.value})}
+                        />
+                        <Calendar size={18} className="input-inner-icon" />
+                      </div>
+                    </div>
+
+                    {/* Inicio de vigencia */}
+                    <div className="form-group">
+                      <label>
+                        Inicio de la vigencia <HelpCircle size={14} className="label-help" />
+                      </label>
+                      <div className="input-with-icon">
+                        <input 
+                          type="text" 
+                          placeholder="01/01/2026"
+                          value={editFormData.inicioVigencia}
+                          onChange={(e) => setEditFormData({...editFormData, inicioVigencia: e.target.value})}
+                        />
+                        <Calendar size={18} className="input-inner-icon" />
+                      </div>
+                    </div>
+
+                    {/* Fin de vigencia */}
+                    <div className="form-group">
+                      <label>
+                        Fin de la vigencia <HelpCircle size={14} className="label-help" />
+                      </label>
+                      <div className="input-with-icon">
+                        <input 
+                          type="text" 
+                          placeholder="31/12/2026"
+                          value={editFormData.finVigencia}
+                          onChange={(e) => setEditFormData({...editFormData, finVigencia: e.target.value})}
+                        />
+                        <Calendar size={18} className="input-inner-icon" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Regional */}
+                  <div className="form-group full-width" style={{ marginTop: '20px' }}>
+                    <label>
+                      Regional <HelpCircle size={14} className="label-help" />
+                    </label>
+                    <div className="regional-box">
+                      <div className="regional-search-bar">
+                        <div className="regional-search-input">
+                          <Search size={18} className="search-icon" />
+                          <input 
+                            type="text" 
+                            placeholder="Busca el nombre de la regional"
+                            value={regionalSearch}
+                            onChange={(e) => setRegionalSearch(e.target.value)}
+                          />
+                        </div>
+                        <button className="btn-filter-regional">
+                          <Filter size={18} />
+                        </button>
+                      </div>
+
+                      <div className="regional-list">
+                        {allRegionales
+                          .filter(r => r.nombre.toLowerCase().includes(regionalSearch.toLowerCase()))
+                          .map(reg => (
+                            <div 
+                              key={reg.id} 
+                              className={`regional-item ${editFormData.regionales.includes(reg.id) ? 'selected' : ''}`}
+                              onClick={() => toggleRegional(reg.id)}
+                            >
+                              <div className={`custom-checkbox ${editFormData.regionales.includes(reg.id) ? 'checked' : ''}`}>
+                                {editFormData.regionales.includes(reg.id) && <Check size={12} />}
+                              </div>
+                              <span>{reg.nombre}</span>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Descripción */}
+                  <div className="form-group full-width" style={{ marginTop: '24px' }}>
+                    <label>
+                      Descripción de la resolución <HelpCircle size={14} className="label-help" />
+                    </label>
+                    <textarea 
+                      placeholder="Resolución 824 - Vigencia del 2026"
+                      rows={4}
+                      value={editFormData.descripcion}
+                      onChange={(e) => setEditFormData({...editFormData, descripcion: e.target.value})}
+                    />
+                  </div>
+                </div>
+
+                <footer className="form-modal-footer">
+                  <button className="btn-attachment">
+                    <Paperclip size={20} />
+                  </button>
+                  <div className="footer-actions">
+                    <button className="btn-modal-action cancel" onClick={() => setIsFormModalOpen(false)}>
+                      Cancelar
+                    </button>
+                    <button className="btn-modal-action submit">
+                      {modalMode === 'create' ? 'Crear resolución' : 'Actualizar resolución'}
+                    </button>
+                  </div>
+                </footer>
               </div>
             </div>
           )}
