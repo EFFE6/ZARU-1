@@ -80,21 +80,25 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 45px; /* Espacio para que el banner no tape el logo */
+  padding-top: 45px;
+  /* Espacio para que el banner no tape el logo */
 }
 
 /* Logo & Headers */
 .login-logo-img {
-  width: 160px; /* Reducido de 210px */
+  width: 160px;
+  /* Reducido de 210px */
   margin-bottom: 0.5rem;
   object-fit: contain;
 }
 
 .login-title-text {
-  font-size: 1.4rem; /* Reducido de 1.6rem */
+  font-size: 1.4rem;
+  /* Reducido de 1.6rem */
   font-weight: 700;
   color: #1e3a5f;
-  margin-bottom: 1rem; /* Reducido de 1.5rem */
+  margin-bottom: 1rem;
+  /* Reducido de 1.5rem */
   align-self: flex-start;
   width: 100%;
 }
@@ -104,7 +108,8 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1.1rem; /* Reducido de 1.5rem */
+  gap: 1.1rem;
+  /* Reducido de 1.5rem */
 }
 
 .login-input-wrapper {
@@ -243,7 +248,8 @@
 }
 
 .login-sena-logo-container {
-  margin-top: 1.5rem; /* Reducido de 3rem */
+  margin-top: 1.5rem;
+  /* Reducido de 3rem */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -280,9 +286,9 @@
 .login-watermark {
   position: absolute;
   top: 15%;
-  right: 8%;
+  right: -1%;
   width: 380px;
-  opacity: 0.65;
+  opacity: 2.65;
   /* Súper visible */
   z-index: 2;
   /* Sobre la forma azul */
@@ -310,26 +316,26 @@
 
 .login-estetoscopio {
   top: 22%;
-  left: 25%;
+  left: 32%;
   /* Más cerca del doctor */
-  width: 180px;
+  width: 150px;
   animation-delay: 0s;
 }
 
 .login-termometro {
-  top: 8%;
+  top: 30%;
   /* Más arriba */
   right: 2%;
-  width: 160px;
+  width: 150px;
   animation-delay: 1s;
 }
 
 .login-adn {
   bottom: 12%;
   top: 83%;
-  left: 17%;
+  left: 21%;
   /* Más cerca del doctor */
-  width: 200px;
+  width: 150px;
   animation-delay: 2s;
 }
 
