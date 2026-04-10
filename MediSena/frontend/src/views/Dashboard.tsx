@@ -47,7 +47,7 @@ const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
-  const totalPages = 13;
+  const totalPages = Math.max(1, Math.ceil(citas.length / pageSize));
 
   const getFormattedDate = () => {
     const parts = new Date().toLocaleDateString('es-ES', {
@@ -87,7 +87,8 @@ const Dashboard: React.FC = () => {
     );
   }
 
-  const pageNumbers = Array.from({ length: Math.min(5, totalPages) }, (_, i) => i + 1);
+  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+  const currentCitas = citas.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   return (
     <div className="main-layout">
@@ -164,9 +165,12 @@ const Dashboard: React.FC = () => {
         {/* ── Citas Section (solo cards + paginación) ── */}
         <section className="citas-section">
           <div className="citas-list">
-            {citas.map(cita => (
+            {currentCitas.map(cita => (
               <CitaCard key={cita.id} cita={cita} />
             ))}
+            {currentCitas.length === 0 && (
+              <div className="table-empty">No hay citas programadas.</div>
+            )}
           </div>
 
           {/* Paginación */}
@@ -209,7 +213,7 @@ const Dashboard: React.FC = () => {
             </div>
 
             <div className="pagination-right">
-              {(currentPage - 1) * pageSize + 1} - {Math.min(currentPage * pageSize, totalPages * pageSize)} de {totalPages} Páginas
+              {citas.length === 0 ? 0 : (currentPage - 1) * pageSize + 1} - {Math.min(currentPage * pageSize, citas.length)} de {citas.length} Registros
             </div>
           </div>
         </section>

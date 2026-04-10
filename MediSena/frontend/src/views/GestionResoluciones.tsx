@@ -204,6 +204,7 @@ const GestionResoluciones: React.FC = () => {
   const [topes, setTopes] = useState<Tope[]>([]);
   const [parentescos, setParentescos] = useState<Parentesco[]>([]);
   const [loading, setLoading] = useState(true);
+  const [errorStatus, setErrorStatus] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('Resoluciones');
 
   /* ── Filtros & búsqueda ── */
@@ -258,6 +259,15 @@ const GestionResoluciones: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      setErrorStatus(null);
+      
+      // Limpiar datos previos para evitar confusión al cambiar de tab
+      setResoluciones([]);
+      setUsuarios([]);
+      setNiveles([]);
+      setTopes([]);
+      setParentescos([]);
+
       try {
         if (activeTab === 'Resoluciones') {
           const res = await api.get('/resoluciones');
@@ -275,8 +285,9 @@ const GestionResoluciones: React.FC = () => {
           const res = await api.get('/parentescos');
           setParentescos(res.data);
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error('Error fetching data:', err);
+        setErrorStatus(err.response?.data?.message || err.message || 'Error al cargar los datos');
       } finally {
         setLoading(false);
         setCurrentPage(1);
@@ -558,8 +569,25 @@ const GestionResoluciones: React.FC = () => {
   };
 
   const renderTableBody = () => {
-    if (loading) return <tr><td colSpan={6} className="table-empty">Cargando datos...</td></tr>;
-    if (currentItems.length === 0) return <tr><td colSpan={6} className="table-empty">No se encontraron resultados.</td></tr>;
+    if (loading) return <tr><td colSpan={8} className="table-empty">Cargando datos...</td></tr>;
+    
+    if (errorStatus) return (
+      <tr>
+        <td colSpan={8} className="table-empty">
+          <div className="error-message">
+            <p style={{ color: '#e11d48', fontWeight: 700 }}>⚠️ {errorStatus}</p>
+            <button 
+              onClick={() => setActiveTab(activeTab)} 
+              style={{ marginTop: '10px', background: '#1e3a52', color: 'white', border: 'none', padding: '6px 16px', borderRadius: '8px', cursor: 'pointer' }}
+            >
+              Reintentar
+            </button>
+          </div>
+        </td>
+      </tr>
+    );
+
+    if (currentItems.length === 0) return <tr><td colSpan={8} className="table-empty">No se encontraron resultados.</td></tr>;
 
     if (activeTab === 'Resoluciones') {
       return (currentItems as Resolucion[]).map(res => (

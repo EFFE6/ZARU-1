@@ -397,3 +397,35 @@
     gap: 15px;
   }
 }
+
+/* ── Ajustes Verticales para Laptops (Adaptabilidad a la pantalla) ── */
+@media (max-height: 850px) {
+  .main-content {
+    padding: 16px 20px 16px 20px;
+    gap: 12px;
+  }
+
+  .stat-card {
+    min-height: 140px;
+  }
+  
+  .stat-card-content {
+    padding: 14px 20px 14px 16px;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+  }
+
+  .cita-card {
+    min-height: 60px;
+  }
+
+  .cita-content {
+    padding: 10px 16px 10px 14px;
+  }
+
+  h1.header-title {
+    margin: 0;
+  }
+}
