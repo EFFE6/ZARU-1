@@ -341,21 +341,21 @@
 }
 
 .resoluciones-table thead tr {
-  background: #E5E7EB;
+  background: #EEF2F6;
 }
 
 .resoluciones-table th {
   text-align: left;
   padding: 18px 24px;
-  font-size: 14px;
-  font-weight: 700;
-  color: #002c4d;
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #1a3c5a;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   white-space: nowrap;
   position: sticky;
   top: 0;
-  background: #E5E7EB;
+  background: #EEF2F6;
   z-index: 5;
 }
 
@@ -378,7 +378,7 @@
 }
 
 .resoluciones-table tbody tr:nth-child(even) {
-  background-color: #F6F6F6;
+  background-color: #FFFFFF;
 }
 
 .resoluciones-table tbody tr:nth-child(odd) {
@@ -474,9 +474,9 @@
 
 /* Editar: transparente, solo ícono */
 .icon-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
   border: none;
   background: transparent;
   display: flex;
@@ -486,16 +486,21 @@
   transition: all 0.16s;
 }
 
-/* Editar: borde azul oscuro */
-.icon-btn.edit {
-  color: #1e3a52;
+/* Editar, Key, View: Estilos unificados borde azul */
+.icon-btn.edit,
+.icon-btn.key,
+.icon-btn.view {
+  color: #0165B0;
   background: #ffffff;
-  border: 1.5px solid #1e3a52;
+  border: 1.5px solid #0165B0;
+  border-radius: 10px;
 }
 
-.icon-btn.edit:hover {
-  background: #f0f4f8;
-  color: #1e3a52;
+.icon-btn.edit:hover,
+.icon-btn.key:hover,
+.icon-btn.view:hover {
+  background: #f0f6fc;
+  color: #0165B0;
   transform: translateY(-1px);
 }
 
@@ -504,6 +509,7 @@
   color: #e11d48;
   background: #ffffff;
   border: 1.5px solid #e11d48;
+  border-radius: 10px;
 }
 
 .icon-btn.delete:hover {
@@ -1294,8 +1300,8 @@
 }
 
 .rol-badge.admin {
-  color: #c07000;
-  background: #fff8e6;
+  color: #d97706;
+  background: #fffbeb;
 }
 
 .rol-badge.usuario {
@@ -1310,11 +1316,11 @@
   gap: 6px;
   padding: 5px 10px;
   border-radius: 7px;
-  border: 1.5px solid #dde8f0;
-  background: #f8fafc;
+  border: 1.5px solid #dbeafe;
+  background: #eff6ff;
   font-size: 12px;
   font-weight: 600;
-  color: #1e3a52;
+  color: #0165B0;
   font-family: 'Work Sans', sans-serif;
   cursor: default;
   max-width: 220px;
@@ -1425,30 +1431,7 @@
   box-shadow: 0 1px 4px rgba(57, 169, 0, 0.30);
 }
 
-/* ── Botón key ── */
-.icon-btn.key {
-  color: #0165B0;
-  background: #ffffff;
-  border: 1.5px solid #0165B0;
-}
 
-.icon-btn.key:hover {
-  background: #eff6ff;
-  transform: translateY(-1px);
-}
-
-/* ── Botón view ── */
-.icon-btn.view {
-  color: #5c7a90;
-  background: #ffffff;
-  border: 1.5px solid #c0d0db;
-}
-
-.icon-btn.view:hover {
-  background: #f0f4f8;
-  border-color: #5c7a90;
-  transform: translateY(-1px);
-}
 
 /* ── Segundo tab activo ── */
 .gestion-content-card.second-tab-active {

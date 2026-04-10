@@ -4,6 +4,7 @@ import api from '../api/api';
 import {
   ChevronRight,
   Plus,
+  RefreshCw,
   Edit2,
   Trash2,
   ChevronLeft,
@@ -193,6 +194,25 @@ const MOCK_PARENTESCOS: Parentesco[] = [
   { id: 6, orden: 6, nombre: 'Otros',           tipo: 'Nacional', activo: true },
 ];
 
+/* ─── Type & Mock Parámetros ────────────────────────────── */
+export interface Parametro {
+  id: number;
+  vigencia: string;
+  regional: string;
+  resolucion: string;
+  razonSocial: string;
+  porcentajeNormal: string;
+  vobos: number;
+}
+
+
+
+const EMPTY_PARENTESCO_FORM = {
+  nombre: '',
+  descripcion: '',
+  ambito: ''
+};
+
 /* ═══════════════════════════════════════════════════════════
    COMPONENTE PRINCIPAL
    ═══════════════════════════════════════════════════════════ */
@@ -203,6 +223,8 @@ const GestionResoluciones: React.FC = () => {
   const [niveles, setNiveles] = useState<Nivel[]>([]);
   const [topes, setTopes] = useState<Tope[]>([]);
   const [parentescos, setParentescos] = useState<Parentesco[]>([]);
+  const [parametros, setParametros] = useState<Parametro[]>([]);
+  const [subespecialidades, setSubespecialidades] = useState<SubEspecialidad[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorStatus, setErrorStatus] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('Resoluciones');
@@ -247,6 +269,15 @@ const GestionResoluciones: React.FC = () => {
   const [isViewTopeOpen, setIsViewTopeOpen] = useState(false);
   const [selectedTope, setSelectedTope] = useState<Tope | null>(null);
 
+  /* ── Modal Parentesco ── */
+  const [isEditParentescoOpen, setIsEditParentescoOpen] = useState(false);
+  const [editParentescoTarget, setEditParentescoTarget] = useState<Parentesco | null>(null);
+  const [parentescoForm, setParentescoForm] = useState({ ...EMPTY_PARENTESCO_FORM });
+
+  /* ── Modal SubEspecialidad ── */
+  const [isViewSubOpen, setIsViewSubOpen] = useState(false);
+  const [selectedSubTarget, setSelectedSubTarget] = useState<SubEspecialidad | null>(null);
+
   /* ── Tooltip regional ── */
   const [tooltip, setTooltip] = useState<{ id: number; text: string } | null>(null);
 
@@ -267,6 +298,8 @@ const GestionResoluciones: React.FC = () => {
       setNiveles([]);
       setTopes([]);
       setParentescos([]);
+      setParametros([]);
+      setSubespecialidades([]);
 
       try {
         if (activeTab === 'Resoluciones') {
@@ -284,6 +317,12 @@ const GestionResoluciones: React.FC = () => {
         } else if (activeTab === 'Parentescos') {
           const res = await api.get('/parentescos');
           setParentescos(res.data);
+        } else if (activeTab === 'Parámetros') {
+          const res = await api.get('/parametros');
+          setParametros(res.data);
+        } else if (activeTab === 'Sub-especialidades') {
+          const res = await api.get('/subespecialidades');
+          setSubespecialidades(res.data);
         }
       } catch (err: any) {
         console.error('Error fetching data:', err);
@@ -336,8 +375,19 @@ const GestionResoluciones: React.FC = () => {
         p.nombre.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
+    if (activeTab === 'Parámetros') {
+      return parametros.filter(p =>
+        p.razonSocial.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    if (activeTab === 'Sub-especialidades') {
+      return subespecialidades.filter(s =>
+        s.nombre.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        s.contratista.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
     return [];
-  }, [activeTab, resoluciones, usuarios, niveles, topes, parentescos, searchQuery, statusFilter, activeFilterTag]);
+  }, [activeTab, resoluciones, usuarios, niveles, topes, parentescos, parametros, subespecialidades, searchQuery, statusFilter, activeFilterTag]);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage) || 1;
   const currentItems = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -357,6 +407,7 @@ const GestionResoluciones: React.FC = () => {
     else if (activeTab === 'Niveles') setNiveles(n => n.filter(x => x.id !== itemToDelete.id));
     else if (activeTab === 'Topes') setTopes(t => t.filter(x => x.id !== itemToDelete.id));
     else if (activeTab === 'Parentescos') setParentescos(p => p.filter(x => x.id !== itemToDelete.id));
+    else if (activeTab === 'Sub-especialidades') setSubespecialidades(s => s.filter(x => x.id !== itemToDelete.id));
     setIsDeleteModalOpen(false); setItemToDelete(null);
   };
 
@@ -365,6 +416,7 @@ const GestionResoluciones: React.FC = () => {
     if (activeTab === 'Topes') return 'Tope';
     if (activeTab === 'Parentescos') return 'Parentesco';
     if (activeTab === 'Usuarios') return 'usuario';
+    if (activeTab === 'Sub-especialidades') return 'Sub-especialidad';
     return 'elemento';
   };
 
@@ -446,6 +498,18 @@ const GestionResoluciones: React.FC = () => {
     setUsuarios(p => p.map(u => u.id === id ? { ...u, activo: !u.activo } : u));
   };
 
+  const openEditParentesco = (p: Parentesco) => {
+    setEditParentescoTarget(p);
+    setParentescoForm({ nombre: p.nombre, descripcion: p.nombre, ambito: p.tipo });
+    setIsEditParentescoOpen(true);
+  };
+  const closeParentescoModal = () => { setIsEditParentescoOpen(false); setEditParentescoTarget(null); };
+  const handleSaveParentesco = () => {
+    if (!editParentescoTarget) return;
+    setParentescos(p => p.map(x => x.id === editParentescoTarget.id ? { ...x, nombre: parentescoForm.nombre, tipo: parentescoForm.ambito } : x));
+    closeParentescoModal();
+  };
+
   /* ─── Render toolbar según tab ──────────────────────── */
   const renderToolbar = () => {
     if (activeTab === 'Usuarios') {
@@ -470,7 +534,7 @@ const GestionResoluciones: React.FC = () => {
           </div>
           <div className="usuarios-toolbar-right">
             <button className="btn-actualizar">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /><path d="M3 21v-5h5" /></svg>
+              <RefreshCw size={14} />
               Actualizar
             </button>
             <button className="btn-new-resolution" onClick={() => { }}>
@@ -503,6 +567,54 @@ const GestionResoluciones: React.FC = () => {
         </div>
       );
     }
+    if (activeTab === 'Parentescos') {
+      return (
+        <div className="content-toolbar">
+          <p className="tab-description">Gestione los parentescos permitidos en el sistema</p>
+          <button className="btn-new-resolution" onClick={() => { }}>
+            <Plus size={16} />
+            Nuevo Parentesco
+          </button>
+        </div>
+      );
+    }
+    if (activeTab === 'Parámetros') {
+      return (
+        <div className="content-toolbar">
+          <p className="tab-description"><span style={{ color: '#5c7a90', fontSize: '13px', fontWeight: 600 }}>Este dato se promediará con el valor del SMLV de la vigencia 2025: <strong style={{ color: '#002c4d' }}>$ 1.423.500</strong></span></p>
+          <div className="usuarios-toolbar-right" style={{ gap: '12px' }}>
+            <select className="stat-select" style={{ minWidth: '150px' }}>
+              <option>Vigencia 2025</option>
+            </select>
+            <button className="btn-new-resolution" onClick={() => { }} style={{ background: '#004B85' }}>
+              <RefreshCw size={14} />
+              Actualizar
+            </button>
+          </div>
+        </div>
+      );
+    }
+    if (activeTab === 'Sub-especialidades') {
+      return (
+        <div className="content-toolbar">
+          <p className="tab-description"><span style={{ color: '#5c7a90', fontSize: '13px', fontWeight: 500 }}>Sub-especialidades asociadas a contratistas del sistema MediSENA.</span></p>
+          <div className="usuarios-toolbar-right" style={{ gap: '12px' }}>
+            <select className="stat-select" style={{ minWidth: '160px' }}>
+              <option>Seleccionar estado</option>
+            </select>
+            <button className="btn-new-resolution" style={{ background: '#004B85' }}>
+              <RefreshCw size={14} />
+              Actualizar
+            </button>
+            <button className="btn-new-resolution" onClick={() => { }} style={{ background: '#004B85' }}>
+              <Plus size={16} />
+              Nueva Sub-especialidad
+            </button>
+          </div>
+        </div>
+      );
+    }
+    if (activeTab === 'Abrir vigencia') return null;
     return (
       <div className="content-toolbar">
         <div className="stat-filter-container">
@@ -565,6 +677,28 @@ const GestionResoluciones: React.FC = () => {
         <th></th>
       </tr>
     );
+    if (activeTab === 'Parámetros') return (
+      <tr>
+        <th>VIGENCIA</th>
+        <th>REGIONAL</th>
+        <th>RESOLUCIÓN</th>
+        <th>RAZÓN SOCIAL</th>
+        <th>% NORMAL</th>
+        <th>VoBos</th>
+        <th></th>
+      </tr>
+    );
+    if (activeTab === 'Sub-especialidades') return (
+      <tr>
+        <th>CONSECUTIVO</th>
+        <th>NOMBRE <ArrowUpDown size={13} className="sort-icon" /></th>
+        <th>CONTRATISTA <ArrowUpDown size={13} className="sort-icon" /></th>
+        <th>NIT <ArrowUpDown size={13} className="sort-icon" /></th>
+        <th>REGIONAL <ArrowUpDown size={13} className="sort-icon" /></th>
+        <th>MEDICAMENTOS</th>
+        <th></th>
+      </tr>
+    );
     return <tr><th colSpan={8}>Mantenimiento de {activeTab}</th></tr>;
   };
 
@@ -624,9 +758,7 @@ const GestionResoluciones: React.FC = () => {
             {/* Avatar + Nombre/Email */}
             <td>
               <div className="user-cell">
-                <div className="user-avatar" style={{ background: avatarColor(user.nombre) }}>
-                  {initials(user.nombre)}
-                </div>
+                <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.nombre)}&background=0D8ABC&color=fff&rounded=true`} alt={user.nombre} className="user-avatar" style={{ border: 'none' }} />
                 <div className="user-info">
                   <span className="user-name">{user.nombre}</span>
                   <span className="user-email">{user.email}</span>
@@ -751,6 +883,69 @@ const GestionResoluciones: React.FC = () => {
       ));
     }
 
+    if (activeTab === 'Parámetros') {
+      return (currentItems as Parametro[]).map(p => (
+        <tr key={p.id}>
+          <td>
+            <div className="desc-with-icon" style={{ gap: '6px' }}>
+              <div 
+                className="regional-tag has-remove" 
+                style={{ padding: 0, background: 'none', border: 'none', color: '#94a3b8' }}
+                onMouseEnter={() => setTooltip({ id: p.id, text: `Este dato corresponde al SMLV del año ${p.vigencia}` })}
+                onMouseLeave={() => setTooltip(null)}
+              >
+                <HelpCircle size={14} />
+                {tooltip?.id === p.id && (
+                  <div className="regional-tooltip" style={{ bottom: '100%', left: '0', whiteSpace: 'nowrap' }}>{tooltip.text}</div>
+                )}
+              </div>
+              {p.vigencia}
+            </div>
+          </td>
+          <td>
+            <div className="regional-tag">
+              <Building2 size={13} className="regional-icon" />
+              <span className="regional-text">{p.regional}</span>
+              <button className="regional-remove"><X size={11} /></button>
+            </div>
+          </td>
+          <td>{p.resolucion}</td>
+          <td>{p.razonSocial}</td>
+          <td>{p.porcentajeNormal}</td>
+          <td>{p.vobos}</td>
+          <td>
+            <div className="row-actions">
+              <button className="icon-btn edit"><Edit2 size={15} /></button>
+            </div>
+          </td>
+        </tr>
+      ));
+    }
+
+    if (activeTab === 'Sub-especialidades') {
+      return (currentItems as SubEspecialidad[]).map(s => (
+        <tr key={s.id}>
+          <td>{s.consecutivo}</td>
+          <td>{s.nombre}</td>
+          <td>{s.contratista}</td>
+          <td>{s.nit}</td>
+          <td>
+            <div className="regional-tag">
+              <Building2 size={13} className="regional-icon" />
+              <span className="regional-text">{s.regional}</span>
+            </div>
+          </td>
+          <td><span style={{ color: '#e11d48', fontWeight: 600 }}>{s.medicamentos}</span></td>
+          <td>
+            <div className="row-actions">
+              <button className="icon-btn edit" onClick={() => { setSelectedSubTarget(s); setIsViewSubOpen(true); }}><Edit2 size={15} /></button>
+              <button className="icon-btn delete" onClick={() => handleDeleteClick(s)}><Trash2 size={15} /></button>
+            </div>
+          </td>
+        </tr>
+      ));
+    }
+
     return <tr><td colSpan={8} className="table-empty">Sin datos.</td></tr>;
   };
 
@@ -775,7 +970,7 @@ const GestionResoluciones: React.FC = () => {
                 <div className="status-dot vigente"></div>
                 {p.activo ? 'Activo' : 'Inactivo'}
               </div>
-              <button className="icon-btn edit"><Edit2 size={15} /></button>
+              <button className="icon-btn edit" onClick={() => openEditParentesco(p)}><Edit2 size={15} /></button>
               <button className="icon-btn delete" onClick={() => handleDeleteClick(p)}><Trash2 size={15} /></button>
             </div>
           </div>
@@ -844,7 +1039,42 @@ const GestionResoluciones: React.FC = () => {
               {renderToolbar()}
 
               {/* Contenido principal */}
-              {activeTab === 'Parentescos' ? (
+              {activeTab === 'Abrir vigencia' ? (
+                <div style={{ padding: '32px' }}>
+                  <div className="um-alert warning" style={{ background: '#fef9c3', border: '1px solid #fde047', color: '#854d0e', marginBottom: '24px' }}>
+                    <AlertTriangle size={15} className="um-alert-icon" color="#d97706" />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <strong style={{ color: '#002c4d', fontSize: '12px' }}>Atención</strong>
+                      <span style={{ fontSize: '11px', color: '#5c7a90' }}>Este proceso solo puede ser ejecutado en la nueva vigencia 2027.</span>
+                    </div>
+                  </div>
+                  <h3 style={{ color: '#004B85', fontSize: '16px', marginBottom: '16px' }}>¿Qué pasará al abrir la nueva vigencia?</h3>
+                  <p style={{ color: '#5c7a90', fontSize: '12px', marginBottom: '8px' }}>Se copiarán automáticamente los siguientes datos de la vigencia anterior:</p>
+                  <ul style={{ color: '#5c7a90', fontSize: '12px', marginLeft: '20px', marginBottom: '24px', listStyleType: 'disc' }}>
+                    <li>Parámetros</li>
+                    <li>Resoluciones</li>
+                    <li>Topes</li>
+                    <li>Cargos</li>
+                    <li>Cargos por funcionario</li>
+                    <li>Categorías por regional</li>
+                    <li>Beneficiarios (se actualizarán los suspendidos)</li>
+                  </ul>
+                  <h3 style={{ color: '#004B85', fontSize: '16px', marginBottom: '16px' }}>Procesos que se activarán</h3>
+                  <p style={{ color: '#5c7a90', fontSize: '12px', marginBottom: '8px' }}>Después de crear la vigencia, podrás usar:</p>
+                  <ul style={{ color: '#5c7a90', fontSize: '12px', marginLeft: '20px', marginBottom: '40px', listStyleType: 'disc' }}>
+                    <li>Órdenes de atención</li>
+                    <li>Cuentas de cobro</li>
+                    <li>Recibos de pago</li>
+                  </ul>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-start' }}>
+                    <button className="btn-new-resolution" style={{ background: '#004B85' }}>
+                      <Plus size={16} />
+                      Abrir vigencia 2027
+                    </button>
+                    <span style={{ fontSize: '11px', color: '#94a3b8' }}>Este proceso puede tardar unos minutos.</span>
+                  </div>
+                </div>
+              ) : activeTab === 'Parentescos' ? (
                 <div className="parentescos-wrapper">
                   {renderParentescosBody()}
                 </div>
@@ -888,15 +1118,24 @@ const GestionResoluciones: React.FC = () => {
           {/* ══ MODAL: Eliminar (contextual) ══ */}
           {isDeleteModalOpen && (
             <div className="modal-overlay">
-              <div className="modal-content">
-                <div className="modal-icon-container"><Trash2 size={26} /></div>
-                <h2 className="modal-title">¿Quieres eliminar este {deleteModalLabel()}?</h2>
+              <div className="modal-content-delete">
+                <div 
+                  className="modal-icon-container-delete"
+                  style={activeTab === 'Sub-especialidades' ? { background: '#dc2626', color: '#ffffff' } : {}}
+                >
+                  <Trash2 size={26} color={activeTab === 'Sub-especialidades' ? '#ffffff' : undefined} />
+                </div>
+                <h2 className="modal-title">¿Quieres eliminar est{activeTab === 'Sub-especialidades' ? 'a' : 'e'} {deleteModalLabel()}?</h2>
                 <p className="modal-description">
-                  Esta acción eliminará el {deleteModalLabel()} de <strong>forma permanente</strong> y no podrás recuperarlo después.
+                  Esta acción eliminará l{activeTab === 'Sub-especialidades' ? 'a' : 'e'} {deleteModalLabel()} de <strong>forma permanente</strong> y no podrás recuperarl{activeTab === 'Sub-especialidades' ? 'a' : 'o'} después.
                 </p>
                 <div className="modal-actions">
                   <button className="btn-modal btn-cancel" onClick={() => setIsDeleteModalOpen(false)}>Cancelar</button>
-                  <button className="btn-modal btn-delete" onClick={confirmDelete}>
+                  <button 
+                    className="btn-modal btn-delete" 
+                    onClick={confirmDelete}
+                    style={activeTab === 'Sub-especialidades' ? { background: '#dc2626', color: 'white' } : {}}
+                  >
                     <Trash2 size={16} />
                     Eliminar {deleteModalLabel()}
                   </button>
@@ -1424,6 +1663,97 @@ const GestionResoluciones: React.FC = () => {
                     </div>
                   </div>
 
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ══ MODAL: Editar Parentesco ══ */}
+          {isEditParentescoOpen && editParentescoTarget && (
+            <div className="modal-overlay" onClick={e => e.target === e.currentTarget && closeParentescoModal()}>
+              <div className="resolucion-modal user-edit-modal">
+                <div className="resolucion-modal-header">
+                  <h2 className="resolucion-modal-title">Editar Parentesco</h2>
+                  <button className="resolucion-modal-close" onClick={closeParentescoModal}><X size={18} /></button>
+                </div>
+                <div className="resolucion-modal-body user-edit-body">
+                  <div className="ue-field" style={{ gridColumn: '1 / -1' }}>
+                    <label className="ue-label">Nombre <HelpCircle size={13} className="rm-help" /></label>
+                    <div className="rm-select-wrapper">
+                      <input className="rm-input-plain" placeholder="Madre-Padre" value={parentescoForm.nombre} onChange={e => setParentescoForm(p => ({ ...p, nombre: e.target.value }))} />
+                      <span className="rm-select-arrow" style={{ paddingRight: '12px' }}>▾</span>
+                    </div>
+                  </div>
+                  <div className="ue-field" style={{ gridColumn: '1 / -1' }}>
+                    <label className="ue-label">Descripción <HelpCircle size={13} className="rm-help" /></label>
+                    <input className="ue-input" placeholder="Madre-Padre" value={parentescoForm.descripcion} onChange={e => setParentescoForm(p => ({ ...p, descripcion: e.target.value }))} />
+                  </div>
+                  <div className="ue-field" style={{ gridColumn: '1 / -1' }}>
+                    <label className="ue-label">Ámbito <HelpCircle size={13} className="rm-help" /></label>
+                    <input className="ue-input" placeholder="Nacional" value={parentescoForm.ambito} onChange={e => setParentescoForm(p => ({ ...p, ambito: e.target.value }))} />
+                  </div>
+                </div>
+                <div className="resolucion-modal-footer" style={{ justifyContent: 'flex-end', borderTop: 'none' }}>
+                  <div className="rm-footer-actions">
+                    <button className="rm-btn-cancel" onClick={closeParentescoModal} style={{ minWidth: '100px' }}>Cancelar</button>
+                    <button className="rm-btn-primary" onClick={handleSaveParentesco} style={{ background: '#004B85', minWidth: '160px', padding: '0 16px' }}>
+                      <Save size={15} style={{ marginRight: 6 }} />
+                      Guardar cambios
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ══ MODAL: Detalles SubEspecialidad ══ */}
+          {isViewSubOpen && selectedSubTarget && (
+            <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setIsViewSubOpen(false)}>
+              <div className="resolucion-modal user-edit-modal">
+                <div className="resolucion-modal-header">
+                  <h2 className="resolucion-modal-title">Detalles de la Sub-Especialidad</h2>
+                  <button className="resolucion-modal-close" onClick={() => setIsViewSubOpen(false)}><X size={18} /></button>
+                </div>
+                <div className="resolucion-modal-body user-edit-body">
+                  <div className="ue-row">
+                    <div className="ue-field">
+                      <label className="ue-label">Contratista <HelpCircle size={13} className="rm-help" /></label>
+                      <input className="ue-input" value="Juan Pérez" disabled />
+                    </div>
+                    <div className="ue-field">
+                      <label className="ue-label">NIT <HelpCircle size={13} className="rm-help" /></label>
+                      <input className="ue-input" value="Nivel 1" disabled />
+                    </div>
+                  </div>
+                  <div className="ue-row">
+                    <div className="ue-field" style={{ flex: 1 }}>
+                      <label className="ue-label">Estado <HelpCircle size={13} className="rm-help" /></label>
+                      <input className="ue-input" value="Activo" disabled />
+                    </div>
+                    <div className="ue-field" style={{ flex: 1 }}>
+                      <label className="ue-label">Consecutivo <HelpCircle size={13} className="rm-help" /></label>
+                      <input className="ue-input" value={selectedSubTarget.consecutivo} disabled />
+                    </div>
+                    <div className="ue-field" style={{ flex: 1 }}>
+                      <label className="ue-label">Regional <HelpCircle size={13} className="rm-help" /></label>
+                      <input className="ue-input" value="1" disabled />
+                    </div>
+                  </div>
+                  <div className="ue-row">
+                    <div className="ue-field">
+                      <label className="ue-label">Alergias <HelpCircle size={13} className="rm-help" /></label>
+                      <input className="ue-input" value="N/A" disabled />
+                    </div>
+                    <div className="ue-field">
+                      <label className="ue-label">Medicamentos <HelpCircle size={13} className="rm-help" /></label>
+                      <input className="ue-input" value="N/A" disabled />
+                    </div>
+                  </div>
+                </div>
+                <div className="resolucion-modal-footer" style={{ justifyContent: 'flex-end', borderTop: 'none' }}>
+                  <button className="rm-btn-primary" onClick={() => setIsViewSubOpen(false)} style={{ background: '#004B85', minWidth: '120px', padding: '10px 16px', justifyContent: 'center' }}>
+                    Cerrar
+                  </button>
                 </div>
               </div>
             </div>

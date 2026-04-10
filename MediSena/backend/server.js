@@ -144,6 +144,38 @@ app.get('/api/parentescos', (req, res) => {
 });
 
 // ──────────────────────────────────────────────
+// ⚙️ Parámetros Data
+// ──────────────────────────────────────────────
+let parametrosData = [
+  { id: 1, vigencia: '2025', regional: 'Regional Centro de Comercio y', resolucion: '824', razonSocial: 'Servicio Médico Asistencial - SENA', porcentajeNormal: '8%', vobos: 1 },
+  { id: 2, vigencia: '2025', regional: 'Regional Centro de Comercio y', resolucion: '824', razonSocial: 'Servicio Médico Asistencial - SENA', porcentajeNormal: '8%', vobos: 8 },
+  { id: 3, vigencia: '2025', regional: 'Regional Centro de Comercio y', resolucion: '824', razonSocial: 'Servicio Médico Asistencial - SENA', porcentajeNormal: '8%', vobos: 1 },
+  { id: 4, vigencia: '2025', regional: 'Regional Centro de Comercio y', resolucion: '824', razonSocial: 'Servicio Médico Asistencial - SENA', porcentajeNormal: '8%', vobos: 8 },
+  { id: 5, vigencia: '2025', regional: 'Regional Centro de Comercio y', resolucion: '824', razonSocial: 'Servicio Médico Asistencial - SENA', porcentajeNormal: '8%', vobos: 1 },
+];
+
+app.get('/api/parametros', (req, res) => {
+  console.log('Hit: /api/parametros');
+  res.json(parametrosData);
+});
+
+// ──────────────────────────────────────────────
+// 🏥 Sub-especialidades Data
+// ──────────────────────────────────────────────
+let subespecialidadesData = [
+  { id: 1, consecutivo: 1, nombre: 'Alergias', contratista: 'Nombre contratista', nit: '100021', regional: '63', medicamentos: '× No' },
+  { id: 2, consecutivo: 1, nombre: 'Alergias', contratista: 'Nombre contratista', nit: '100021', regional: '63', medicamentos: '× No' },
+  { id: 3, consecutivo: 1, nombre: 'Aparatos ortopedicos', contratista: 'Nombre contratista', nit: '100021', regional: '63', medicamentos: '× No' },
+  { id: 4, consecutivo: 1, nombre: 'Cardiologia', contratista: 'Nombre contratista', nit: '100021', regional: '63', medicamentos: '× No' },
+  { id: 5, consecutivo: 1, nombre: 'Cardiologia', contratista: 'Nombre contratista', nit: '100021', regional: '63', medicamentos: '× No' },
+];
+
+app.get('/api/subespecialidades', (req, res) => {
+  console.log('Hit: /api/subespecialidades');
+  res.json(subespecialidadesData);
+});
+
+// ──────────────────────────────────────────────
 // 🚀 Servidor
 // ──────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;
