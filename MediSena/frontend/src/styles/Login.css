@@ -6,6 +6,18 @@
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
+  position: relative;
+}
+
+.login-header-banner {
+  background-color: #3465CC;
+  height: 25px;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  box-sizing: border-box;
 }
 
 .login-main-content {
@@ -68,24 +80,22 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* Center horizontally */
+  padding-top: 45px; /* Espacio para que el banner no tape el logo */
 }
 
 /* Logo & Headers */
 .login-logo-img {
-  width: 210px;
-  /* Un poco mas grande */
-  margin-bottom: 0.8rem;
+  width: 160px; /* Reducido de 210px */
+  margin-bottom: 0.5rem;
   object-fit: contain;
 }
 
 .login-title-text {
-  font-size: 1.6rem;
+  font-size: 1.4rem; /* Reducido de 1.6rem */
   font-weight: 700;
   color: #1e3a5f;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem; /* Reducido de 1.5rem */
   align-self: flex-start;
-  /* Align text to left */
   width: 100%;
 }
 
@@ -94,7 +104,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.1rem; /* Reducido de 1.5rem */
 }
 
 .login-input-wrapper {
@@ -233,7 +243,7 @@
 }
 
 .login-sena-logo-container {
-  margin-top: 3rem;
+  margin-top: 1.5rem; /* Reducido de 3rem */
   display: flex;
   justify-content: center;
   align-items: center;

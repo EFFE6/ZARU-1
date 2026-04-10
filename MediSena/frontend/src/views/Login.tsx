@@ -59,7 +59,9 @@ const Login = () => {
   };
 
   return (
-    <div className="login-wrapper">
+    <div className="login-wrapper">      <div className="login-header-banner">
+      </div>
+
       <div className="login-main-content">
 
         {/* Background Lines - PNG images from Figma */}
