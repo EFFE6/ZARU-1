@@ -2693,3 +2693,72 @@
   border-radius: 20px;
   font-family: 'Work Sans', sans-serif;
 }
+
+/* ══════════════════════════════════════════════════════════
+   ABRIR VIGENCIA
+   ══════════════════════════════════════════════════════════ */
+.abr-vigencia-container {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 0 24px 24px 24px;
+}
+
+.abr-vigencia-container::-webkit-scrollbar {
+  display: none;
+}
+
+.vigencia-card-content {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.vigencia-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.vigencia-list {
+  color: #5c7a90;
+  font-size: 13px;
+  margin-left: 20px;
+  list-style-type: disc;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.vigencia-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+  margin-top: 16px;
+}
+
+.vigencia-footer-info {
+  font-size: 13px;
+  color: #94a3b8;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+@media (max-width: 768px) {
+  .abr-vigencia-container {
+    padding: 0 16px 16px 16px;
+  }
+  
+  .vigencia-card-content {
+    padding: 24px;
+    gap: 20px;
+  }
+  
+  .vigencia-sections {
+    gap: 24px;
+  }
+}

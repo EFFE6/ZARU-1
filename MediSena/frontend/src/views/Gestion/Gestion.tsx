@@ -481,30 +481,32 @@ const Gestion: React.FC = () => {
               )}
 
               {/* Paginación */}
-              <div className="pagination-footer">
-                <div className="items-per-page">
-                  <span>Elementos por página</span>
-                  <div className="items-select-wrapper">
-                    <select className="items-select" value={itemsPerPage} onChange={e => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}>
-                      <option value={5}>5</option>
-                      <option value={10}>10</option>
-                      <option value={20}>20</option>
-                    </select>
+              {activeTab !== 'Abrir vigencia' && (
+                <div className="pagination-footer">
+                  <div className="items-per-page">
+                    <span>Elementos por página</span>
+                    <div className="items-select-wrapper">
+                      <select className="items-select" value={itemsPerPage} onChange={e => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}>
+                        <option value={5}>5</option>
+                        <option value={10}>10</option>
+                        <option value={20}>20</option>
+                      </select>
+                    </div>
                   </div>
+                  <div className="page-controls">
+                    <button className="page-nav-btn" onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}>
+                      <ChevronLeft size={18} />
+                    </button>
+                    {visiblePages.map(n => (
+                      <button key={n} className={`page-num-btn ${currentPage === n ? 'active' : ''}`} onClick={() => setCurrentPage(n)}>{n}</button>
+                    ))}
+                    <button className="page-nav-btn" onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}>
+                      <ChevronRight size={18} />
+                    </button>
+                  </div>
+                  <div className="page-info-total">{currentPage} - de {totalPages} páginas</div>
                 </div>
-                <div className="page-controls">
-                  <button className="page-nav-btn" onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}>
-                    <ChevronLeft size={18} />
-                  </button>
-                  {visiblePages.map(n => (
-                    <button key={n} className={`page-num-btn ${currentPage === n ? 'active' : ''}`} onClick={() => setCurrentPage(n)}>{n}</button>
-                  ))}
-                  <button className="page-nav-btn" onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}>
-                    <ChevronRight size={18} />
-                  </button>
-                </div>
-                <div className="page-info-total">{currentPage} - de {totalPages} páginas</div>
-              </div>
+              )}
             </div>
           </div>
 

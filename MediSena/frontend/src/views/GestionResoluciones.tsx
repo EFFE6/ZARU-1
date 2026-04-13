@@ -1040,38 +1040,65 @@ const GestionResoluciones: React.FC = () => {
 
               {/* Contenido principal */}
               {activeTab === 'Abrir vigencia' ? (
-                <div style={{ padding: '32px' }}>
-                  <div className="um-alert warning" style={{ background: '#fef9c3', border: '1px solid #fde047', color: '#854d0e', marginBottom: '24px' }}>
-                    <AlertTriangle size={15} className="um-alert-icon" color="#d97706" />
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                      <strong style={{ color: '#002c4d', fontSize: '12px' }}>Atención</strong>
-                      <span style={{ fontSize: '11px', color: '#5c7a90' }}>Este proceso solo puede ser ejecutado en la nueva vigencia 2027.</span>
+                <div className="abr-vigencia-container">
+                  <div className="vigencia-card-content">
+                    {/* Alerta de atención */}
+                    <div className="um-alert warning" style={{ marginBottom: 0 }}>
+                      <AlertTriangle size={16} className="um-alert-icon" color="#d97706" />
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        <strong style={{ color: '#002c4d', fontSize: '13px' }}>Atención</strong>
+                        <span style={{ fontSize: '12px', color: '#5c7a90' }}>
+                          Este proceso solo puede ser ejecutado en la nueva vigencia 2027.
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                  <h3 style={{ color: '#004B85', fontSize: '16px', marginBottom: '16px' }}>¿Qué pasará al abrir la nueva vigencia?</h3>
-                  <p style={{ color: '#5c7a90', fontSize: '12px', marginBottom: '8px' }}>Se copiarán automáticamente los siguientes datos de la vigencia anterior:</p>
-                  <ul style={{ color: '#5c7a90', fontSize: '12px', marginLeft: '20px', marginBottom: '24px', listStyleType: 'disc' }}>
-                    <li>Parámetros</li>
-                    <li>Resoluciones</li>
-                    <li>Topes</li>
-                    <li>Cargos</li>
-                    <li>Cargos por funcionario</li>
-                    <li>Categorías por regional</li>
-                    <li>Beneficiarios (se actualizarán los suspendidos)</li>
-                  </ul>
-                  <h3 style={{ color: '#004B85', fontSize: '16px', marginBottom: '16px' }}>Procesos que se activarán</h3>
-                  <p style={{ color: '#5c7a90', fontSize: '12px', marginBottom: '8px' }}>Después de crear la vigencia, podrás usar:</p>
-                  <ul style={{ color: '#5c7a90', fontSize: '12px', marginLeft: '20px', marginBottom: '40px', listStyleType: 'disc' }}>
-                    <li>Órdenes de atención</li>
-                    <li>Cuentas de cobro</li>
-                    <li>Recibos de pago</li>
-                  </ul>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-start' }}>
-                    <button className="btn-new-resolution" style={{ background: '#004B85' }}>
-                      <Plus size={16} />
-                      Abrir vigencia 2027
-                    </button>
-                    <span style={{ fontSize: '11px', color: '#94a3b8' }}>Este proceso puede tardar unos minutos.</span>
+
+                    <div className="vigencia-sections">
+                      {/* Sección: ¿Qué pasará? */}
+                      <div className="vigencia-section">
+                        <h2 style={{ color: '#1e3a52', fontSize: '20px', marginBottom: '16px', fontWeight: 900, letterSpacing: '-0.02em' }}>
+                          ¿Qué pasará al abrir la nueva vigencia?
+                        </h2>
+                        <p style={{ color: '#5c7a90', fontSize: '14px', marginBottom: '12px', fontWeight: 500 }}>
+                          Se copiarán automáticamente los siguientes datos de la vigencia anterior:
+                        </p>
+                        <ul className="vigencia-list">
+                          <li>Parámetros</li>
+                          <li>Resoluciones</li>
+                          <li>Topes</li>
+                          <li>Cargos</li>
+                          <li>Cargos por funcionario</li>
+                          <li>Categorías por regional</li>
+                          <li>Beneficiarios (se actualizarán los suspendidos)</li>
+                        </ul>
+                      </div>
+
+                      {/* Sección: Procesos que se activarán */}
+                      <div className="vigencia-section">
+                        <h2 style={{ color: '#1e3a52', fontSize: '20px', marginBottom: '16px', fontWeight: 900, letterSpacing: '-0.02em' }}>
+                          Procesos que se activarán
+                        </h2>
+                        <p style={{ color: '#5c7a90', fontSize: '14px', marginBottom: '12px', fontWeight: 500 }}>
+                          Después de crear la vigencia, podrás usar:
+                        </p>
+                        <ul className="vigencia-list">
+                          <li>Órdenes de atención</li>
+                          <li>Cuentas de cobro</li>
+                          <li>Recibos de pago</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    {/* Acciones finales */}
+                    <div className="vigencia-actions">
+                      <button className="btn-new-resolution" style={{ background: '#002c4d', padding: '12px 24px', borderRadius: '10px' }}>
+                        <Plus size={18} />
+                        Abrir vigencia 2027
+                      </button>
+                      <p className="vigencia-footer-info">
+                        Este proceso puede tardar unos minutos.
+                      </p>
+                    </div>
                   </div>
                 </div>
               ) : activeTab === 'Parentescos' ? (
