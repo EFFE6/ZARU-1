@@ -2,7 +2,7 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './views/Login';
 import Dashboard from './views/Dashboard';
-import GestionResoluciones from './views/GestionResoluciones';
+import Gestion from './views/Gestion/Gestion';
 import './App.css';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -26,7 +26,7 @@ function App() {
         } 
       />
       <Route path="/dashboard" element={<Navigate to="/" replace />} />
-      <Route path="/gestion" element={<ProtectedRoute><GestionResoluciones /></ProtectedRoute>} />
+      <Route path="/gestion" element={<ProtectedRoute><Gestion /></ProtectedRoute>} />
       <Route path="/datos-basicos" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
       <Route path="/movimientos" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
       <Route path="/excedentes" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
