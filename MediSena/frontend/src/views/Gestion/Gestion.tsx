@@ -30,8 +30,8 @@ import {
 import {
   EMPTY_PARENTESCO_FORM, ParentescosToolbar, ParentescosLista, EditParentescoModal,
 } from './Parentescos';
-import { ParametrosToolbar, ParametrosHead, ParametrosTabla } from './Parametros';
-import { SubEspecialidadesToolbar, SubEspecialidadesHead, SubEspecialidadesTabla, ViewSubModal } from './SubEspecialidades';
+import { ParametrosToolbar, ParametrosHead, ParametrosTabla, EditParametroModal } from './Parametros';
+import { SubEspecialidadesToolbar, SubEspecialidadesHead, SubEspecialidadesTabla, EditSubModal } from './SubEspecialidades';
 import AbrirVigencia from './AbrirVigencia';
 
 /* ════════════════════════════════════════════════════════════
@@ -97,8 +97,14 @@ const Gestion: React.FC = () => {
   const [parentescoForm, setParentescoForm] = useState({ ...EMPTY_PARENTESCO_FORM });
 
   /* ── Modal SubEspecialidad ── */
-  const [isViewSubOpen, setIsViewSubOpen] = useState(false);
+  const [isEditSubOpen, setIsEditSubOpen] = useState(false);
   const [selectedSubTarget, setSelectedSubTarget] = useState<SubEspecialidad | null>(null);
+  const [subForm, setSubForm] = useState({ consecutivo: '', nombre: '', contratista: '', nit: '', regional: '', medicamentos: '' });
+
+  /* ── Modal Parametro ── */
+  const [isEditParametroOpen, setIsEditParametroOpen] = useState(false);
+  const [editParametroTarget, setEditParametroTarget] = useState<Parametro | null>(null);
+  const [parametroForm, setParametroForm] = useState({ vigencia: '', regional: '', resolucion: '', razonSocial: '', porcentajeNormal: '', vobos: '' });
 
   /* ── Tooltip regional ── */
   const [tooltip, setTooltip] = useState<{ id: number; text: string } | null>(null);
@@ -196,6 +202,33 @@ const Gestion: React.FC = () => {
     const end = Math.min(totalPages, currentPage + delta);
     return Array.from({ length: end - start + 1 }, (_, i) => start + i);
   }, [currentPage, totalPages]);
+
+  /* ─── Handlers Parametros ────────────────────────────── */
+  const openEditParametro = (p: Parametro) => {
+    setEditParametroTarget(p);
+    setParametroForm({ vigencia: p.vigencia, regional: p.regional, resolucion: p.resolucion, razonSocial: p.razonSocial, porcentajeNormal: p.porcentajeNormal, vobos: p.vobos.toString() });
+    setIsEditParametroOpen(true);
+  };
+  const closeParametroModal = () => { setIsEditParametroOpen(false); setEditParametroTarget(null); };
+  const handleSaveParametro = () => {
+    if (!editParametroTarget) return;
+    setParametros(p => p.map(x => x.id === editParametroTarget.id ? { ...x, vigencia: parametroForm.vigencia, regional: parametroForm.regional, resolucion: parametroForm.resolucion, razonSocial: parametroForm.razonSocial, porcentajeNormal: parametroForm.porcentajeNormal, vobos: parseInt(parametroForm.vobos) || 0 } : x));
+    closeParametroModal();
+  };
+
+  /* ─── Handlers SubEspecialidad ───────────────────────── */
+  const openEditSub = (s: SubEspecialidad) => {
+    setSelectedSubTarget(s);
+    setSubForm({ consecutivo: s.consecutivo.toString(), nombre: s.nombre, contratista: s.contratista, nit: s.nit, regional: s.regional, medicamentos: s.medicamentos.toString() });
+    setIsEditSubOpen(true);
+  };
+  const closeSubModal = () => { setIsEditSubOpen(false); setSelectedSubTarget(null); };
+  const handleSaveSub = () => {
+    if (!selectedSubTarget) return;
+    setSubespecialidades(p => p.map(x => x.id === selectedSubTarget.id ? { ...x, consecutivo: parseInt(subForm.consecutivo) || 0, nombre: subForm.nombre, contratista: subForm.contratista, nit: subForm.nit, regional: subForm.regional, medicamentos: parseInt(subForm.medicamentos) || 0 } : x));
+    closeSubModal();
+  };
+
 
   /* ─── Handlers eliminar ──────────────────────────── */
   const handleDeleteClick = (item: any) => { setItemToDelete(item); setIsDeleteModalOpen(true); };
@@ -387,13 +420,14 @@ const Gestion: React.FC = () => {
         loading={loading}
         tooltip={tooltip}
         onTooltip={setTooltip}
+        onEdit={openEditParametro}
       />
     );
     if (activeTab === 'Sub-especialidades') return (
       <SubEspecialidadesTabla
         items={currentItems as SubEspecialidad[]}
         loading={loading}
-        onView={s => { setSelectedSubTarget(s); setIsViewSubOpen(true); }}
+        onView={openEditSub}
         onDelete={handleDeleteClick}
       />
     );
@@ -708,9 +742,24 @@ const Gestion: React.FC = () => {
             />
           )}
 
-          {/* ══ MODAL: Ver Sub-especialidad ══ */}
-          {isViewSubOpen && selectedSubTarget && (
-            <ViewSubModal sub={selectedSubTarget} onClose={() => setIsViewSubOpen(false)} />
+          {/* ══ MODAL: Editar Sub-especialidad ══ */}
+          {isEditSubOpen && selectedSubTarget && (
+            <EditSubModal
+              form={subForm}
+              onFormChange={(f, v) => setSubForm(p => ({ ...p, [f]: v }))}
+              onClose={closeSubModal}
+              onSave={handleSaveSub}
+            />
+          )}
+
+          {/* ══ MODAL: Editar Parametro ══ */}
+          {isEditParametroOpen && editParametroTarget && (
+            <EditParametroModal
+              form={parametroForm}
+              onFormChange={(f, v) => setParametroForm(p => ({ ...p, [f]: v }))}
+              onClose={closeParametroModal}
+              onSave={handleSaveParametro}
+            />
           )}
 
         </div>

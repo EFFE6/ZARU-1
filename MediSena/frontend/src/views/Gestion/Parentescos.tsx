@@ -84,18 +84,15 @@ export const EditParentescoModal: React.FC<EditParentescoModalProps> = ({
         <button className="resolucion-modal-close" onClick={onClose}><X size={18} /></button>
       </div>
       <div className="resolucion-modal-body user-edit-body">
-        <div className="ue-field" style={{ gridColumn: '1 / -1' }}>
+        <div className="ue-field">
           <label className="ue-label">Nombre <HelpCircle size={13} className="rm-help" /></label>
-          <div className="rm-select-wrapper">
-            <input className="rm-input-plain" placeholder="Madre-Padre" value={form.nombre} onChange={e => onFormChange('nombre', e.target.value)} />
-            <span className="rm-select-arrow" style={{ paddingRight: '12px' }}>▾</span>
-          </div>
+          <input className="ue-input" placeholder="Madre-Padre" value={form.nombre} onChange={e => onFormChange('nombre', e.target.value)} />
         </div>
-        <div className="ue-field" style={{ gridColumn: '1 / -1' }}>
+        <div className="ue-field">
           <label className="ue-label">Descripción <HelpCircle size={13} className="rm-help" /></label>
           <input className="ue-input" placeholder="Madre-Padre" value={form.descripcion} onChange={e => onFormChange('descripcion', e.target.value)} />
         </div>
-        <div className="ue-field" style={{ gridColumn: '1 / -1' }}>
+        <div className="ue-field">
           <label className="ue-label">Ámbito <HelpCircle size={13} className="rm-help" /></label>
           <input className="ue-input" placeholder="Nacional" value={form.ambito} onChange={e => onFormChange('ambito', e.target.value)} />
         </div>
@@ -103,8 +100,8 @@ export const EditParentescoModal: React.FC<EditParentescoModalProps> = ({
       <div className="resolucion-modal-footer" style={{ justifyContent: 'flex-end', borderTop: 'none' }}>
         <div className="rm-footer-actions">
           <button className="rm-btn-cancel" onClick={onClose} style={{ minWidth: '100px' }}>Cancelar</button>
-          <button className="rm-btn-primary" onClick={onSave} style={{ background: '#004B85', minWidth: '160px', padding: '0 16px' }}>
-            <Save size={15} style={{ marginRight: 6 }} />
+          <button className="rm-btn-primary" onClick={onSave} style={{ minWidth: '160px' }}>
+            <Save size={15} />
             Guardar cambios
           </button>
         </div>

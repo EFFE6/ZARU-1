@@ -276,7 +276,14 @@ const GestionResoluciones: React.FC = () => {
 
   /* ── Modal SubEspecialidad ── */
   const [isViewSubOpen, setIsViewSubOpen] = useState(false);
+  const [isEditSubOpen, setIsEditSubOpen] = useState(false);
   const [selectedSubTarget, setSelectedSubTarget] = useState<SubEspecialidad | null>(null);
+  const [subForm, setSubForm] = useState({ consecutivo: '', nombre: '', contratista: '', nit: '', regional: '', medicamentos: '' });
+
+  /* ── Modal Parametro ── */
+  const [isEditParametroOpen, setIsEditParametroOpen] = useState(false);
+  const [editParametroTarget, setEditParametroTarget] = useState<Parametro | null>(null);
+  const [parametroForm, setParametroForm] = useState({ vigencia: '', regional: '', resolucion: '', razonSocial: '', porcentajeNormal: '', vobos: '' });
 
   /* ── Tooltip regional ── */
   const [tooltip, setTooltip] = useState<{ id: number; text: string } | null>(null);
@@ -508,6 +515,32 @@ const GestionResoluciones: React.FC = () => {
     if (!editParentescoTarget) return;
     setParentescos(p => p.map(x => x.id === editParentescoTarget.id ? { ...x, nombre: parentescoForm.nombre, tipo: parentescoForm.ambito } : x));
     closeParentescoModal();
+  };
+
+  /* ─── Handlers Parametros ────────────────────────────── */
+  const openEditParametro = (p: Parametro) => {
+    setEditParametroTarget(p);
+    setParametroForm({ vigencia: p.vigencia, regional: p.regional, resolucion: p.resolucion, razonSocial: p.razonSocial, porcentajeNormal: p.porcentajeNormal, vobos: p.vobos.toString() });
+    setIsEditParametroOpen(true);
+  };
+  const closeParametroModal = () => { setIsEditParametroOpen(false); setEditParametroTarget(null); };
+  const handleSaveParametro = () => {
+    if (!editParametroTarget) return;
+    setParametros(p => p.map(x => x.id === editParametroTarget.id ? { ...x, vigencia: parametroForm.vigencia, regional: parametroForm.regional, resolucion: parametroForm.resolucion, razonSocial: parametroForm.razonSocial, porcentajeNormal: parametroForm.porcentajeNormal, vobos: parseInt(parametroForm.vobos) || 0 } : x));
+    closeParametroModal();
+  };
+
+  /* ─── Handlers Sub-especialidades ─────────────────────── */
+  const openEditSub = (s: SubEspecialidad) => {
+    setSelectedSubTarget(s);
+    setSubForm({ consecutivo: s.consecutivo.toString(), nombre: s.nombre, contratista: s.contratista, nit: s.nit, regional: s.regional, medicamentos: s.medicamentos.toString() });
+    setIsEditSubOpen(true);
+  };
+  const closeSubModal = () => { setIsEditSubOpen(false); setSelectedSubTarget(null); };
+  const handleSaveSub = () => {
+    if (!selectedSubTarget) return;
+    setSubespecialidades(p => p.map(x => x.id === selectedSubTarget.id ? { ...x, consecutivo: parseInt(subForm.consecutivo) || 0, nombre: subForm.nombre, contratista: subForm.contratista, nit: subForm.nit, regional: subForm.regional, medicamentos: parseInt(subForm.medicamentos) || 0 } : x));
+    closeSubModal();
   };
 
   /* ─── Render toolbar según tab ──────────────────────── */
@@ -915,7 +948,7 @@ const GestionResoluciones: React.FC = () => {
           <td>{p.vobos}</td>
           <td>
             <div className="row-actions">
-              <button className="icon-btn edit"><Edit2 size={15} /></button>
+              <button className="icon-btn edit" onClick={() => openEditParametro(p)}><Edit2 size={15} /></button>
             </div>
           </td>
         </tr>
@@ -938,7 +971,7 @@ const GestionResoluciones: React.FC = () => {
           <td><span style={{ color: '#e11d48', fontWeight: 600 }}>{s.medicamentos}</span></td>
           <td>
             <div className="row-actions">
-              <button className="icon-btn edit" onClick={() => { setSelectedSubTarget(s); setIsViewSubOpen(true); }}><Edit2 size={15} /></button>
+              <button className="icon-btn edit" onClick={() => openEditSub(s)}><Edit2 size={15} /></button>
               <button className="icon-btn delete" onClick={() => handleDeleteClick(s)}><Trash2 size={15} /></button>
             </div>
           </td>
@@ -1253,11 +1286,11 @@ const GestionResoluciones: React.FC = () => {
           {isViewTopeOpen && selectedTope && (
             <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setIsViewTopeOpen(false)}>
               <div className="resolucion-modal tope-view-modal">
-                <div className="resolucion-modal-header" style={{ paddingBottom: '16px' }}>
+                <div className="resolucion-modal-header">
                   <h2 className="resolucion-modal-title">{selectedTope.grupo}</h2>
                   <button className="resolucion-modal-close" onClick={() => setIsViewTopeOpen(false)}><X size={18} /></button>
                 </div>
-                <div className="resolucion-modal-body tope-view-body" style={{ padding: '0 32px 32px 32px' }}>
+                <div className="resolucion-modal-body tope-view-body" style={{ padding: '24px 32px' }}>
                   
                   {/* Alerta */}
                   <div className="tope-alert">
@@ -1280,7 +1313,7 @@ const GestionResoluciones: React.FC = () => {
                     </div>
                     <div className="ti-col">
                       <div className="ti-label">Nivel</div>
-                      <div className="ti-val ti-n4">N4</div>
+                      <div className="ti-val ti-n4">{selectedTope.nivel}</div>
                     </div>
                     <div className="ti-col">
                       <div className="ti-label">Vigencia</div>
@@ -1292,14 +1325,18 @@ const GestionResoluciones: React.FC = () => {
                     </div>
                     <div className="ti-col">
                       <div className="ti-label">Estado</div>
-                      <div className="ti-val"><span className="ti-badge-history">Histórico</span></div>
+                      <div className="ti-val">
+                        <span className={`ti-badge-history ${selectedTope.estado === 'Vigente' ? 'vigente' : 'historico'}`}>
+                          {selectedTope.estado}
+                        </span>
+                      </div>
                     </div>
                   </div>
 
                   {/* Categorías Normales */}
                   <div className="tope-section">
                     <div className="ts-header ts-blue">Topes Máximos - Categorías Normales</div>
-                    <div className="ts-row"><span>Tope máximo del grupo en categoría A Normal</span><strong>$ 0</strong></div>
+                    <div className="ts-row"><span>Tope máximo del grupo en categoría A Normal</span><strong>{selectedTope.valorPromedio}</strong></div>
                     <div className="ts-row"><span>Tope máximo del grupo en categoría B Normal</span><strong>$ 0</strong></div>
                     <div className="ts-row"><span>Tope máximo del grupo en categoría C Normal</span><strong>$ 0</strong></div>
                     <div className="ts-row"><span>Tope máximo del grupo en categoría D Normal</span><strong>$ 0</strong></div>
@@ -1315,8 +1352,8 @@ const GestionResoluciones: React.FC = () => {
                   </div>
 
                 </div>
-                <div className="resolucion-modal-footer" style={{ borderTop: 'none', padding: '0 32px 32px 32px', justifyContent: 'flex-end' }}>
-                  <button className="rm-btn-primary" onClick={() => setIsViewTopeOpen(false)} style={{ minWidth: '140px', justifyContent: 'center' }}>
+                <div className="resolucion-modal-footer" style={{ borderTop: 'none', padding: '16px 32px 32px 32px', justifyContent: 'flex-end' }}>
+                  <button className="rm-btn-primary" onClick={() => setIsViewTopeOpen(false)} style={{ minWidth: '140px' }}>
                     Cerrar
                   </button>
                 </div>
@@ -1704,18 +1741,15 @@ const GestionResoluciones: React.FC = () => {
                   <button className="resolucion-modal-close" onClick={closeParentescoModal}><X size={18} /></button>
                 </div>
                 <div className="resolucion-modal-body user-edit-body">
-                  <div className="ue-field" style={{ gridColumn: '1 / -1' }}>
+                  <div className="ue-field">
                     <label className="ue-label">Nombre <HelpCircle size={13} className="rm-help" /></label>
-                    <div className="rm-select-wrapper">
-                      <input className="rm-input-plain" placeholder="Madre-Padre" value={parentescoForm.nombre} onChange={e => setParentescoForm(p => ({ ...p, nombre: e.target.value }))} />
-                      <span className="rm-select-arrow" style={{ paddingRight: '12px' }}>▾</span>
-                    </div>
+                    <input className="ue-input" placeholder="Madre-Padre" value={parentescoForm.nombre} onChange={e => setParentescoForm(p => ({ ...p, nombre: e.target.value }))} />
                   </div>
-                  <div className="ue-field" style={{ gridColumn: '1 / -1' }}>
+                  <div className="ue-field">
                     <label className="ue-label">Descripción <HelpCircle size={13} className="rm-help" /></label>
                     <input className="ue-input" placeholder="Madre-Padre" value={parentescoForm.descripcion} onChange={e => setParentescoForm(p => ({ ...p, descripcion: e.target.value }))} />
                   </div>
-                  <div className="ue-field" style={{ gridColumn: '1 / -1' }}>
+                  <div className="ue-field">
                     <label className="ue-label">Ámbito <HelpCircle size={13} className="rm-help" /></label>
                     <input className="ue-input" placeholder="Nacional" value={parentescoForm.ambito} onChange={e => setParentescoForm(p => ({ ...p, ambito: e.target.value }))} />
                   </div>
@@ -1723,8 +1757,8 @@ const GestionResoluciones: React.FC = () => {
                 <div className="resolucion-modal-footer" style={{ justifyContent: 'flex-end', borderTop: 'none' }}>
                   <div className="rm-footer-actions">
                     <button className="rm-btn-cancel" onClick={closeParentescoModal} style={{ minWidth: '100px' }}>Cancelar</button>
-                    <button className="rm-btn-primary" onClick={handleSaveParentesco} style={{ background: '#004B85', minWidth: '160px', padding: '0 16px' }}>
-                      <Save size={15} style={{ marginRight: 6 }} />
+                    <button className="rm-btn-primary" onClick={handleSaveParentesco} style={{ minWidth: '160px' }}>
+                      <Save size={15} />
                       Guardar cambios
                     </button>
                   </div>
@@ -1733,58 +1767,112 @@ const GestionResoluciones: React.FC = () => {
             </div>
           )}
 
-          {/* ══ MODAL: Detalles SubEspecialidad ══ */}
-          {isViewSubOpen && selectedSubTarget && (
-            <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setIsViewSubOpen(false)}>
+          {/* ══ MODAL: Editar SubEspecialidad ══ */}
+          {isEditSubOpen && selectedSubTarget && (
+            <div className="modal-overlay" onClick={e => e.target === e.currentTarget && closeSubModal()}>
               <div className="resolucion-modal user-edit-modal">
                 <div className="resolucion-modal-header">
-                  <h2 className="resolucion-modal-title">Detalles de la Sub-Especialidad</h2>
-                  <button className="resolucion-modal-close" onClick={() => setIsViewSubOpen(false)}><X size={18} /></button>
+                  <h2 className="resolucion-modal-title">Editar Sub-Especialidad</h2>
+                  <button className="resolucion-modal-close" onClick={closeSubModal}><X size={18} /></button>
                 </div>
                 <div className="resolucion-modal-body user-edit-body">
                   <div className="ue-row">
                     <div className="ue-field">
-                      <label className="ue-label">Contratista <HelpCircle size={13} className="rm-help" /></label>
-                      <input className="ue-input" value="Juan Pérez" disabled />
+                      <label className="ue-label">Nombre <HelpCircle size={13} className="rm-help" /></label>
+                      <input className="ue-input" value={subForm.nombre} onChange={e => setSubForm(p => ({ ...p, nombre: e.target.value }))} />
                     </div>
+                    <div className="ue-field">
+                      <label className="ue-label">Contratista <HelpCircle size={13} className="rm-help" /></label>
+                      <input className="ue-input" value={subForm.contratista} onChange={e => setSubForm(p => ({ ...p, contratista: e.target.value }))} />
+                    </div>
+                  </div>
+                  <div className="ue-row">
                     <div className="ue-field">
                       <label className="ue-label">NIT <HelpCircle size={13} className="rm-help" /></label>
-                      <input className="ue-input" value="Nivel 1" disabled />
+                      <input className="ue-input" value={subForm.nit} onChange={e => setSubForm(p => ({ ...p, nit: e.target.value }))} />
+                    </div>
+                    <div className="ue-field">
+                      <label className="ue-label">Regional <HelpCircle size={13} className="rm-help" /></label>
+                      <input className="ue-input" value={subForm.regional} onChange={e => setSubForm(p => ({ ...p, regional: e.target.value }))} />
                     </div>
                   </div>
                   <div className="ue-row">
-                    <div className="ue-field" style={{ flex: 1 }}>
-                      <label className="ue-label">Estado <HelpCircle size={13} className="rm-help" /></label>
-                      <input className="ue-input" value="Activo" disabled />
-                    </div>
                     <div className="ue-field" style={{ flex: 1 }}>
                       <label className="ue-label">Consecutivo <HelpCircle size={13} className="rm-help" /></label>
-                      <input className="ue-input" value={selectedSubTarget.consecutivo} disabled />
+                      <input className="ue-input" type="number" value={subForm.consecutivo} onChange={e => setSubForm(p => ({ ...p, consecutivo: e.target.value }))} />
                     </div>
                     <div className="ue-field" style={{ flex: 1 }}>
-                      <label className="ue-label">Regional <HelpCircle size={13} className="rm-help" /></label>
-                      <input className="ue-input" value="1" disabled />
-                    </div>
-                  </div>
-                  <div className="ue-row">
-                    <div className="ue-field">
-                      <label className="ue-label">Alergias <HelpCircle size={13} className="rm-help" /></label>
-                      <input className="ue-input" value="N/A" disabled />
-                    </div>
-                    <div className="ue-field">
                       <label className="ue-label">Medicamentos <HelpCircle size={13} className="rm-help" /></label>
-                      <input className="ue-input" value="N/A" disabled />
+                      <input className="ue-input" type="number" value={subForm.medicamentos} onChange={e => setSubForm(p => ({ ...p, medicamentos: e.target.value }))} />
                     </div>
                   </div>
                 </div>
                 <div className="resolucion-modal-footer" style={{ justifyContent: 'flex-end', borderTop: 'none' }}>
-                  <button className="rm-btn-primary" onClick={() => setIsViewSubOpen(false)} style={{ background: '#004B85', minWidth: '120px', padding: '10px 16px', justifyContent: 'center' }}>
-                    Cerrar
-                  </button>
+                  <div className="rm-footer-actions">
+                    <button className="rm-btn-cancel" onClick={closeSubModal} style={{ minWidth: '100px' }}>Cancelar</button>
+                    <button className="rm-btn-primary" onClick={handleSaveSub} style={{ minWidth: '160px' }}>
+                      <Save size={15} />
+                      Guardar cambios
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           )}
+
+          {/* ══ MODAL: Editar Parametro ══ */}
+          {isEditParametroOpen && editParametroTarget && (
+            <div className="modal-overlay" onClick={e => e.target === e.currentTarget && closeParametroModal()}>
+              <div className="resolucion-modal user-edit-modal">
+                <div className="resolucion-modal-header">
+                  <h2 className="resolucion-modal-title">Editar Parámetro</h2>
+                  <button className="resolucion-modal-close" onClick={closeParametroModal}><X size={18} /></button>
+                </div>
+                <div className="resolucion-modal-body user-edit-body">
+                  <div className="ue-row">
+                    <div className="ue-field">
+                      <label className="ue-label">Vigencia <HelpCircle size={13} className="rm-help" /></label>
+                      <input className="ue-input" value={parametroForm.vigencia} onChange={e => setParametroForm(p => ({ ...p, vigencia: e.target.value }))} />
+                    </div>
+                    <div className="ue-field">
+                      <label className="ue-label">Regional <HelpCircle size={13} className="rm-help" /></label>
+                      <input className="ue-input" value={parametroForm.regional} onChange={e => setParametroForm(p => ({ ...p, regional: e.target.value }))} />
+                    </div>
+                  </div>
+                  <div className="ue-row">
+                    <div className="ue-field">
+                      <label className="ue-label">Resolución <HelpCircle size={13} className="rm-help" /></label>
+                      <input className="ue-input" value={parametroForm.resolucion} onChange={e => setParametroForm(p => ({ ...p, resolucion: e.target.value }))} />
+                    </div>
+                    <div className="ue-field">
+                      <label className="ue-label">Razón Social <HelpCircle size={13} className="rm-help" /></label>
+                      <input className="ue-input" value={parametroForm.razonSocial} onChange={e => setParametroForm(p => ({ ...p, razonSocial: e.target.value }))} />
+                    </div>
+                  </div>
+                  <div className="ue-row">
+                    <div className="ue-field">
+                      <label className="ue-label">% SMLV <HelpCircle size={13} className="rm-help" /></label>
+                      <input className="ue-input" value={parametroForm.porcentajeNormal} onChange={e => setParametroForm(p => ({ ...p, porcentajeNormal: e.target.value }))} />
+                    </div>
+                    <div className="ue-field">
+                      <label className="ue-label">VoBos <HelpCircle size={13} className="rm-help" /></label>
+                      <input className="ue-input" type="number" value={parametroForm.vobos} onChange={e => setParametroForm(p => ({ ...p, vobos: e.target.value }))} />
+                    </div>
+                  </div>
+                </div>
+                <div className="resolucion-modal-footer" style={{ justifyContent: 'flex-end', borderTop: 'none' }}>
+                  <div className="rm-footer-actions">
+                    <button className="rm-btn-cancel" onClick={closeParametroModal} style={{ minWidth: '100px' }}>Cancelar</button>
+                    <button className="rm-btn-primary" onClick={handleSaveParametro} style={{ minWidth: '160px' }}>
+                      <Save size={15} />
+                      Guardar cambios
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
 
         </div>
       </main>

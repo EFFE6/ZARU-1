@@ -89,14 +89,16 @@ export const SubEspecialidadesTabla: React.FC<SubEspecialidadesTablaProps> = ({
 };
 
 /* ══════════════════════════════════════════════════════
-   MODAL DETALLES SUB-ESPECIALIDAD
+   MODAL EDITAR SUB-ESPECIALIDAD
    ══════════════════════════════════════════════════════ */
-interface ViewSubModalProps {
-  sub: SubEspecialidad;
+interface EditSubModalProps {
+  form: { consecutivo: string; nombre: string; contratista: string; nit: string; regional: string; medicamentos: string };
+  onFormChange: (field: string, value: string) => void;
   onClose: () => void;
+  onSave: () => void;
 }
 
-export const ViewSubModal: React.FC<ViewSubModalProps> = ({ sub, onClose }) => (
+export const EditSubModal: React.FC<EditSubModalProps> = ({ form, onFormChange, onClose, onSave }) => (
   <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
     <div className="resolucion-modal user-edit-modal">
       <div className="resolucion-modal-header">
@@ -106,47 +108,43 @@ export const ViewSubModal: React.FC<ViewSubModalProps> = ({ sub, onClose }) => (
       <div className="resolucion-modal-body user-edit-body">
         <div className="ue-row">
           <div className="ue-field">
-            <label className="ue-label">Contratista <HelpCircle size={13} className="rm-help" /></label>
-            <input className="ue-input" value="Juan Pérez" disabled />
+            <label className="ue-label">Nombre <HelpCircle size={13} className="rm-help" /></label>
+            <input className="ue-input" value={form.nombre} onChange={e => onFormChange('nombre', e.target.value)} />
           </div>
+          <div className="ue-field">
+            <label className="ue-label">Contratista <HelpCircle size={13} className="rm-help" /></label>
+            <input className="ue-input" value={form.contratista} onChange={e => onFormChange('contratista', e.target.value)} />
+          </div>
+        </div>
+        <div className="ue-row">
           <div className="ue-field">
             <label className="ue-label">NIT <HelpCircle size={13} className="rm-help" /></label>
-            <input className="ue-input" value="Nivel 1" disabled />
+            <input className="ue-input" value={form.nit} onChange={e => onFormChange('nit', e.target.value)} />
+          </div>
+          <div className="ue-field">
+            <label className="ue-label">Regional <HelpCircle size={13} className="rm-help" /></label>
+            <input className="ue-input" value={form.regional} onChange={e => onFormChange('regional', e.target.value)} />
           </div>
         </div>
         <div className="ue-row">
-          <div className="ue-field" style={{ flex: 1 }}>
-            <label className="ue-label">Estado <HelpCircle size={13} className="rm-help" /></label>
-            <input className="ue-input" value="Activo" disabled />
-          </div>
           <div className="ue-field" style={{ flex: 1 }}>
             <label className="ue-label">Consecutivo <HelpCircle size={13} className="rm-help" /></label>
-            <input className="ue-input" value={sub.consecutivo} disabled />
+            <input className="ue-input" type="number" value={form.consecutivo} onChange={e => onFormChange('consecutivo', e.target.value)} />
           </div>
           <div className="ue-field" style={{ flex: 1 }}>
-            <label className="ue-label">Regional <HelpCircle size={13} className="rm-help" /></label>
-            <input className="ue-input" value="1" disabled />
-          </div>
-        </div>
-        <div className="ue-row">
-          <div className="ue-field">
-            <label className="ue-label">Alergias <HelpCircle size={13} className="rm-help" /></label>
-            <input className="ue-input" value="N/A" disabled />
-          </div>
-          <div className="ue-field">
             <label className="ue-label">Medicamentos <HelpCircle size={13} className="rm-help" /></label>
-            <input className="ue-input" value="N/A" disabled />
+            <input className="ue-input" type="number" value={form.medicamentos} onChange={e => onFormChange('medicamentos', e.target.value)} />
           </div>
         </div>
       </div>
       <div className="resolucion-modal-footer" style={{ justifyContent: 'flex-end', borderTop: 'none' }}>
-        <button
-          className="rm-btn-primary"
-          onClick={onClose}
-          style={{ background: '#004B85', minWidth: '120px', padding: '10px 16px', justifyContent: 'center' }}
-        >
-          Cerrar
-        </button>
+        <div className="rm-footer-actions">
+          <button className="rm-btn-cancel" onClick={onClose} style={{ minWidth: '100px' }}>Cancelar</button>
+          <button className="rm-btn-primary" onClick={onSave} style={{ minWidth: '160px' }}>
+            <Save size={15} />
+            Guardar cambios
+          </button>
+        </div>
       </div>
     </div>
   </div>

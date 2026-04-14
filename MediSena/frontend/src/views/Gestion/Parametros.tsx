@@ -50,10 +50,11 @@ interface ParametrosTablaProps {
   loading: boolean;
   tooltip: { id: number; text: string } | null;
   onTooltip: (v: { id: number; text: string } | null) => void;
+  onEdit: (p: Parametro) => void;
 }
 
 export const ParametrosTabla: React.FC<ParametrosTablaProps> = ({
-  items, loading, tooltip, onTooltip,
+  items, loading, tooltip, onTooltip, onEdit
 }) => {
   if (loading) return <tr><td colSpan={7} className="table-empty">Cargando datos...</td></tr>;
   if (items.length === 0) return <tr><td colSpan={7} className="table-empty">No se encontraron resultados.</td></tr>;
@@ -91,7 +92,7 @@ export const ParametrosTabla: React.FC<ParametrosTablaProps> = ({
           <td>{p.vobos}</td>
           <td>
             <div className="row-actions">
-              <button className="icon-btn edit"><Edit2 size={15} /></button>
+              <button className="icon-btn edit" onClick={() => onEdit(p)}><Edit2 size={15} /></button>
             </div>
           </td>
         </tr>
@@ -99,3 +100,66 @@ export const ParametrosTabla: React.FC<ParametrosTablaProps> = ({
     </>
   );
 };
+
+/* ══════════════════════════════════════════════════════
+   MODAL EDITAR PARÁMETRO
+   ══════════════════════════════════════════════════════ */
+import { Save } from 'lucide-react';
+interface EditParametroModalProps {
+  form: { vigencia: string; regional: string; resolucion: string; razonSocial: string; porcentajeNormal: string; vobos: string };
+  onFormChange: (field: string, value: string) => void;
+  onClose: () => void;
+  onSave: () => void;
+}
+
+export const EditParametroModal: React.FC<EditParametroModalProps> = ({ form, onFormChange, onClose, onSave }) => (
+  <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+    <div className="resolucion-modal user-edit-modal">
+      <div className="resolucion-modal-header">
+        <h2 className="resolucion-modal-title">Editar Parámetro</h2>
+        <button className="resolucion-modal-close" onClick={onClose}><X size={18} /></button>
+      </div>
+      <div className="resolucion-modal-body user-edit-body">
+        <div className="ue-row">
+          <div className="ue-field">
+            <label className="ue-label">Vigencia <HelpCircle size={13} className="rm-help" /></label>
+            <input className="ue-input" value={form.vigencia} onChange={e => onFormChange('vigencia', e.target.value)} />
+          </div>
+          <div className="ue-field">
+            <label className="ue-label">Regional <HelpCircle size={13} className="rm-help" /></label>
+            <input className="ue-input" value={form.regional} onChange={e => onFormChange('regional', e.target.value)} />
+          </div>
+        </div>
+        <div className="ue-row">
+          <div className="ue-field">
+            <label className="ue-label">Resolución <HelpCircle size={13} className="rm-help" /></label>
+            <input className="ue-input" value={form.resolucion} onChange={e => onFormChange('resolucion', e.target.value)} />
+          </div>
+          <div className="ue-field">
+            <label className="ue-label">Razón Social <HelpCircle size={13} className="rm-help" /></label>
+            <input className="ue-input" value={form.razonSocial} onChange={e => onFormChange('razonSocial', e.target.value)} />
+          </div>
+        </div>
+        <div className="ue-row">
+          <div className="ue-field">
+            <label className="ue-label">% SMLV <HelpCircle size={13} className="rm-help" /></label>
+            <input className="ue-input" value={form.porcentajeNormal} onChange={e => onFormChange('porcentajeNormal', e.target.value)} />
+          </div>
+          <div className="ue-field">
+            <label className="ue-label">VoBos <HelpCircle size={13} className="rm-help" /></label>
+            <input className="ue-input" type="number" value={form.vobos} onChange={e => onFormChange('vobos', e.target.value)} />
+          </div>
+        </div>
+      </div>
+      <div className="resolucion-modal-footer" style={{ justifyContent: 'flex-end', borderTop: 'none' }}>
+        <div className="rm-footer-actions">
+          <button className="rm-btn-cancel" onClick={onClose} style={{ minWidth: '100px' }}>Cancelar</button>
+          <button className="rm-btn-primary" onClick={onSave} style={{ minWidth: '160px' }}>
+            <Save size={15} />
+            Guardar cambios
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+);

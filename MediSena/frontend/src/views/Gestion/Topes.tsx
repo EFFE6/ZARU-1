@@ -91,11 +91,11 @@ interface ViewTopeModalProps {
 export const ViewTopeModal: React.FC<ViewTopeModalProps> = ({ tope, onClose }) => (
   <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
     <div className="resolucion-modal tope-view-modal">
-      <div className="resolucion-modal-header" style={{ paddingBottom: '16px' }}>
+      <div className="resolucion-modal-header">
         <h2 className="resolucion-modal-title">{tope.grupo}</h2>
         <button className="resolucion-modal-close" onClick={onClose}><X size={18} /></button>
       </div>
-      <div className="resolucion-modal-body tope-view-body" style={{ padding: '0 32px 32px 32px' }}>
+      <div className="resolucion-modal-body tope-view-body" style={{ padding: '24px 32px' }}>
         <div className="tope-alert">
           <div className="alert-icon"><AlertTriangle size={18} color="#d97706" /></div>
           <div className="alert-content">
@@ -106,14 +106,21 @@ export const ViewTopeModal: React.FC<ViewTopeModalProps> = ({ tope, onClose }) =
         <div className="tope-info-box">
           <div className="ti-col"><div className="ti-label">Código</div><div className="ti-val">{tope.codigo}</div></div>
           <div className="ti-col"><div className="ti-label">Nombre</div><div className="ti-val">{tope.grupo}</div></div>
-          <div className="ti-col"><div className="ti-label">Nivel</div><div className="ti-val ti-n4">N4</div></div>
+          <div className="ti-col"><div className="ti-label">Nivel</div><div className="ti-val ti-n4">{tope.nivel}</div></div>
           <div className="ti-col"><div className="ti-label">Vigencia</div><div className="ti-val">{tope.vigencia}</div></div>
           <div className="ti-col"><div className="ti-label">Resolución</div><div className="ti-val">{tope.resolucion}</div></div>
-          <div className="ti-col"><div className="ti-label">Estado</div><div className="ti-val"><span className="ti-badge-history">Histórico</span></div></div>
+          <div className="ti-col">
+        <div className="ti-label">Estado</div>
+        <div className="ti-val">
+          <span className={`ti-badge-history ${tope.estado === 'Vigente' ? 'vigente' : 'historico'}`}>
+            {tope.estado}
+          </span>
+        </div>
+      </div>
         </div>
         <div className="tope-section">
           <div className="ts-header ts-blue">Topes Máximos - Categorías Normales</div>
-          <div className="ts-row"><span>Tope máximo del grupo en categoría A Normal</span><strong>$ 0</strong></div>
+          <div className="ts-row"><span>Tope máximo del grupo en categoría A Normal</span><strong>{tope.valorPromedio}</strong></div>
           <div className="ts-row"><span>Tope máximo del grupo en categoría B Normal</span><strong>$ 0</strong></div>
           <div className="ts-row"><span>Tope máximo del grupo en categoría C Normal</span><strong>$ 0</strong></div>
           <div className="ts-row"><span>Tope máximo del grupo en categoría D Normal</span><strong>$ 0</strong></div>
@@ -126,8 +133,8 @@ export const ViewTopeModal: React.FC<ViewTopeModalProps> = ({ tope, onClose }) =
           <div className="ts-row"><span>Tope máximo del grupo en categoría D Especial</span><strong>$ 0</strong></div>
         </div>
       </div>
-      <div className="resolucion-modal-footer" style={{ borderTop: 'none', padding: '0 32px 32px 32px', justifyContent: 'flex-end' }}>
-        <button className="rm-btn-primary" onClick={onClose} style={{ minWidth: '140px', justifyContent: 'center' }}>
+      <div className="resolucion-modal-footer" style={{ borderTop: 'none', padding: '16px 32px 32px 32px', justifyContent: 'flex-end' }}>
+        <button className="rm-btn-primary" onClick={onClose} style={{ minWidth: '140px' }}>
           Cerrar
         </button>
       </div>
