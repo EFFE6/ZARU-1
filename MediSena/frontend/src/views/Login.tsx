@@ -17,6 +17,7 @@ import adn from '../assets/img/login/adn.png';
 import linea1 from '../assets/img/login/linea1.png';
 import linea2 from '../assets/img/login/linea2.png';
 import linea3 from '../assets/img/login/linea3.png';
+import headerImg from '../assets/img/login/header.png';
 
 import '../styles/Login.css';
 
@@ -63,14 +64,7 @@ const Login = () => {
       {/* ── Barra gov.co ── */}
       <div className="login-govco-bar">
         <div className="login-govco-inner">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="govco-flag-icon">
-            <rect x="2" y="4" width="20" height="16" rx="2" />
-            <path d="M2 8h20" />
-            <path d="M2 12h20" />
-          </svg>
-          <span className="govco-text">gov.co</span>
-          <span className="govco-sep">|</span>
-          <span className="govco-sub">Portal oficial del Estado colombiano</span>
+          <img src={headerImg} alt="Gov.co Header" className="govco-header-img" />
         </div>
       </div>
 

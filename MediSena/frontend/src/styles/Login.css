@@ -2,7 +2,7 @@
 .login-govco-bar {
   background-color: #3465CC;
   width: 100%;
-  height: 28px;
+  height: 24px;
   display: flex;
   align-items: center;
   padding: 0 24px;
@@ -18,33 +18,12 @@
   gap: 8px;
 }
 
-.govco-flag-icon {
-  color: #ffffff;
-  opacity: 0.9;
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-}
+.govco-header-img {
+  height: 12px;
+  /* Ajusta la altura de la imagen dentro de la barra azul */
+  object-fit: contain;
+  opacity: 0.95;
 
-.govco-text {
-  font-size: 13px;
-  font-weight: 700;
-  color: #ffffff;
-  letter-spacing: 0.5px;
-  font-family: 'Work Sans', sans-serif;
-}
-
-.govco-sep {
-  color: rgba(255, 255, 255, 0.4);
-  font-size: 13px;
-  margin: 0 2px;
-}
-
-.govco-sub {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.7);
-  font-family: 'Work Sans', sans-serif;
-  letter-spacing: 0.2px;
 }
 
 /* Reset & Base */
@@ -73,6 +52,8 @@
   display: flex;
   position: relative;
   overflow: hidden;
+  margin-top: -10px;
+  /* Jala el contenido principal 3px hacia arriba, escondiendo cualquier espacio debajo de la barra govco */
 }
 
 /* Background Lines (PNG images) */
