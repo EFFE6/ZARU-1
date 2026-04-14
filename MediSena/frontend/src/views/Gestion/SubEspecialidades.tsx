@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  ArrowUpDown, Edit2, Trash2, Plus, RefreshCw, X, Building2, HelpCircle,
+  ArrowUpDown, Edit2, Trash2, Plus, RefreshCw, X, Building2, HelpCircle, Save,
 } from 'lucide-react';
 import { SubEspecialidad } from './types';
 
@@ -133,7 +133,7 @@ export const EditSubModal: React.FC<EditSubModalProps> = ({ form, onFormChange, 
           </div>
           <div className="ue-field" style={{ flex: 1 }}>
             <label className="ue-label">Medicamentos <HelpCircle size={13} className="rm-help" /></label>
-            <input className="ue-input" type="number" value={form.medicamentos} onChange={e => onFormChange('medicamentos', e.target.value)} />
+            <input className="ue-input" type="text" value={form.medicamentos} onChange={e => onFormChange('medicamentos', e.target.value)} />
           </div>
         </div>
       </div>
