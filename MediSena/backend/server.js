@@ -73,25 +73,53 @@ app.get('/api/dashboard/citas', authenticateToken, (req, res) => {
 // ──────────────────────────────────────────────
 // 👥 Usuarios Data
 // ──────────────────────────────────────────────
+let usuariosData = [
+  { id: 1, nombre: 'Paulette Goya', username: 'PGoya', rol: 'Administrador', email: 'Pgoya@example.com', regional: '63 - Dirección Regional Centro de Comercio y Servicios', ultimoAcceso: '31 dic 2025', activo: true, tipoUsuario: 'T', fechaCreacion: '01 ene 2026', fechaModificacion: '31 dic 2026', codigoDependencia: '1000', telefono: '000', avatarInitials: 'PG' },
+  { id: 2, nombre: 'Carlos Valencia', username: 'CValencia', rol: 'Usuario', email: 'Cavalencia@example.com', regional: '63', ultimoAcceso: '31 dic 2025', activo: false, tipoUsuario: 'U', fechaCreacion: '01 ene 2026', fechaModificacion: '31 dic 2026', codigoDependencia: '1001', telefono: '000', avatarInitials: 'PG' },
+];
+
 app.get('/api/usuarios', (req, res) => {
   console.log('Hit: /api/usuarios');
-  const usuarios = [
-    { id: 1, nombre: 'Paulette Goya', username: 'PGoya', rol: 'Administrador', email: 'Pgoya@example.com', regional: '63 - Dirección Regional Centro de Comercio y Servicios', ultimoAcceso: '31 dic 2025', activo: true, tipoUsuario: 'T', fechaCreacion: '01 ene 2026', fechaModificacion: '31 dic 2026', codigoDependencia: '1000', telefono: '000', avatarInitials: 'PG' },
-    { id: 2, nombre: 'Carlos Valencia', username: 'CValencia', rol: 'Usuario', email: 'Cavalencia@example.com', regional: '63', ultimoAcceso: '31 dic 2025', activo: false, tipoUsuario: 'U', fechaCreacion: '01 ene 2026', fechaModificacion: '31 dic 2026', codigoDependencia: '1001', telefono: '000', avatarInitials: 'PG' },
-  ];
-  res.json(usuarios);
+  res.json(usuariosData);
+});
+
+app.put('/api/usuarios/:id', authenticateToken, (req, res) => {
+  usuariosData = usuariosData.map(u => String(u.id) === req.params.id ? { ...u, ...req.body } : u);
+  res.json({ success: true });
+});
+
+app.delete('/api/usuarios/:id', authenticateToken, (req, res) => {
+  usuariosData = usuariosData.filter(u => String(u.id) !== req.params.id);
+  res.json({ success: true });
 });
 
 // ──────────────────────────────────────────────
 // 📄 Resoluciones Data
 // ──────────────────────────────────────────────
+let resolucionesData = [
+  { id: 1, numero: "824", fecha: "01 ene 2024", descripcion: "Resolución 824 - Vigencia 2024", estado: "Vigente", vigencia: "01 ene 2024 - 31 dic 2024" },
+  { id: 2, numero: "824", fecha: "01 ene 2023", descripcion: "Resolución 824 - Vigencia 2023", estado: "Vencido", vigencia: "01 ene 2023 - 31 dic 2023" },
+];
+
 app.get('/api/resoluciones', (req, res) => {
   console.log('Hit: /api/resoluciones');
-  const resoluciones = [
-    { id: 1, numero: "824", fecha: "01 ene 2024", descripcion: "Resolución 824 - Vigencia 2024", estado: "Vigente", vigencia: "01 ene 2024 - 31 dic 2024" },
-    { id: 2, numero: "824", fecha: "01 ene 2023", descripcion: "Resolución 824 - Vigencia 2023", estado: "Vencido", vigencia: "01 ene 2023 - 31 dic 2023" },
-  ];
-  res.json(resoluciones);
+  res.json(resolucionesData);
+});
+
+app.post('/api/resoluciones', authenticateToken, (req, res) => {
+  const nuevo = { id: Date.now(), ...req.body };
+  resolucionesData.push(nuevo);
+  res.status(201).json(nuevo);
+});
+
+app.put('/api/resoluciones/:id', authenticateToken, (req, res) => {
+  resolucionesData = resolucionesData.map(r => String(r.id) === req.params.id ? { ...r, ...req.body } : r);
+  res.json({ success: true });
+});
+
+app.delete('/api/resoluciones/:id', authenticateToken, (req, res) => {
+  resolucionesData = resolucionesData.filter(r => String(r.id) !== req.params.id);
+  res.json({ success: true });
 });
 
 // ──────────────────────────────────────────────
@@ -113,6 +141,16 @@ app.post('/api/niveles', authenticateToken, (req, res) => {
   res.status(201).json(nuevo);
 });
 
+app.put('/api/niveles/:id', authenticateToken, (req, res) => {
+  nivelesData = nivelesData.map(n => String(n.id) === req.params.id ? { ...n, ...req.body } : n);
+  res.json({ success: true });
+});
+
+app.delete('/api/niveles/:id', authenticateToken, (req, res) => {
+  nivelesData = nivelesData.filter(n => String(n.id) !== req.params.id);
+  res.json({ success: true });
+});
+
 // ──────────────────────────────────────────────
 // 🏦 Topes Data
 // ──────────────────────────────────────────────
@@ -131,6 +169,16 @@ app.post('/api/topes', authenticateToken, (req, res) => {
   res.status(201).json(nuevo);
 });
 
+app.put('/api/topes/:id', authenticateToken, (req, res) => {
+  topesData = topesData.map(t => String(t.id) === req.params.id ? { ...t, ...req.body } : t);
+  res.json({ success: true });
+});
+
+app.delete('/api/topes/:id', authenticateToken, (req, res) => {
+  topesData = topesData.filter(t => String(t.id) !== req.params.id);
+  res.json({ success: true });
+});
+
 // ──────────────────────────────────────────────
 // 👨‍👩‍👧 Parentescos Data
 // ──────────────────────────────────────────────
@@ -141,6 +189,16 @@ let parentescosData = [
 app.get('/api/parentescos', (req, res) => {
   console.log('Hit: /api/parentescos');
   res.json(parentescosData);
+});
+
+app.put('/api/parentescos/:id', authenticateToken, (req, res) => {
+  parentescosData = parentescosData.map(p => String(p.id) === req.params.id ? { ...p, ...req.body } : p);
+  res.json({ success: true });
+});
+
+app.delete('/api/parentescos/:id', authenticateToken, (req, res) => {
+  parentescosData = parentescosData.filter(p => String(p.id) !== req.params.id);
+  res.json({ success: true });
 });
 
 // ──────────────────────────────────────────────
@@ -159,6 +217,16 @@ app.get('/api/parametros', (req, res) => {
   res.json(parametrosData);
 });
 
+app.put('/api/parametros/:id', authenticateToken, (req, res) => {
+  parametrosData = parametrosData.map(p => String(p.id) === req.params.id ? { ...p, ...req.body } : p);
+  res.json({ success: true });
+});
+
+app.delete('/api/parametros/:id', authenticateToken, (req, res) => {
+  parametrosData = parametrosData.filter(p => String(p.id) !== req.params.id);
+  res.json({ success: true });
+});
+
 // ──────────────────────────────────────────────
 // 🏥 Sub-especialidades Data
 // ──────────────────────────────────────────────
@@ -173,6 +241,16 @@ let subespecialidadesData = [
 app.get('/api/subespecialidades', (req, res) => {
   console.log('Hit: /api/subespecialidades');
   res.json(subespecialidadesData);
+});
+
+app.put('/api/subespecialidades/:id', authenticateToken, (req, res) => {
+  subespecialidadesData = subespecialidadesData.map(s => String(s.id) === req.params.id ? { ...s, ...req.body } : s);
+  res.json({ success: true });
+});
+
+app.delete('/api/subespecialidades/:id', authenticateToken, (req, res) => {
+  subespecialidadesData = subespecialidadesData.filter(s => String(s.id) !== req.params.id);
+  res.json({ success: true });
 });
 
 // ──────────────────────────────────────────────
