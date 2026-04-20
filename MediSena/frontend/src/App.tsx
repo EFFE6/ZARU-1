@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './views/Login';
 import Dashboard from './views/Dashboard';
 import Gestion from './views/Gestion/Gestion';
+import DatosBasicos from './views/DatosBasicos/DatosBasicos';
 import OrdenAtencion from './views/Movimientos/OrdenAtencion';
 import CuentaCobro from './views/Movimientos/CuentaCobro';
 import RelacionPagos from './views/Movimientos/RelacionPagos';
@@ -30,7 +31,7 @@ function App() {
       />
       <Route path="/dashboard" element={<Navigate to="/" replace />} />
       <Route path="/gestion" element={<ProtectedRoute><Gestion /></ProtectedRoute>} />
-      <Route path="/datos-basicos" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+      <Route path="/datos-basicos" element={<ProtectedRoute><DatosBasicos /></ProtectedRoute>} />
       <Route path="/movimientos" element={<Navigate to="/movimientos/orden-atencion" replace />} />
       <Route path="/movimientos/orden-atencion" element={<ProtectedRoute><OrdenAtencion /></ProtectedRoute>} />
       <Route path="/movimientos/cuenta-cobro" element={<ProtectedRoute><CuentaCobro /></ProtectedRoute>} />

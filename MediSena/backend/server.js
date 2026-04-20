@@ -340,6 +340,139 @@ app.get('/api/relacion-pagos', (req, res) => {
 });
 
 // ──────────────────────────────────────────────
+// 📁 Datos Básicos: Funcionarios
+// ──────────────────────────────────────────────
+let funcionariosData = [
+  { id: 1, identificacion: '9526609', nombre: 'AGUIRRE CAMACHO LUIS ALEJANDRO', cargo: 'INSTRUCTOR 16', dependencia: '9101', regional: '15', beneficiarios: { activos: 0, inactivos: 2 }, estado: 'ACTIVO' },
+  { id: 2, identificacion: '9514642', nombre: 'ALARCON SALOMON', cargo: 'PENSION COMPLEMENTO 1', dependencia: '9502', regional: '15', beneficiarios: { activos: 1, inactivos: 1 }, estado: 'ACTIVO' },
+  { id: 3, identificacion: '7217095', nombre: 'ALBARRACIN ESTUPIÑAN ENRIQUE DE JESUS', cargo: 'INSTRUCTOR 12', dependencia: '9102', regional: '15', beneficiarios: { activos: 1, inactivos: 4 }, estado: 'ACTIVO' },
+  { id: 4, identificacion: '6768496', nombre: 'ALFONSO BARON FLORIBERTO', cargo: 'Trabajador de Campo G10 10', dependencia: '9102', regional: '15', beneficiarios: { activos: 2, inactivos: 2 }, estado: 'ACTIVO' },
+  { id: 5, identificacion: '1022345678', nombre: 'MARTINEZ DUARTE ANDREA', cargo: 'COORDINADOR REGIONAL', dependencia: '1000', regional: '63', beneficiarios: { activos: 3, inactivos: 0 }, estado: 'ACTIVO' },
+  { id: 6, identificacion: '80012345', nombre: 'GOMEZ PEREZ JULIO CESAR', cargo: 'AUXILIAR DE ENFERMERIA', dependencia: '1001', regional: '63', beneficiarios: { activos: 1, inactivos: 2 }, estado: 'INACTIVO' },
+];
+
+app.get('/api/funcionarios', (req, res) => res.json(funcionariosData));
+// ... (POST, PUT, DELETE omitted for brevity in replace_file_content but I'll keep the full block logic)
+app.post('/api/funcionarios', authenticateToken, (req, res) => {
+  const nuevo = { id: Date.now(), ...req.body };
+  funcionariosData.unshift(nuevo);
+  res.status(201).json(nuevo);
+});
+app.put('/api/funcionarios/:id', authenticateToken, (req, res) => {
+  funcionariosData = funcionariosData.map(f => String(f.id) === req.params.id ? { ...f, ...req.body } : f);
+  res.json({ success: true });
+});
+app.delete('/api/funcionarios/:id', authenticateToken, (req, res) => {
+  funcionariosData = funcionariosData.filter(f => String(f.id) !== req.params.id);
+  res.json({ success: true });
+});
+
+// ──────────────────────────────────────────────
+// 📁 Datos Básicos: Contratistas
+// ──────────────────────────────────────────────
+let contratistasData = [
+  { id: 1, razonSocial: 'Clínica del Norte S.A.S.', nit: '900.123.456-7', regional: 'Regional 63', especialidad: 'Medicina General', estado: 'Activo' },
+  { id: 2, razonSocial: 'Hospital Universitario de la Samaritana', nit: '860.000.123-4', regional: 'Regional 15', especialidad: 'Alta Complejidad', estado: 'Activo' },
+  { id: 3, razonSocial: 'Centro radiológico de Occidente', nit: '901.444.555-1', regional: 'Regional 63', especialidad: 'Imagenología', estado: 'Inactivo' },
+  { id: 4, razonSocial: 'Óptica Visión Clara', nit: '800.222.111-9', regional: 'Regional 63', especialidad: 'Optometría', estado: 'Activo' },
+];
+
+app.get('/api/contratistas', (req, res) => res.json(contratistasData));
+app.post('/api/contratistas', authenticateToken, (req, res) => {
+  const nuevo = { id: Date.now(), ...req.body };
+  contratistasData.unshift(nuevo);
+  res.status(201).json(nuevo);
+});
+app.put('/api/contratistas/:id', authenticateToken, (req, res) => {
+  contratistasData = contratistasData.map(c => String(c.id) === req.params.id ? { ...c, ...req.body } : c);
+  res.json({ success: true });
+});
+app.delete('/api/contratistas/:id', authenticateToken, (req, res) => {
+  contratistasData = contratistasData.filter(c => String(c.id) !== req.params.id);
+  res.json({ success: true });
+});
+
+// ──────────────────────────────────────────────
+// 📁 Datos Básicos: Médicos
+// ──────────────────────────────────────────────
+let medicosData = [
+  { id: 1, nombre: 'Dr. Juan Carlos Herrera', especialidad: 'Medicina General', registro: 'RM-12345', regional: 'Regional 63', estado: 'Activo' },
+  { id: 2, nombre: 'Dra. Patricia Morales', especialidad: 'Odontología', registro: 'RM-67890', regional: 'Regional 001', estado: 'Activo' },
+  { id: 3, nombre: 'Dr. Andrés Torres', especialidad: 'Medicina Interna', registro: 'RM-11223', regional: 'Regional 63', estado: 'Inactivo' },
+  { id: 4, nombre: 'Dra. Elizabeth Swan', especialidad: 'Cirugía General', registro: 'RM-44556', regional: 'Regional 15', estado: 'Activo' },
+  { id: 5, nombre: 'Dr. Gregory House', especialidad: 'Diferenciación Diagnóstica', registro: 'RM-99999', regional: 'Regional 63', estado: 'Activo' },
+];
+
+app.get('/api/medicos', (req, res) => res.json(medicosData));
+app.post('/api/medicos', authenticateToken, (req, res) => {
+  const nuevo = { id: Date.now(), ...req.body };
+  medicosData.unshift(nuevo);
+  res.status(201).json(nuevo);
+});
+app.put('/api/medicos/:id', authenticateToken, (req, res) => {
+  medicosData = medicosData.map(m => String(m.id) === req.params.id ? { ...m, ...req.body } : m);
+  res.json({ success: true });
+});
+app.delete('/api/medicos/:id', authenticateToken, (req, res) => {
+  medicosData = medicosData.filter(m => String(m.id) !== req.params.id);
+  res.json({ success: true });
+});
+
+// ──────────────────────────────────────────────
+// 📁 Datos Básicos: Contratos
+// ──────────────────────────────────────────────
+let contratosData = [
+  { id: 1, numero: 'CONT-2026-001', contratista: 'Clínica del Norte S.A.S.', objeto: 'Prestación de servicios de salud', vigencia: '01 ene 2026 - 31 dic 2026', estado: 'Vigente' },
+  { id: 2, numero: 'CONT-2026-002', contratista: 'Hospital Universitario de la Samaritana', objeto: 'Servicios de urgencias y cirugía', vigencia: '01 mar 2026 - 28 feb 2027', estado: 'Vigente' },
+  { id: 3, numero: 'CONT-2025-015', contratista: 'Centro radiológico de Occidente', objeto: 'Servicios de diagnóstico por imagen', vigencia: '01 ene 2025 - 31 dic 2025', estado: 'Vencido' },
+  { id: 4, numero: 'CONT-2026-044', contratista: 'Óptica Visión Clara', objeto: 'Suministros ópticos y consultas', vigencia: '01 jun 2026 - 31 dic 2026', estado: 'Vigente' },
+];
+
+app.get('/api/contratos', (req, res) => res.json(contratosData));
+app.post('/api/contratos', authenticateToken, (req, res) => {
+  const nuevo = { id: Date.now(), ...req.body };
+  contratosData.unshift(nuevo);
+  res.status(201).json(nuevo);
+});
+app.put('/api/contratos/:id', authenticateToken, (req, res) => {
+  contratosData = contratosData.map(c => String(c.id) === req.params.id ? { ...c, ...req.body } : c);
+  res.json({ success: true });
+});
+app.delete('/api/contratos/:id', authenticateToken, (req, res) => {
+  contratosData = contratosData.filter(c => String(c.id) !== req.params.id);
+  res.json({ success: true });
+});
+
+// ──────────────────────────────────────────────
+// 📁 Datos Básicos: Beneficiarios
+// ──────────────────────────────────────────────
+let beneficiariosData = {
+  '1': [
+    { id: 101, letra: '', nombre: 'MARÍA AGUIRRE CAMACHO', documento: '1022345678', clasificacion: 'A', parentesco: 'Hijo', edad: '12', genero: 'F', telefono: '3001234567', estado: '0', suspendido: true },
+    { id: 102, letra: '', nombre: 'LAURA AGUIRRE CAMACHO', documento: '1022345679', clasificacion: 'A', parentesco: 'Hijo', edad: '10', genero: 'F', telefono: '3001234568', estado: '0', suspendido: true },
+  ],
+  '2': [
+    { id: 103, letra: '', nombre: 'PEDRO ALARCON', documento: '1022345680', clasificacion: 'B', parentesco: 'Padre', edad: '65', genero: 'M', telefono: '3001234569', estado: '0', suspendido: false },
+  ]
+};
+
+app.get('/api/funcionarios/:id/beneficiarios', (req, res) => {
+  const { id } = req.params;
+  res.json(beneficiariosData[id] || []);
+});
+
+app.post('/api/funcionarios/:id/beneficiarios', authenticateToken, (req, res) => {
+  const { id } = req.params;
+  const nuevo = { id: Date.now(), ...req.body };
+  if (!beneficiariosData[id]) beneficiariosData[id] = [];
+  beneficiariosData[id].push(nuevo);
+  res.status(201).json(nuevo);
+});
+
+
+
+
+// ──────────────────────────────────────────────
 // 🚀 Servidor
 // ──────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;

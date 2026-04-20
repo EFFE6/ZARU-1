@@ -25,9 +25,7 @@
   flex-direction: column;
   gap: 20px;
   padding: 24px 28px 28px;
-  height: 100vh;
   box-sizing: border-box;
-  overflow: hidden;
 }
 
 /* ─── BREADCRUMB ──────────────────────────────────────────── */
@@ -148,8 +146,6 @@
 .tabs-card-group {
   display: flex;
   flex-direction: column;
-  flex: 1;
-  min-height: 0;
 }
 
 /* ─── TABS ────────────────────────────────────────────────── */
@@ -254,10 +250,8 @@
   position: relative;
   z-index: 1;
   padding: 24px 28px 28px;
-  flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 0;
 }
 
 .gestion-content-card.first-tab-active {
@@ -318,14 +312,12 @@
 
 /* ─── TABLA ───────────────────────────────────────────────── */
 .table-wrapper {
-  overflow: auto;
   border-radius: 16px;
   border: 1px solid #E5E7EB;
-  flex: 1;
-  min-height: 0;
   /* Ocultar barra de scroll */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE y Edge */
+  overflow-x: auto;
 }
 
 .table-wrapper::-webkit-scrollbar {

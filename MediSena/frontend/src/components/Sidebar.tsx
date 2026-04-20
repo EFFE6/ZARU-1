@@ -55,7 +55,10 @@ const Sidebar = () => {
       icon: DatosBasicosIcon,
       label: 'Datos Básicos',
       children: [
-        // Se llenará después
+        { id: 'Funcionarios', label: 'Funcionarios', path: '/datos-basicos' },
+        { id: 'Contratistas', label: 'Contratistas', path: '/datos-basicos' },
+        { id: 'Medicos', label: 'Médicos', path: '/datos-basicos' },
+        { id: 'Contratos', label: 'Contratos', path: '/datos-basicos' },
       ],
     },
     {
