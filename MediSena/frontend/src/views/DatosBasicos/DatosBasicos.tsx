@@ -14,7 +14,10 @@ import {
   Info,
   Check,
   Pencil,
-  Trash2
+  Trash2,
+  Save,
+  Eye,
+  Ban
 } from 'lucide-react';
 import '../../styles/DatosBasicos.css';
 
@@ -41,6 +44,11 @@ const DatosBasicos: React.FC = () => {
   const [beneficiarios, setBeneficiarios] = useState<Beneficiario[]>([]);
   const [loadingBene, setLoadingBene] = useState(false);
 
+  /* ── Official (Funcionario) Modal ── */
+  const [isOfficialModalOpen, setIsOfficialModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<'view' | 'edit' | 'create'>('view');
+  const [officialForm, setOfficialForm] = useState<Partial<Funcionario>>({});
+
   const openBeneficiarios = async (f: Funcionario) => {
     setSelectedOfficial(f);
     setIsBeneficiariosOpen(true);
@@ -55,6 +63,45 @@ const DatosBasicos: React.FC = () => {
     }
   };
 
+  const handleOpenOfficial = (f: Funcionario, mode: 'view' | 'edit') => {
+    setOfficialForm({ ...f });
+    setModalMode(mode);
+    setIsOfficialModalOpen(true);
+  };
+
+  const handleNewOfficial = () => {
+    setOfficialForm({
+      identificacion: '',
+      nombre: '',
+      apellido: '',
+      cargo: '',
+      dependencia: '',
+      regional: '',
+      estado: 'ACTIVO',
+      tipoDocumento: 'Cédula de Ciudadanía',
+      tipoVinculacion: 'Planta - Carrera Administrativa',
+      beneficiarios: { activos: 0, inactivos: 0 }
+    });
+    setModalMode('create');
+    setIsOfficialModalOpen(true);
+  };
+
+  const handleSaveOfficial = async () => {
+    try {
+      if (modalMode === 'edit' || modalMode === 'view') {
+        await api.put(`/funcionarios/${officialForm.id}`, officialForm);
+      } else {
+        await api.post('/funcionarios', officialForm);
+      }
+      setIsOfficialModalOpen(false);
+      // Recargar la tabla (esto se maneja en el hijo, pero idealmente el hijo escucharía un trigger o se pasaría una función de refresh)
+      // Por simplicidad en este MVP, asumiremos que el usuario recarga o que el hijo se actualiza.
+      window.location.reload(); 
+    } catch (error) {
+      console.error('Error saving official:', error);
+    }
+  };
+
   const tabs: Array<'Funcionarios' | 'Contratistas' | 'Médicos' | 'Contratos'> = [
     'Funcionarios', 'Contratistas', 'Médicos', 'Contratos',
   ];
@@ -63,11 +110,25 @@ const DatosBasicos: React.FC = () => {
   const renderActiveTab = () => {
     switch (activeTab) {
       case 'Funcionarios': 
-        return <Funcionarios onOpenBeneficiarios={openBeneficiarios} />;
+        return (
+          <Funcionarios 
+            onOpenBeneficiarios={openBeneficiarios} 
+            onEditOfficial={(f) => handleOpenOfficial(f, 'edit')}
+            onViewOfficial={(f) => handleOpenOfficial(f, 'view')}
+            onNewOfficial={handleNewOfficial}
+          />
+        );
       case 'Contratistas': return <Contratistas />;
       case 'Médicos': return <Medicos />;
       case 'Contratos': return <Contratos />;
-      default: return <Funcionarios onOpenBeneficiarios={openBeneficiarios} />;
+      default: return (
+        <Funcionarios 
+          onOpenBeneficiarios={openBeneficiarios} 
+          onEditOfficial={(f) => handleOpenOfficial(f, 'edit')}
+          onViewOfficial={(f) => handleOpenOfficial(f, 'view')}
+          onNewOfficial={handleNewOfficial}
+        />
+      );
     }
   };
 
@@ -119,14 +180,14 @@ const DatosBasicos: React.FC = () => {
             {renderActiveTab()}
           </div>
 
-          {/* Modal Beneficiarios (Renderizado fuera del card para evitar trapping de z-index) */}
+          {/* Modal Beneficiarios (Capa Superior) */}
           {isBeneficiariosOpen && selectedOfficial && (
             <div className="db-modal-overlay" onClick={e => e.target === e.currentTarget && setIsBeneficiariosOpen(false)}>
               <div className="db-modal-beneficiarios">
                 <div className="db-bene-header">
                   <div className="db-bene-title-wrap">
-                    <Users size={20} className="db-bene-icon" />
-                    <h2 className="db-bene-title">Beneficiarios</h2>
+                    <Users size={20} className="db-official-icon" />
+                    <h2 className="db-official-title">Beneficiarios</h2>
                     <div className="db-official-tag">
                       Funcionario: {selectedOfficial.identificacion} - {selectedOfficial.nombre}
                     </div>
@@ -182,7 +243,7 @@ const DatosBasicos: React.FC = () => {
                               <td>{b.genero}</td>
                               <td>{b.telefono}</td>
                               <td>
-                                <div className="db-estado-circle">0</div>
+                                <div className="db-letra-circle" style={{ background: '#ecfdf5', color: '#059669', border: 'none' }}>0</div>
                               </td>
                               <td>
                                 <div className={`db-toggle-switch ${b.suspendido ? 'active' : ''}`}>
@@ -212,6 +273,296 @@ const DatosBasicos: React.FC = () => {
                   </button>
                   <button className="db-btn-close-bene" onClick={() => setIsBeneficiariosOpen(false)}>Cerrar</button>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* Modal Official View/Edit (Capa Superior) */}
+          {isOfficialModalOpen && (
+            <div className="db-modal-overlay" onClick={e => e.target === e.currentTarget && setIsOfficialModalOpen(false)}>
+              <div className="db-modal-official-full">
+                
+                {modalMode === 'view' ? (
+                  /* ─── DISEÑO DE DETALLES (VIEW MODE) ─── */
+                  <>
+                    <div className="db-official-header" style={{ border: 'none', paddingBottom: 0 }}>
+                      <div className="db-official-title-wrap">
+                        <Eye size={20} className="db-official-icon" />
+                        <h2 className="db-official-title" style={{ fontSize: '16px', fontWeight: 700 }}>Detalles del Funcionario</h2>
+                      </div>
+                      <button className="db-modal-close" onClick={() => setIsOfficialModalOpen(false)}><X size={20} /></button>
+                    </div>
+
+                    <div className="db-view-header">
+                      <div className="db-view-avatar-large">
+                        {officialForm.nombre?.split(' ').map(n => n[0]).join('').slice(0, 2) || '??'}
+                      </div>
+                      <div className="db-view-id-info">
+                        <h3 className="db-view-name">{officialForm.nombre} {officialForm.apellido}</h3>
+                        <span className="db-view-id-tag">CC - {officialForm.identificacion}</span>
+                        <div className={`db-view-status-badge ${officialForm.estado === 'INACTIVO' ? 'inactivo' : ''}`} 
+                             style={officialForm.estado === 'INACTIVO' ? { background: '#ef4444' } : {}}>
+                          {officialForm.estado}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="db-view-grid">
+                      <div className="db-view-field">
+                        <span className="db-view-label">Cargo</span>
+                        <span className="db-view-value">{officialForm.cargo}</span>
+                      </div>
+                      <div className="db-view-field">
+                        <span className="db-view-label">Dependencia</span>
+                        <span className="db-view-value">{officialForm.dependencia}</span>
+                      </div>
+                      <div className="db-view-field">
+                        <span className="db-view-label">Regional</span>
+                        <span className="db-view-value">{officialForm.regional}</span>
+                      </div>
+                      <div className="db-view-field">
+                        <span className="db-view-label">Tipo de Vinculación</span>
+                        <span className="db-view-value">{officialForm.tipoVinculacion || 'No especificado'}</span>
+                      </div>
+                      
+                      <div className="db-view-bene-row">
+                        <span className="db-view-label">Beneficiarios a Cargo</span>
+                        <div className="db-view-bene-stats">
+                          <div className="db-view-stat-item">
+                            <Users size={16} />
+                            {(officialForm.beneficiarios?.activos || 0) + (officialForm.beneficiarios?.inactivos || 0)} Total
+                          </div>
+                          <div className="db-view-stat-item activos">
+                            <Check size={16} />
+                            {officialForm.beneficiarios?.activos || 0} Activos
+                          </div>
+                          <div className="db-view-stat-item inactivos">
+                            <Ban size={16} />
+                            {officialForm.beneficiarios?.inactivos || 0} Inactivos
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="db-view-divider"></div>
+
+                    <h4 className="db-view-section-title">Información de Contacto</h4>
+                    <div className="db-view-contact-grid">
+                      <div className="db-view-field">
+                        <span className="db-view-label">Teléfono</span>
+                        <span className="db-view-value">{officialForm.telefono || 'Sin registrar'}</span>
+                      </div>
+                      <div className="db-view-field">
+                        <span className="db-view-label">Dirección</span>
+                        <span className="db-view-value">{officialForm.direccion || 'Sin registrar'}</span>
+                      </div>
+                    </div>
+
+                    <div className="db-official-footer" style={{ background: 'transparent', border: 'none' }}>
+                      <button className="db-btn-close-view" onClick={() => setIsOfficialModalOpen(false)}>Cerrar</button>
+                    </div>
+                  </>
+                ) : (
+                  /* ─── DISEÑO DE FORMULARIO (EDIT/CREATE MODE) ─── */
+                  <>
+                    <div className="db-official-header">
+                      <div className="db-official-title-wrap">
+                        <Briefcase size={22} className="db-official-icon" />
+                        <h2 className="db-official-title">
+                          {modalMode === 'edit' ? 'Editar' : 'Nuevo'} Funcionario
+                        </h2>
+                      </div>
+                      <button className="db-modal-close" onClick={() => setIsOfficialModalOpen(false)}><X size={20} /></button>
+                    </div>
+
+                    <div className="db-official-body">
+                      {/* Sección 1: Información Personal */}
+                      <div className="db-form-section">
+                        <h3 className="db-section-title">Información Personal</h3>
+                        <div className="db-form-grid-3">
+                          <div className="db-field">
+                            <label className="db-field-label">Tipo de Documento <span>*</span></label>
+                            <select 
+                              className="db-field-select" 
+                              value={officialForm.tipoDocumento}
+                              onChange={e => setOfficialForm(p => ({ ...p, tipoDocumento: e.target.value }))}
+                            >
+                              <option>Cédula de Ciudadanía</option>
+                              <option>Tarjeta de Identidad</option>
+                              <option>Cédula de Extranjería</option>
+                            </select>
+                          </div>
+                          <div className="db-field">
+                            <label className="db-field-label">Número de Identificación <span>*</span></label>
+                            <input 
+                              type="text" className="db-field-input" 
+                              value={officialForm.identificacion}
+                              onChange={e => setOfficialForm(p => ({ ...p, identificacion: e.target.value }))}
+                            />
+                          </div>
+                          <div className="db-field-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', gridColumn: 'span 1' }}>
+                            <div className="db-field">
+                              <label className="db-field-label">Nombre <span>*</span></label>
+                              <input 
+                                type="text" className="db-field-input" 
+                                value={officialForm.nombre}
+                                onChange={e => setOfficialForm(p => ({ ...p, nombre: e.target.value }))}
+                              />
+                            </div>
+                            <div className="db-field">
+                              <label className="db-field-label">Apellido <span>*</span></label>
+                              <input 
+                                type="text" className="db-field-input" 
+                                value={officialForm.apellido || ''}
+                                onChange={e => setOfficialForm(p => ({ ...p, apellido: e.target.value }))}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="db-form-grid-3">
+                          <div className="db-field">
+                            <label className="db-field-label">Fecha de Nacimiento <span>*</span></label>
+                            <input 
+                              type="date" className="db-field-input" 
+                              value={officialForm.fechaNacimiento || ''}
+                              onChange={e => setOfficialForm(p => ({ ...p, fechaNacimiento: e.target.value }))}
+                            />
+                          </div>
+                          <div className="db-field">
+                            <label className="db-field-label">Teléfono <span>*</span></label>
+                            <input 
+                              type="text" className="db-field-input" 
+                              value={officialForm.telefono || ''}
+                              onChange={e => setOfficialForm(p => ({ ...p, telefono: e.target.value }))}
+                            />
+                          </div>
+                          <div className="db-field">
+                            <label className="db-field-label">Email Institucional</label>
+                            <input 
+                              type="email" className="db-field-input" 
+                              value={officialForm.emailInstitucional || ''}
+                              onChange={e => setOfficialForm(p => ({ ...p, emailInstitucional: e.target.value }))}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Sección 2: Información Laboral */}
+                      <div className="db-form-section">
+                        <h3 className="db-section-title">Información Laboral</h3>
+                        <div className="db-form-grid-2">
+                          <div className="db-field">
+                            <label className="db-field-label">Cargo <span>*</span></label>
+                            <input 
+                              type="text" className="db-field-input" 
+                              value={officialForm.cargo}
+                              onChange={e => setOfficialForm(p => ({ ...p, cargo: e.target.value }))}
+                            />
+                          </div>
+                          <div className="db-field">
+                            <label className="db-field-label">Dependencia <span>*</span></label>
+                            <input 
+                              type="text" className="db-field-input" 
+                              value={officialForm.dependencia}
+                              onChange={e => setOfficialForm(p => ({ ...p, dependencia: e.target.value }))}
+                            />
+                          </div>
+                        </div>
+                        <div className="db-form-grid-3">
+                          <div className="db-field">
+                            <label className="db-field-label">Regional <span>*</span></label>
+                            <input 
+                              type="text" className="db-field-input" 
+                              value={officialForm.regional}
+                              onChange={e => setOfficialForm(p => ({ ...p, regional: e.target.value }))}
+                            />
+                          </div>
+                          <div className="db-field">
+                            <label className="db-field-label">Tipo de Vinculación</label>
+                            <select 
+                              className="db-field-select" 
+                              value={officialForm.tipoVinculacion}
+                              onChange={e => setOfficialForm(p => ({ ...p, tipoVinculacion: e.target.value }))}
+                            >
+                              <option>Planta - Carrera Administrativa</option>
+                              <option>Planta - Libre Nombramiento</option>
+                              <option>Provisionalidad</option>
+                              <option>Establecimiento</option>
+                            </select>
+                          </div>
+                          <div className="db-field">
+                            <label className="db-field-label">Fecha de Ingreso</label>
+                            <input 
+                              type="date" className="db-field-input" 
+                              value={officialForm.fechaIngreso || ''}
+                              onChange={e => setOfficialForm(p => ({ ...p, fechaIngreso: e.target.value }))}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Sección 3: Información de Contacto */}
+                      <div className="db-form-section">
+                        <h3 className="db-section-title">Información de Contacto</h3>
+                        <div className="db-form-grid-2">
+                          <div className="db-field">
+                            <label className="db-field-label">Teléfono de Contacto</label>
+                            <input 
+                              type="text" className="db-field-input" 
+                              value={officialForm.telefonoContacto || ''}
+                              onChange={e => setOfficialForm(p => ({ ...p, telefonoContacto: e.target.value }))}
+                            />
+                          </div>
+                          <div className="db-field">
+                            <label className="db-field-label">Ciudad</label>
+                            <input 
+                              type="text" className="db-field-input" 
+                              value={officialForm.ciudad || ''}
+                              onChange={e => setOfficialForm(p => ({ ...p, ciudad: e.target.value }))}
+                            />
+                          </div>
+                        </div>
+                        <div className="db-form-grid-2">
+                          <div className="db-field">
+                            <label className="db-field-label">Dirección</label>
+                            <input 
+                              type="text" className="db-field-input" 
+                              value={officialForm.direccion || ''}
+                              onChange={e => setOfficialForm(p => ({ ...p, direccion: e.target.value }))}
+                            />
+                          </div>
+                          <div className="db-field">
+                            <label className="db-field-label">Departamento</label>
+                            <input 
+                              type="text" className="db-field-input" 
+                              value={officialForm.departamento || ''}
+                              onChange={e => setOfficialForm(p => ({ ...p, departamento: e.target.value }))}
+                            />
+                          </div>
+                        </div>
+                        <div className="db-field">
+                          <label className="db-field-label">Observaciones</label>
+                          <textarea 
+                            className="db-field-textarea" 
+                            value={officialForm.observaciones || ''}
+                            onChange={e => setOfficialForm(p => ({ ...p, observaciones: e.target.value }))}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="db-official-footer">
+                      <button className="db-btn-cancel-form" onClick={() => setIsOfficialModalOpen(false)}>
+                        <X size={15} />
+                        Cancelar
+                      </button>
+                      <button className="db-btn-save-form" onClick={handleSaveOfficial}>
+                        <Save size={15} />
+                        {modalMode === 'edit' ? 'Actualizar' : 'Guardar'}
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           )}

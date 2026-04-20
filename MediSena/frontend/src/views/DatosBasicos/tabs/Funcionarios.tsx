@@ -23,11 +23,23 @@ import {
 
 export interface Funcionario {
   id: number;
+  tipoDocumento?: string;
   identificacion: string;
   nombre: string;
+  apellido?: string;
+  fechaNacimiento?: string;
+  telefono?: string;
+  emailInstitucional?: string;
   cargo: string;
   dependencia: string;
   regional: string;
+  tipoVinculacion?: string;
+  fechaIngreso?: string;
+  telefonoContacto?: string;
+  ciudad?: string;
+  departamento?: string;
+  direccion?: string;
+  observaciones?: string;
   beneficiarios: {
     activos: number;
     inactivos: number;
@@ -51,9 +63,12 @@ export interface Beneficiario {
 
 interface FuncionariosProps {
   onOpenBeneficiarios: (f: Funcionario) => void;
+  onEditOfficial: (f: Funcionario) => void;
+  onViewOfficial: (f: Funcionario) => void;
+  onNewOfficial: () => void;
 }
 
-const Funcionarios: React.FC<FuncionariosProps> = ({ onOpenBeneficiarios }) => {
+const Funcionarios: React.FC<FuncionariosProps> = ({ onOpenBeneficiarios, onEditOfficial, onViewOfficial, onNewOfficial }) => {
   const [funcionarios, setFuncionarios] = useState<Funcionario[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -66,16 +81,6 @@ const Funcionarios: React.FC<FuncionariosProps> = ({ onOpenBeneficiarios }) => {
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<Funcionario | null>(null);
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [isEdit, setIsEdit] = useState(false);
-  const [formData, setFormData] = useState({
-    identificacion: '',
-    nombre: '',
-    cargo: '',
-    dependencia: '',
-    regional: ''
-  });
-  const [editId, setEditId] = useState<number | null>(null);
 
   useEffect(() => {
     fetchFuncionarios();
@@ -125,24 +130,6 @@ const Funcionarios: React.FC<FuncionariosProps> = ({ onOpenBeneficiarios }) => {
     }
   };
 
-  const resetForm = () => {
-    setFormData({ identificacion: '', nombre: '', cargo: '', dependencia: '', regional: '' });
-    setEditId(null);
-    setIsEdit(false);
-  };
-
-  const openEdit = (f: Funcionario) => {
-    setFormData({
-      identificacion: f.identificacion,
-      nombre: f.nombre,
-      cargo: f.cargo,
-      dependencia: f.dependencia,
-      regional: f.regional
-    });
-    setEditId(f.id);
-    setIsEdit(true);
-    setIsFormOpen(true);
-  };
 
   const filteredData = funcionarios.filter(f => {
     const q = searchQuery.toLowerCase();
@@ -199,7 +186,7 @@ const Funcionarios: React.FC<FuncionariosProps> = ({ onOpenBeneficiarios }) => {
             <RefreshCw size={14} />
             Actualizar
           </button>
-          <button className="db-btn-new" onClick={() => { resetForm(); setIsFormOpen(true); }}>
+          <button className="db-btn-new" onClick={onNewOfficial}>
             <Plus size={16} />
             Nuevo Funcionario
           </button>
@@ -262,8 +249,8 @@ const Funcionarios: React.FC<FuncionariosProps> = ({ onOpenBeneficiarios }) => {
                   </td>
                   <td>
                     <div className="db-row-actions">
-                      <button className="db-icon-btn db-icon-eye" title="Ver"><Eye size={16} /></button>
-                      <button className="db-icon-btn db-icon-pencil" title="Editar" onClick={() => openEdit(f)}><Pencil size={16} /></button>
+                      <button className="db-icon-btn db-icon-eye" title="Ver" onClick={() => onViewOfficial(f)}><Eye size={16} /></button>
+                      <button className="db-icon-btn db-icon-pencil" title="Editar" onClick={() => onEditOfficial(f)}><Pencil size={16} /></button>
                       <button className="db-icon-btn db-icon-ban" title="Restringir" onClick={() => { setItemToDelete(f); setIsDeleteModalOpen(true); }}><Ban size={16} /></button>
                     </div>
                   </td>
@@ -299,48 +286,6 @@ const Funcionarios: React.FC<FuncionariosProps> = ({ onOpenBeneficiarios }) => {
       </div>
 
 
-      {/* Modal Crear/Editar Funcionario */}
-      {isFormOpen && (
-        <div className="db-modal-overlay" onClick={e => e.target === e.currentTarget && setIsFormOpen(false)}>
-          <div className="db-modal-form">
-            <div className="db-modal-header">
-              <h2 className="db-modal-form-title">{isEdit ? 'Editar' : 'Nuevo'} Funcionario</h2>
-              <button className="db-modal-close" onClick={() => setIsFormOpen(false)}><X size={18} /></button>
-            </div>
-            <div className="db-modal-body">
-              <div className="db-form-grid">
-                <div className="db-form-field">
-                  <label className="db-form-label">Identificación <HelpCircle size={13} className="db-help-icon" /></label>
-                  <input className="db-form-input" placeholder="Ej: 9526609" value={formData.identificacion} onChange={e => setFormData(p => ({ ...p, identificacion: e.target.value }))} />
-                </div>
-                <div className="db-form-field">
-                  <label className="db-form-label">Nombre completo <HelpCircle size={13} className="db-help-icon" /></label>
-                  <input className="db-form-input" placeholder="Ej: AGUIRRE CAMACHO LUIS ALEJANDRO" value={formData.nombre} onChange={e => setFormData(p => ({ ...p, nombre: e.target.value }))} />
-                </div>
-                <div className="db-form-field">
-                  <label className="db-form-label">Cargo <HelpCircle size={13} className="db-help-icon" /></label>
-                  <input className="db-form-input" placeholder="Ej: INSTRUCTOR 16" value={formData.cargo} onChange={e => setFormData(p => ({ ...p, cargo: e.target.value }))} />
-                </div>
-                <div className="db-form-field">
-                  <label className="db-form-label">Dependencia <HelpCircle size={13} className="db-help-icon" /></label>
-                  <input className="db-form-input" placeholder="Ej: 9101" value={formData.dependencia} onChange={e => setFormData(p => ({ ...p, dependencia: e.target.value }))} />
-                </div>
-                <div className="db-form-field">
-                  <label className="db-form-label">Regional <HelpCircle size={13} className="db-help-icon" /></label>
-                  <input className="db-form-input" placeholder="Ej: 15" value={formData.regional} onChange={e => setFormData(p => ({ ...p, regional: e.target.value }))} />
-                </div>
-              </div>
-            </div>
-            <div className="db-modal-footer">
-              <button className="db-btn-cancel" onClick={() => setIsFormOpen(false)}>Cancelar</button>
-              <button className="db-btn-primary" onClick={handleSave}>
-                <Save size={15} />
-                Guardar cambios
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Modal Eliminar Funcionario */}
       {isDeleteModalOpen && (
