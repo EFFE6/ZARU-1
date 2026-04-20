@@ -308,11 +308,11 @@ const Gestion: React.FC = () => {
         onTagChange={setActiveFilterTag}
       />
     );
-    if (activeTab === 'Niveles') return <NivelesToolbar onNew={() => {}} />;
-    if (activeTab === 'Topes') return <TopesToolbar onNew={() => {}} />;
-    if (activeTab === 'Parentescos') return <ParentescosToolbar onNew={() => {}} />;
+    if (activeTab === 'Niveles') return <NivelesToolbar onNew={() => { }} />;
+    if (activeTab === 'Topes') return <TopesToolbar onNew={() => { }} />;
+    if (activeTab === 'Parentescos') return <ParentescosToolbar onNew={() => { }} />;
     if (activeTab === 'Parámetros') return <ParametrosToolbar />;
-    if (activeTab === 'Sub-especialidades') return <SubEspecialidadesToolbar onNew={() => {}} />;
+    if (activeTab === 'Sub-especialidades') return <SubEspecialidadesToolbar onNew={() => { }} />;
     if (activeTab === 'Abrir vigencia') return null;
     return (
       <ResolucionesToolbar

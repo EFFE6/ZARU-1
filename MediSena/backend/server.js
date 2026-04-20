@@ -176,6 +176,92 @@ app.get('/api/subespecialidades', (req, res) => {
 });
 
 // ──────────────────────────────────────────────
+// 🏥 Órdenes de Atención
+// ──────────────────────────────────────────────
+let ordenesAtencionData = [
+  { id: 1, numero: 668, vigencia: 2026, beneficiario: 'ROSALINA PALMA SANDOVAL', contratista: 'CLAUDIA BASSIL AMIN', especialidad: 0, fecha: '21/2/2026', estado: 'A', tipoAtencion: 'Consulta General', observaciones: 'SE AUTORIZA CONSULTA ESPECIALIZADA POR DERMATOLOGIA. TARIFA PACTADA', funcionarioSolicitante: '', medicoTratante: '', diagnostico: '', valorEstimado: '' },
+  { id: 2, numero: 668, vigencia: 2026, beneficiario: 'ROSALINA PALMA SANDOVAL', contratista: 'ABRIL GALEANO GIOVANNI', especialidad: 0, fecha: '21/2/2026', estado: 'A', tipoAtencion: 'Control', observaciones: '', funcionarioSolicitante: '', medicoTratante: '', diagnostico: '', valorEstimado: '' },
+  { id: 3, numero: 668, vigencia: 2026, beneficiario: 'ROSALINA PALMA SANDOVAL', contratista: 'ABRIL GALEANO GIOVANNI', especialidad: 0, fecha: '21/2/2026', estado: 'A', tipoAtencion: 'Urgencia', observaciones: '', funcionarioSolicitante: '', medicoTratante: '', diagnostico: '', valorEstimado: '' },
+  { id: 4, numero: 667, vigencia: 2026, beneficiario: 'ROSALINA PALMA SANDOVAL', contratista: 'Piedad Viana Marzola', especialidad: 0, fecha: '21/2/2026', estado: 'A', tipoAtencion: 'Especializada', observaciones: 'SE AUTORIZA CONSULTA ESPECIALIZADA POR ORTOPEDIA. TARIFA PACTADA', funcionarioSolicitante: '', medicoTratante: '', diagnostico: '', valorEstimado: '' },
+  { id: 5, numero: 667, vigencia: 2026, beneficiario: 'ROSALINA PALMA SANDOVAL', contratista: 'DURANGO LARIOS MARIA BERNARDA', especialidad: 0, fecha: '21/2/2026', estado: 'A', tipoAtencion: 'Consulta General', observaciones: '', funcionarioSolicitante: '', medicoTratante: '', diagnostico: '', valorEstimado: '' },
+  { id: 6, numero: 667, vigencia: 2026, beneficiario: 'ROSALINA PALMA SANDOVAL', contratista: 'CLAUDIA BASSIL AMIN', especialidad: 0, fecha: '21/2/2026', estado: 'A', tipoAtencion: 'Control', observaciones: '', funcionarioSolicitante: '', medicoTratante: '', diagnostico: '', valorEstimado: '' },
+  { id: 7, numero: 666, vigencia: 2026, beneficiario: 'CARLOS MENDEZ RUIZ', contratista: 'ABRIL GALEANO GIOVANNI', especialidad: 1, fecha: '20/2/2026', estado: 'I', tipoAtencion: 'Urgencia', observaciones: '', funcionarioSolicitante: '', medicoTratante: '', diagnostico: '', valorEstimado: '' },
+  { id: 8, numero: 665, vigencia: 2026, beneficiario: 'MARIA GARCIA LOPEZ', contratista: 'Piedad Viana Marzola', especialidad: 2, fecha: '19/2/2026', estado: 'P', tipoAtencion: 'Especializada', observaciones: '', funcionarioSolicitante: '', medicoTratante: '', diagnostico: '', valorEstimado: '' },
+  { id: 9, numero: 664, vigencia: 2025, beneficiario: 'PEDRO RAMIREZ TORRES', contratista: 'DURANGO LARIOS MARIA BERNARDA', especialidad: 0, fecha: '18/2/2026', estado: 'A', tipoAtencion: 'Consulta General', observaciones: '', funcionarioSolicitante: '', medicoTratante: '', diagnostico: '', valorEstimado: '' },
+  { id: 10, numero: 663, vigencia: 2025, beneficiario: 'ANA MARTINEZ SILVA', contratista: 'CLAUDIA BASSIL AMIN', especialidad: 3, fecha: '17/2/2026', estado: 'A', tipoAtencion: 'Control', observaciones: '', funcionarioSolicitante: '', medicoTratante: '', diagnostico: '', valorEstimado: '' },
+];
+
+app.get('/api/ordenes-atencion', (req, res) => {
+  console.log('Hit: /api/ordenes-atencion');
+  res.json(ordenesAtencionData);
+});
+
+app.put('/api/ordenes-atencion/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const idx = ordenesAtencionData.findIndex(o => o.id === id);
+  if (idx === -1) return res.status(404).json({ message: 'Orden no encontrada' });
+  ordenesAtencionData[idx] = { ...ordenesAtencionData[idx], ...req.body };
+  res.json(ordenesAtencionData[idx]);
+});
+
+// ──────────────────────────────────────────────
+// 💰 Cuentas de Cobro
+// ──────────────────────────────────────────────
+let cuentasCobroData = [
+  { id: 1, numero: 4623, contratista: '176041', periodo: '2015-10-01T00:00:00.000Z', fecha: '14/9/2015', valor: '$70000', estado: 'PENDIENTE' },
+  { id: 2, numero: 4626, contratista: '176041', periodo: '2015-10-01T00:00:00.000Z', fecha: '2/9/2015', valor: '$120737', estado: 'PENDIENTE' },
+  { id: 3, numero: 4627, contratista: '176041', periodo: '2015-10-01T00:00:00.000Z', fecha: '2/9/2015', valor: '$70000', estado: 'PENDIENTE' },
+  { id: 4, numero: 4630, contratista: '176041', periodo: '2015-10-01T00:00:00.000Z', fecha: '9/9/2015', valor: '$70000', estado: 'PENDIENTE' },
+  { id: 5, numero: 4631, contratista: '176041', periodo: '2015-10-01T00:00:00.000Z', fecha: '9/9/2015', valor: '$80000', estado: 'PENDIENTE' },
+];
+
+app.get('/api/cuentas-cobro', (req, res) => {
+  console.log('Hit: /api/cuentas-cobro');
+  res.json(cuentasCobroData);
+});
+
+app.post('/api/cuentas-cobro', (req, res) => {
+  const nueva = { id: Date.now(), ...req.body };
+  cuentasCobroData.push(nueva);
+  res.status(201).json(nueva);
+});
+
+// ──────────────────────────────────────────────
+// ✅ Aprobar / rechazar Cuenta de Cobro
+// ──────────────────────────────────────────────
+app.patch('/api/cuentas-cobro/:id/estado', (req, res) => {
+  const id = parseInt(req.params.id);
+  const { estado } = req.body; // 'APROBADA' | 'RECHAZADA' | 'PENDIENTE'
+  const idx = cuentasCobroData.findIndex(c => c.id === id);
+  if (idx === -1) return res.status(404).json({ message: 'Cuenta no encontrada' });
+  cuentasCobroData[idx].estado = estado;
+  res.json(cuentasCobroData[idx]);
+});
+
+// ──────────────────────────────────────────────
+// 📋 Relación de Pagos
+// ──────────────────────────────────────────────
+let relacionPagosData = [
+  { id: 1,  numero: 1001, contratista: 'CLAUDIA BASSIL AMIN',           cuentaCobro: 'CC-4623', fechaPago: '30/09/2015', valor: '$70.000',   formaPago: 'Transferencia', estado: 'PAGADO' },
+  { id: 2,  numero: 1002, contratista: 'CLAUDIA BASSIL AMIN',           cuentaCobro: 'CC-4626', fechaPago: '30/09/2015', valor: '$120.737',  formaPago: 'Transferencia', estado: 'PAGADO' },
+  { id: 3,  numero: 1003, contratista: 'ABRIL GALEANO GIOVANNI',        cuentaCobro: 'CC-4627', fechaPago: '01/10/2015', valor: '$70.000',   formaPago: 'Cheque',        estado: 'PAGADO' },
+  { id: 4,  numero: 1004, contratista: 'Piedad Viana Marzola',          cuentaCobro: 'CC-4630', fechaPago: '05/10/2015', valor: '$70.000',   formaPago: 'Transferencia', estado: 'PAGADO' },
+  { id: 5,  numero: 1005, contratista: 'DURANGO LARIOS MARIA BERNARDA', cuentaCobro: 'CC-4631', fechaPago: '05/10/2015', valor: '$80.000',   formaPago: 'Transferencia', estado: 'PAGADO' },
+  { id: 6,  numero: 1006, contratista: 'CLAUDIA BASSIL AMIN',           cuentaCobro: 'CC-4632', fechaPago: '12/10/2015', valor: '$95.000',   formaPago: 'Transferencia', estado: 'PENDIENTE' },
+  { id: 7,  numero: 1007, contratista: 'ABRIL GALEANO GIOVANNI',        cuentaCobro: 'CC-4635', fechaPago: '15/10/2015', valor: '$142.500',  formaPago: 'Transferencia', estado: 'PAGADO' },
+  { id: 8,  numero: 1008, contratista: 'Piedad Viana Marzola',          cuentaCobro: 'CC-4638', fechaPago: '20/10/2015', valor: '$60.000',   formaPago: 'Cheque',        estado: 'PAGADO' },
+  { id: 9,  numero: 1009, contratista: 'DURANGO LARIOS MARIA BERNARDA', cuentaCobro: 'CC-4641', fechaPago: '25/10/2015', valor: '$110.000',  formaPago: 'Transferencia', estado: 'RECHAZADO' },
+  { id: 10, numero: 1010, contratista: 'CLAUDIA BASSIL AMIN',           cuentaCobro: 'CC-4645', fechaPago: '28/10/2015', valor: '$88.000',   formaPago: 'Transferencia', estado: 'PAGADO' },
+  { id: 11, numero: 1011, contratista: 'ABRIL GALEANO GIOVANNI',        cuentaCobro: 'CC-4648', fechaPago: '31/10/2015', valor: '$53.200',   formaPago: 'Transferencia', estado: 'PENDIENTE' },
+  { id: 12, numero: 1012, contratista: 'Piedad Viana Marzola',          cuentaCobro: 'CC-4651', fechaPago: '05/11/2015', valor: '$200.000',  formaPago: 'Transferencia', estado: 'PAGADO' },
+];
+
+app.get('/api/relacion-pagos', (req, res) => {
+  console.log('Hit: /api/relacion-pagos');
+  res.json(relacionPagosData);
+});
+
+// ──────────────────────────────────────────────
 // 🚀 Servidor
 // ──────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;
