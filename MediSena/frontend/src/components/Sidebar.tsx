@@ -212,15 +212,10 @@ const Sidebar = () => {
         <div className="user-profile-section">
           <div className={`profile-card ${isCollapsed ? 'profile-card--collapsed' : ''}`}>
             {isCollapsed ? (
-              /* Modo colapsado: solo avatar centrado + botón salir */
-              <>
-                <div className="profile-avatar">
-                  <img src={iconoFace} alt="Usuario" />
-                </div>
-                <button className="logout-icon-btn" onClick={handleLogout} title="Cerrar sesión">
-                  <img src={botonSalir} alt="Salir" className="logout-icon-img" />
-                </button>
-              </>
+              /* Modo colapsado: solo avatar centrado */
+              <div className="profile-avatar">
+                <img src={iconoFace} alt="Usuario" />
+              </div>
             ) : (
               /* Modo expandido: avatar + nombre + botón */
               <div className="profile-inner">
