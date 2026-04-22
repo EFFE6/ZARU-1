@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import MovimientosLayout from './MovimientosLayout';
+import Sidebar from '../../components/Sidebar';
+import MovTabs from './MovTabs';
 import api from '../../api/api';
-import { Clock, Download, RefreshCw, Search } from 'lucide-react';
+import { Home, ChevronRight, Clock, Download, RefreshCw, Search } from 'lucide-react';
+import '../../styles/GestionResoluciones/GestionResoluciones.css';
+import './OrdenAtencion.css';
 import './ConsultarOrdenes.css';
 
 interface OrdenConsulta {
@@ -24,6 +27,7 @@ const ConsultarOrdenes: React.FC = () => {
   const [año, setAño] = useState('2026');
   const [estado, setEstado] = useState('Todos');
   const [search, setSearch] = useState('');
+  const [firstActive, setFirstActive] = useState(false);
 
   const fetchData = async () => {
     setLoading(true);
@@ -31,7 +35,6 @@ const ConsultarOrdenes: React.FC = () => {
       const res = await api.get('/ordenes');
       setData(res.data);
     } catch {
-      // Demo data si falla el backend
       setData([
         { id: 1, numero: 668, fecha: '21/2/2026', paciente: 'ROSALINA PALMA SANDOVAL', servicio: 0, contratista: 'ABRIL GALEANO GIOVANNI', valor: 0, estado: 'A' },
         { id: 2, numero: 668, fecha: '21/2/2026', paciente: 'ROSALINA PALMA SANDOVAL', servicio: 0, contratista: 'ABRIL GALEANO GIOVANNI', valor: 0, estado: 'A' },
@@ -73,114 +76,133 @@ const ConsultarOrdenes: React.FC = () => {
   const estadoLabel: Record<string, string> = { A: 'A', C: 'C', P: 'P', X: 'X' };
 
   return (
-    <MovimientosLayout breadcrumb={['Movimientos', 'Consultar Órdenes']}>
-      <div className="co-card">
+    <div className="main-layout">
+      <Sidebar />
+      <main className="main-content">
+        <div className="gestion-container">
 
-        {/* ── Header ── */}
-        <div className="co-header">
-          <div>
-            <div className="co-title-row">
-              <Clock size={22} color="#1e3a52" />
-              <h1 className="co-title">Consultar Órdenes de Atención</h1>
+          {/* Header degradado */}
+          <header className="gestion-header">
+            <div className="gestion-header-top">
+              <nav className="breadcrumb">
+                <div className="breadcrumb-item"><Home size={14} /></div>
+                <div className="breadcrumb-sep"><ChevronRight size={13} /></div>
+                <div className="breadcrumb-item">Movimientos</div>
+                <div className="breadcrumb-sep"><ChevronRight size={13} /></div>
+                <div className="breadcrumb-item active">Consultar Órdenes</div>
+              </nav>
             </div>
-            <p className="co-subtitle">Consulta histórica de órdenes médicas por año</p>
-          </div>
-          <div className="co-header-actions">
-            <button className="co-btn-export">
-              <Download size={15} /> Exportar
-            </button>
-            <button className="co-btn-refresh" onClick={fetchData}>
-              <RefreshCw size={15} /> Actualizar
-            </button>
-          </div>
-        </div>
-
-        {/* ── Filtros ── */}
-        <div className="co-filters-box">
-          <div className="co-filters-label">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-            Filtros de Búsqueda
-          </div>
-          <div className="co-filters-row">
-            <div className="co-filter-group">
-              <label className="co-filter-label">Año</label>
-              <select className="co-filter-select" value={año} onChange={e => setAño(e.target.value)}>
-                {AÑOS.map(a => <option key={a} value={a}>{a}</option>)}
-              </select>
+            <div className="gestion-header-bottom">
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <Clock size={24} color="#1e3a52" />
+                <h1 className="gestion-title" style={{ margin: 0 }}>Consultar Órdenes de Atención</h1>
+              </div>
+              <div style={{ display: 'flex', gap: 10 }}>
+                <button className="oa-btn-refresh">
+                  <Download size={14} style={{ opacity: 0.6 }} /> Exportar
+                </button>
+                <button className="oa-btn-refresh" onClick={fetchData}>
+                  <RefreshCw size={14} /> Actualizar
+                </button>
+              </div>
             </div>
-            <div className="co-filter-group">
-              <label className="co-filter-label">Estado</label>
-              <select className="co-filter-select" value={estado} onChange={e => setEstado(e.target.value)}>
-                {ESTADOS.map(e => <option key={e} value={e}>{e}</option>)}
-              </select>
-            </div>
-            <div className="co-search-wrapper">
-              <Search size={15} color="#94a3b8" className="co-search-icon" />
-              <input
-                type="text"
-                className="co-search-input"
-                placeholder="Buscar por número de orden, paciente o servicio..."
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-              />
+          </header>
+
+          {/* Card blanca */}
+          <div className="tabs-card-group">
+            <MovTabs onFirstActive={setFirstActive} />
+            <div className={`gestion-content-card${firstActive ? ' first-tab-active' : ''}`} style={{ marginTop: 0 }}>
+
+              {/* Filtros */}
+              <div className="co-filters-box">
+                <div className="co-filters-label">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                  Filtros de Búsqueda
+                </div>
+                <div className="co-filters-row">
+                  <div className="co-filter-group">
+                    <label className="co-filter-label">Año</label>
+                    <select className="co-filter-select" value={año} onChange={e => setAño(e.target.value)}>
+                      {AÑOS.map(a => <option key={a} value={a}>{a}</option>)}
+                    </select>
+                  </div>
+                  <div className="co-filter-group">
+                    <label className="co-filter-label">Estado</label>
+                    <select className="co-filter-select" value={estado} onChange={e => setEstado(e.target.value)}>
+                      {ESTADOS.map(e => <option key={e} value={e}>{e}</option>)}
+                    </select>
+                  </div>
+                  <div className="co-search-wrapper">
+                    <Search size={15} color="#94a3b8" className="co-search-icon" />
+                    <input
+                      type="text"
+                      className="co-search-input"
+                      placeholder="Buscar por número de orden, paciente o servicio..."
+                      value={search}
+                      onChange={e => setSearch(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Stats */}
+              <div className="co-stats-row">
+                <span className="co-stat-pill blue">Total: {total} órdenes</span>
+                <span className="co-stat-pill green">Completadas: {completadas}</span>
+                <span className="co-stat-pill orange">Pendientes: {pendientes}</span>
+                <span className="co-stat-pill teal">Valor Total: ${valorTotal.toLocaleString()}</span>
+              </div>
+
+              {/* Tabla */}
+              <div className="co-table-wrapper">
+                <table className="co-table">
+                  <thead>
+                    <tr>
+                      <th>Número Orden</th>
+                      <th>Fecha</th>
+                      <th>Paciente</th>
+                      <th>Servicio</th>
+                      <th>Contratista</th>
+                      <th>Valor</th>
+                      <th>Estado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {loading ? (
+                      <tr><td colSpan={7} className="co-table-empty">Cargando...</td></tr>
+                    ) : filtered.length === 0 ? (
+                      <tr>
+                        <td colSpan={7} className="co-table-empty">
+                          No hay órdenes para el año {año} con los filtros seleccionados
+                        </td>
+                      </tr>
+                    ) : (
+                      filtered.map(o => (
+                        <tr key={o.id}>
+                          <td className="co-col-num">{o.numero}</td>
+                          <td>{o.fecha}</td>
+                          <td className="co-col-paciente">{o.paciente}</td>
+                          <td>{o.servicio}</td>
+                          <td>{o.contratista}</td>
+                          <td>${o.valor.toLocaleString()}</td>
+                          <td>
+                            <span className={`co-estado-pill ${o.estado === 'C' ? 'green' : o.estado === 'P' ? 'orange' : o.estado === 'X' ? 'red' : 'gray'}`}>
+                              {estadoLabel[o.estado] || o.estado}
+                            </span>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
             </div>
           </div>
-        </div>
 
-        {/* ── Stats pills ── */}
-        <div className="co-stats-row">
-          <span className="co-stat-pill blue">Total: {total} órdenes</span>
-          <span className="co-stat-pill green">Completadas: {completadas}</span>
-          <span className="co-stat-pill orange">Pendientes: {pendientes}</span>
-          <span className="co-stat-pill teal">Valor Total: ${valorTotal.toLocaleString()}</span>
         </div>
-
-        {/* ── Tabla ── */}
-        <div className="co-table-wrapper">
-          <table className="co-table">
-            <thead>
-              <tr>
-                <th>Número Orden</th>
-                <th>Fecha</th>
-                <th>Paciente</th>
-                <th>Servicio</th>
-                <th>Contratista</th>
-                <th>Valor</th>
-                <th>Estado</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <tr><td colSpan={7} className="co-table-empty">Cargando...</td></tr>
-              ) : filtered.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="co-table-empty">
-                    No hay órdenes para el año {año} con los filtros seleccionados
-                  </td>
-                </tr>
-              ) : (
-                filtered.map(o => (
-                  <tr key={o.id}>
-                    <td className="co-col-num">{o.numero}</td>
-                    <td>{o.fecha}</td>
-                    <td className="co-col-paciente">{o.paciente}</td>
-                    <td>{o.servicio}</td>
-                    <td>{o.contratista}</td>
-                    <td>${o.valor.toLocaleString()}</td>
-                    <td>
-                      <span className={`co-estado-pill ${o.estado === 'C' ? 'green' : o.estado === 'P' ? 'orange' : o.estado === 'X' ? 'red' : 'gray'}`}>
-                        {estadoLabel[o.estado] || o.estado}
-                      </span>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-
-      </div>
-    </MovimientosLayout>
+      </main>
+    </div>
   );
 };
 

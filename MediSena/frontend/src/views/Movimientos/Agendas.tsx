@@ -1,60 +1,67 @@
 import React, { useState } from 'react';
-import Sidebar from '../../../components/Sidebar';
-import { Home, ChevronRight, Search } from 'lucide-react';
-import './Agendas.css';
+import Sidebar from '../../components/Sidebar';
+import { Home, ChevronRight } from 'lucide-react';
 import ProgramarAgenda from './tabs/ProgramarAgenda';
 import GestionAgendas from './tabs/GestionAgendas';
+import './tabs/Agendas.css';
+import '../../styles/GestionResoluciones/GestionResoluciones.css';
 
 const Agendas: React.FC = () => {
   const [activeTab, setActiveTab] = useState('Programar Agenda');
-
   const tabs = ['Programar Agenda', 'Gestión de Agendas'];
 
   return (
     <div className="main-layout">
       <Sidebar />
-      <main className="main-content" style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
-        <div className="agendas-container" style={{ overflowY: 'auto' }}>
-          
-          <header className="agendas-header">
-            <div className="db-header-top">
-              <nav className="db-breadcrumb">
-                <div className="db-breadcrumb-item"><Home size={13} /></div>
-                <div className="db-breadcrumb-sep"><ChevronRight size={12} /></div>
-                <div className="db-breadcrumb-item">Movimientos</div>
-                <div className="db-breadcrumb-sep"><ChevronRight size={12} /></div>
-                <div className="db-breadcrumb-item active">{activeTab}</div>
+      <main className="main-content">
+        <div className="gestion-container">
+
+          {/* Header */}
+          <header className="gestion-header">
+            <div className="gestion-header-top">
+              <nav className="breadcrumb">
+                <div className="breadcrumb-item"><Home size={14} /></div>
+                <div className="breadcrumb-sep"><ChevronRight size={13} /></div>
+                <div className="breadcrumb-item">Movimientos</div>
+                <div className="breadcrumb-sep"><ChevronRight size={13} /></div>
+                <div className="breadcrumb-item active">{activeTab}</div>
               </nav>
             </div>
-            
-            <div className="agendas-header-bottom">
-              <div className="agendas-header-bottom-left">
-                <h1 className="agendas-title">{activeTab}</h1>
-                {activeTab === 'Gestión de Agendas' && (
-                  <p className="agendas-tab-description">Visualice y administre las agendas médicas</p>
-                )}
-              </div>
-              <div className="agendas-header-bottom-right">
-                <div className="agendas-search-container-header">
-                  <input type="text" placeholder="Busca el nombre de usuario o radicado" className="agendas-search-input-header" />
-                  <button className="agendas-search-btn-header">
-                    <Search size={16} color="#002c4d" />
-                  </button>
-                </div>
-              </div>
+            <div className="gestion-header-bottom">
+              <h1 className="gestion-title" style={{ margin: 0 }}>{activeTab}</h1>
             </div>
+            <p className="oa-subtitle">
+              {activeTab === 'Programar Agenda'
+                ? 'Complete los datos para programar una nueva cita médica'
+                : 'Visualice y administre las agendas médicas programadas'}
+            </p>
           </header>
 
-          <div className="db-tabs-card-group" style={{ marginTop: '20px' }}>
-            <div className="agendas-tabs-scroll-area">
+          {/* Tabs + Content */}
+          <div className="tabs-card-group">
+
+            {/* Pills de pestañas */}
+            <div style={{ display: 'flex', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
               {tabs.map(tab => (
-                <div
+                <button
                   key={tab}
-                  className={`agendas-tab-pill ${activeTab === tab ? 'active' : ''}`}
                   onClick={() => setActiveTab(tab)}
+                  style={{
+                    padding: '8px 18px',
+                    borderRadius: 10,
+                    border: 'none',
+                    fontSize: '0.82rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    transition: 'all 0.18s',
+                    background: activeTab === tab
+                      ? 'linear-gradient(135deg, #0165B0, #013156)'
+                      : '#f1f5f9',
+                    color: activeTab === tab ? '#fff' : '#334155',
+                  }}
                 >
                   {tab}
-                </div>
+                </button>
               ))}
             </div>
 

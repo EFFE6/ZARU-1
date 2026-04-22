@@ -95,7 +95,8 @@ const Sidebar = () => {
         if (sub) {
           setActiveItem(item.id);
           setActiveSubItem(sub.id);
-          setOpenMenus(prev => ({ ...prev, [item.id]: true }));
+          // Solo abrir si todavía no está abierto — evita toggle al cambiar tabs
+          setOpenMenus(prev => prev[item.id] ? prev : { ...prev, [item.id]: true });
           return;
         }
       }

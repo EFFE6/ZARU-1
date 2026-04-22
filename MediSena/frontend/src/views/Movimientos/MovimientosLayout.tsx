@@ -18,7 +18,7 @@ const MovimientosLayout: React.FC<MovimientosLayoutProps> = ({ breadcrumb, child
   return (
     <div className="main-layout">
       <Sidebar />
-      <main className="main-content">
+      <main className="main-content main-content--fill">
         <div className="mov-page">
 
           {/* Breadcrumb */}

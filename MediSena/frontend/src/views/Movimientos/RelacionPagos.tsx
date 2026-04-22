@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Sidebar from '../../components/Sidebar';
+import MovTabs from './MovTabs';
 import api from '../../api/api';
 import {
   ChevronRight, ChevronLeft, Home, RefreshCw,
@@ -27,6 +28,7 @@ const RelacionPagosView: React.FC = () => {
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [firstActive, setFirstActive] = useState(false);
 
   const fetchPagos = async () => {
     setLoading(true);
@@ -98,7 +100,8 @@ const RelacionPagosView: React.FC = () => {
           </header>
 
           <div className="tabs-card-group">
-            <div className="gestion-content-card" style={{ borderRadius: '18px', marginTop: 0 }}>
+            <MovTabs onFirstActive={setFirstActive} />
+            <div className={`gestion-content-card${firstActive ? ' first-tab-active' : ''}`} style={{ marginTop: 0 }}>
 
               {/* Toolbar búsqueda */}
               <div className="rp-toolbar">

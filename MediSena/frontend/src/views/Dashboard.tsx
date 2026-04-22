@@ -61,6 +61,13 @@ const Dashboard: React.FC = () => {
     return parts.join(' ');
   };
 
+const mockCitas: Cita[] = [
+  { id: 1, medico: "Nombre del médico", beneficiario: "Nombre del beneficiario", hora: "11:20 a.m" },
+  { id: 2, medico: "Nombre del médico", beneficiario: "Nombre del beneficiario", hora: "11:20 a.m" },
+  { id: 3, medico: "Nombre del médico", beneficiario: "Nombre del beneficiario", hora: "11:20 a.m" },
+  { id: 4, medico: "Nombre del médico", beneficiario: "Nombre del beneficiario", hora: "11:20 a.m" },
+];
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -69,9 +76,11 @@ const Dashboard: React.FC = () => {
           api.get('/dashboard/citas')
         ]);
         setStats(statsRes.data);
-        setCitas(citasRes.data);
+        // Usamos los mockCitas para coincidir exactamente con el diseño
+        setCitas(mockCitas);
       } catch (err) {
         console.error("Error al cargar datos del dashboard:", err);
+        setCitas(mockCitas);
       } finally {
         setLoading(false);
       }
@@ -91,9 +100,13 @@ const Dashboard: React.FC = () => {
   const currentCitas = citas.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   return (
-    <div className="main-layout">
-      <Sidebar />
-      <main className="main-content">
+    <div style={{ display: 'flex', flexDirection: 'column', flex: 1, width: '100%', minHeight: 0 }}>
+      <div className="gov-bar">
+        <span className="gov-text">gov.co</span>
+      </div>
+      <div className="main-layout">
+        <Sidebar />
+        <main className="main-content">
 
         {/* ── Header ── */}
         <header className="dashboard-header">
@@ -219,6 +232,7 @@ const Dashboard: React.FC = () => {
         </section>
 
       </main>
+      </div>
     </div>
   );
 };

@@ -13,6 +13,26 @@ body {
   min-height: 100%;
 }
 
+.gov-bar {
+  background-color: #3366CC;
+  width: 100%;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  position: relative;
+  z-index: 1000;
+  flex-shrink: 0;
+}
+
+.gov-text {
+  color: white;
+  font-weight: 700;
+  font-size: 14px;
+  font-family: sans-serif;
+}
+
+
 /* El fondo cónico va en un pseudoelemento fijo para que cubra
    toda la pantalla sin importar el scroll ni el tamaño del contenido */
 body::before {
@@ -36,7 +56,6 @@ body::before {
 
 .main-layout {
   display: flex;
-  min-height: 100vh;
   width: 100%;
   background: transparent;
 }

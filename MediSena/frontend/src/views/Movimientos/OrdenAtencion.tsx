@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Sidebar from '../../components/Sidebar';
+import MovTabs from './MovTabs';
 import api from '../../api/api';
 import {
   ChevronRight, ChevronLeft, Home, Eye, Printer, Pencil,
@@ -340,6 +341,7 @@ const OrdenAtencionView: React.FC = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [detallesOrden, setDetallesOrden] = useState<OrdenAtencion | null>(null);
   const [editOrden, setEditOrden] = useState<OrdenAtencion | null>(null);
+  const [firstActive, setFirstActive] = useState(true); // Orden de Atención es el primer tab
 
   /* ── Fetch desde backend ── */
   const fetchOrdenes = async () => {
@@ -409,16 +411,26 @@ const OrdenAtencionView: React.FC = () => {
                   </span>
                 )}
               </div>
-              <button className="oa-btn-refresh" onClick={fetchOrdenes}>
-                <RefreshCw size={14} /> Actualizar
-              </button>
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <button
+                  className="oa-btn-nueva-orden"
+                  disabled
+                  title="Próximamente disponible"
+                >
+                  + Nueva Orden
+                </button>
+                <button className="oa-btn-refresh" onClick={fetchOrdenes}>
+                  <RefreshCw size={14} /> Actualizar
+                </button>
+              </div>
             </div>
             <p className="oa-subtitle">Gestionar órdenes médicas para beneficiarios</p>
           </header>
 
-          {/* ── Card principal ── */}
+          {/* ── Tabs + Card ── */}
           <div className="tabs-card-group">
-            <div className="gestion-content-card" style={{ borderRadius: '18px', marginTop: 0 }}>
+            <MovTabs onFirstActive={setFirstActive} />
+            <div className={`gestion-content-card${firstActive ? ' first-tab-active' : ''}`} style={{ marginTop: 0 }}>
 
               {/* Barra de advertencia — siempre visible */}
               <div className="oa-warning-bar">

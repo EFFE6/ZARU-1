@@ -6,11 +6,9 @@
   flex: 1;
   padding: 24px 26px 20px 26px;
   overflow-y: auto;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   gap: 18px;
-
 }
 
 /* ── Header ── */
