@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import Sidebar from '../../components/Sidebar';
+
 import api from '../../api/api';
 import {
   ChevronRight, Plus, ChevronLeft, Home, X, Trash2, EyeOff, Eye, Save,
@@ -487,10 +487,7 @@ const Gestion: React.FC = () => {
 
   /* ════════════════════════════════════════════════ RENDER ═══ */
   return (
-    <div className="main-layout">
-      <Sidebar />
-      <main className="main-content">
-        <div className="gestion-container">
+    <div className="gestion-container">
 
           {/* ── Header ── */}
           <header className="gestion-header">
@@ -816,8 +813,6 @@ const Gestion: React.FC = () => {
             />
           )}
 
-        </div>
-      </main>
     </div>
   );
 };

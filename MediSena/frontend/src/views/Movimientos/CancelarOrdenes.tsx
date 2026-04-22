@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Sidebar from '../../components/Sidebar';
+
 import MovTabs from './MovTabs';
 import { Home, ChevronRight, Search, AlertTriangle, FileX, CheckCircle2, Loader2, ClipboardList } from 'lucide-react';
 import '../../styles/GestionResoluciones/GestionResoluciones.css';
@@ -53,34 +53,9 @@ const CancelarOrdenes: React.FC = () => {
   };
 
   return (
-    <div className="main-layout">
-      <Sidebar />
-      <main className="main-content">
-        <div className="gestion-container">
+    <div className="co-table-container">
 
-          {/* Header degradado */}
-          <header className="gestion-header">
-            <div className="gestion-header-top">
-              <nav className="breadcrumb">
-                <div className="breadcrumb-item"><Home size={14} /></div>
-                <div className="breadcrumb-sep"><ChevronRight size={13} /></div>
-                <div className="breadcrumb-item">Movimientos</div>
-                <div className="breadcrumb-sep"><ChevronRight size={13} /></div>
-                <div className="breadcrumb-item active">Cancelar Órdenes</div>
-              </nav>
-            </div>
-            <div className="gestion-header-bottom">
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <ClipboardList size={24} color="#1e3a52" />
-                <h1 className="gestion-title" style={{ margin: 0 }}>Cancelar Órdenes</h1>
-              </div>
-            </div>
-          </header>
 
-          {/* Card blanca */}
-          <div className="tabs-card-group">
-            <MovTabs onFirstActive={setFirstActive} />
-            <div className={`gestion-content-card${firstActive ? ' first-tab-active' : ''}`} style={{ marginTop: 0 }}>
 
               {/* Banner éxito */}
               {cancelada && (
@@ -172,11 +147,9 @@ const CancelarOrdenes: React.FC = () => {
                 </div>
               )}
 
-            </div>
-          </div>
 
-        </div>
-      </main>
+
+
     </div>
   );
 };

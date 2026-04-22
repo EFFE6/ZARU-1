@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Sidebar from '../../components/Sidebar';
+
 import { Home, ChevronRight } from 'lucide-react';
 import ProgramarAgenda from './tabs/ProgramarAgenda';
 import GestionAgendas from './tabs/GestionAgendas';
@@ -11,10 +11,7 @@ const Agendas: React.FC = () => {
   const tabs = ['Programar Agenda', 'Gestión de Agendas'];
 
   return (
-    <div className="main-layout">
-      <Sidebar />
-      <main className="main-content">
-        <div className="gestion-container">
+    <div className="gestion-container">
 
           {/* Header */}
           <header className="gestion-header">
@@ -69,8 +66,6 @@ const Agendas: React.FC = () => {
             {activeTab === 'Gestión de Agendas' && <GestionAgendas />}
           </div>
 
-        </div>
-      </main>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import Sidebar from '../../components/Sidebar';
+
 import MovTabs from './MovTabs';
 import api from '../../api/api';
 import { Home, ChevronRight, Clock, Download, RefreshCw, Search } from 'lucide-react';
@@ -76,42 +76,9 @@ const ConsultarOrdenes: React.FC = () => {
   const estadoLabel: Record<string, string> = { A: 'A', C: 'C', P: 'P', X: 'X' };
 
   return (
-    <div className="main-layout">
-      <Sidebar />
-      <main className="main-content">
-        <div className="gestion-container">
+    <div className="co-table-container">
 
-          {/* Header degradado */}
-          <header className="gestion-header">
-            <div className="gestion-header-top">
-              <nav className="breadcrumb">
-                <div className="breadcrumb-item"><Home size={14} /></div>
-                <div className="breadcrumb-sep"><ChevronRight size={13} /></div>
-                <div className="breadcrumb-item">Movimientos</div>
-                <div className="breadcrumb-sep"><ChevronRight size={13} /></div>
-                <div className="breadcrumb-item active">Consultar Órdenes</div>
-              </nav>
-            </div>
-            <div className="gestion-header-bottom">
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <Clock size={24} color="#1e3a52" />
-                <h1 className="gestion-title" style={{ margin: 0 }}>Consultar Órdenes de Atención</h1>
-              </div>
-              <div style={{ display: 'flex', gap: 10 }}>
-                <button className="oa-btn-refresh">
-                  <Download size={14} style={{ opacity: 0.6 }} /> Exportar
-                </button>
-                <button className="oa-btn-refresh" onClick={fetchData}>
-                  <RefreshCw size={14} /> Actualizar
-                </button>
-              </div>
-            </div>
-          </header>
 
-          {/* Card blanca */}
-          <div className="tabs-card-group">
-            <MovTabs onFirstActive={setFirstActive} />
-            <div className={`gestion-content-card${firstActive ? ' first-tab-active' : ''}`} style={{ marginTop: 0 }}>
 
               {/* Filtros */}
               <div className="co-filters-box">
@@ -197,11 +164,9 @@ const ConsultarOrdenes: React.FC = () => {
                 </table>
               </div>
 
-            </div>
-          </div>
 
-        </div>
-      </main>
+
+
     </div>
   );
 };

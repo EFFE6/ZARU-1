@@ -12,8 +12,8 @@ import ProgramarAgendaView from './views/Movimientos/ProgramarAgenda';
 import GestionAgendasView from './views/Movimientos/GestionAgendas';
 import CancelarOrdenes from './views/Movimientos/CancelarOrdenes';
 import ConsultarOrdenes from './views/Movimientos/ConsultarOrdenes';
+import MovimientosWrapper from './views/Movimientos/MovimientosWrapper';
 import './App.css';
-
 import MainLayout from './components/MainLayout';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -29,19 +29,21 @@ function App() {
     <>
       <Routes>
         <Route path="/login" element={<Login />} />
-
-        {/* Protected Routes inside MainLayout */}
+        {/* Rutas Protegidas dentro del MainLayout */}
         <Route element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/gestion" element={<Gestion />} />
           <Route path="/datos-basicos" element={<DatosBasicos />} />
-          <Route path="/movimientos/orden-atencion" element={<OrdenAtencion />} />
-          <Route path="/movimientos/cuenta-cobro" element={<CuentaCobro />} />
-          <Route path="/movimientos/relacion-pagos" element={<RelacionPagos />} />
-          <Route path="/movimientos/programar-agenda" element={<ProgramarAgendaView />} />
-          <Route path="/movimientos/agendas" element={<GestionAgendasView />} />
-          <Route path="/movimientos/cancelar-ordenes" element={<CancelarOrdenes />} />
-          <Route path="/movimientos/consultar-ordenes" element={<ConsultarOrdenes />} />
+          <Route path="/movimientos" element={<MovimientosWrapper />}>
+            <Route index element={<Navigate to="orden-atencion" replace />} />
+            <Route path="orden-atencion" element={<OrdenAtencion />} />
+            <Route path="cuenta-cobro" element={<CuentaCobro />} />
+            <Route path="relacion-pagos" element={<RelacionPagos />} />
+            <Route path="programar-agenda" element={<ProgramarAgendaView />} />
+            <Route path="agendas" element={<GestionAgendasView />} />
+            <Route path="cancelar-ordenes" element={<CancelarOrdenes />} />
+            <Route path="consultar-ordenes" element={<ConsultarOrdenes />} />
+          </Route>
           <Route path="/excedentes" element={<Dashboard />} />
           <Route path="/consultas" element={<Dashboard />} />
           <Route path="/reportes" element={<Dashboard />} />
@@ -49,9 +51,7 @@ function App() {
         </Route>
 
         <Route path="/dashboard" element={<Navigate to="/" replace />} />
-        <Route path="/movimientos" element={<Navigate to="/movimientos/orden-atencion" replace />} />
 
-        {/* Redirección por defecto */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>

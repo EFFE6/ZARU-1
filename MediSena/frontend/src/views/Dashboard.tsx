@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from '../components/Sidebar';
+
 import api from '../api/api';
 import {
   Loader2,
@@ -82,7 +82,7 @@ const Dashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="main-layout" style={{ justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
         <Loader2 className="animate-spin" size={48} color="#1C3E57" />
       </div>
     );
@@ -92,15 +92,8 @@ const Dashboard: React.FC = () => {
   const currentCitas = citas.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', flex: 1, width: '100%', minHeight: 0 }}>
-      <div className="gov-bar">
-        <span className="gov-text">gov.co</span>
-      </div>
-      <div className="main-layout">
-        <Sidebar />
-        <main className="main-content">
-
-        {/* ── Header ── */}
+    <>
+      {/* ── Header ── */}
         <header className="dashboard-header">
           <div className="header-title-container">
             <div className="sun-icon-container">
@@ -223,9 +216,7 @@ const Dashboard: React.FC = () => {
           </div>
         </section>
 
-      </main>
-      </div>
-    </div>
+    </>
   );
 };
 

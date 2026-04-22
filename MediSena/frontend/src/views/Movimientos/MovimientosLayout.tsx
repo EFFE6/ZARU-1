@@ -1,5 +1,5 @@
 import React from 'react';
-import Sidebar from '../../components/Sidebar';
+
 import { Home, ChevronRight } from 'lucide-react';
 import './Movimientos.css';
 
@@ -16,10 +16,7 @@ interface MovimientosLayoutProps {
  */
 const MovimientosLayout: React.FC<MovimientosLayoutProps> = ({ breadcrumb, children }) => {
   return (
-    <div className="main-layout">
-      <Sidebar />
-      <main className="main-content main-content--fill">
-        <div className="mov-page">
+    <div className="mov-page">
 
           {/* Breadcrumb */}
           <nav className="breadcrumb mov-breadcrumb">
@@ -37,8 +34,6 @@ const MovimientosLayout: React.FC<MovimientosLayoutProps> = ({ breadcrumb, child
           {/* Contenido (card blanca con title adentro) */}
           {children}
 
-        </div>
-      </main>
     </div>
   );
 };

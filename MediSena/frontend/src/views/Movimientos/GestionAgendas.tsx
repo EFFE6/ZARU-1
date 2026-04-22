@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Sidebar from '../../components/Sidebar';
+
 import MovTabs from './MovTabs';
 import { Home, ChevronRight, Eye, Pencil, RefreshCw, ChevronDown } from 'lucide-react';
 import '../../styles/GestionResoluciones/GestionResoluciones.css';
@@ -51,34 +51,9 @@ const GestionAgendasView: React.FC = () => {
   });
 
   return (
-    <div className="main-layout">
-      <Sidebar />
-      <main className="main-content">
-        <div className="gestion-container">
+    <div className="gag-table-container">
 
-          {/* Header degradado */}
-          <header className="gestion-header">
-            <div className="gestion-header-top">
-              <nav className="breadcrumb">
-                <div className="breadcrumb-item"><Home size={14} /></div>
-                <div className="breadcrumb-sep"><ChevronRight size={13} /></div>
-                <div className="breadcrumb-item">Movimientos</div>
-                <div className="breadcrumb-sep"><ChevronRight size={13} /></div>
-                <div className="breadcrumb-item active">Agendas</div>
-              </nav>
-            </div>
-            <div className="gestion-header-bottom">
-              <h1 className="gestion-title" style={{ margin: 0 }}>Gestión de Agendas</h1>
-              <button className="oa-btn-refresh">
-                <RefreshCw size={14} /> Actualizar
-              </button>
-            </div>
-          </header>
 
-          {/* Card blanca */}
-          <div className="tabs-card-group">
-            <MovTabs onFirstActive={setFirstActive} />
-            <div className={`gestion-content-card${firstActive ? ' first-tab-active' : ''}`} style={{ marginTop: 0 }}>
 
               {/* Filtros */}
               <div className="oa-toolbar" style={{ flexWrap: 'wrap', gap: 10 }}>
@@ -162,11 +137,9 @@ const GestionAgendasView: React.FC = () => {
                 <span className="rp-total-badge rp-total-dark">{filtered.length} agenda(s) encontrada(s)</span>
               </div>
 
-            </div>
-          </div>
 
-        </div>
-      </main>
+
+
     </div>
   );
 };

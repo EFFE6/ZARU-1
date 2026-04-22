@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import Sidebar from '../../components/Sidebar';
+
 import MovTabs from './MovTabs';
 import api from '../../api/api';
 import {
@@ -67,41 +67,9 @@ const RelacionPagosView: React.FC = () => {
   }, 0);
 
   return (
-    <div className="main-layout">
-      <Sidebar />
-      <main className="main-content">
-        <div className="gestion-container">
+    <div className="rp-table-container">
 
-          {/* Header */}
-          <header className="gestion-header">
-            <div className="gestion-header-top">
-              <nav className="breadcrumb">
-                <div className="breadcrumb-item"><Home size={14} /></div>
-                <div className="breadcrumb-sep"><ChevronRight size={13} /></div>
-                <div className="breadcrumb-item">Movimientos</div>
-                <div className="breadcrumb-sep"><ChevronRight size={13} /></div>
-                <div className="breadcrumb-item active">Relación de Pagos</div>
-              </nav>
-            </div>
-            <div className="gestion-header-bottom">
-              <h1 className="gestion-title" style={{ margin: 0 }}>Relación de Pagos</h1>
-              <div style={{ display: 'flex', gap: 10 }}>
-                <button className="oa-btn-refresh" onClick={fetchPagos}>
-                  <Download size={14} style={{ opacity: 0.6 }} /> Exportar
-                </button>
-                <button className="oa-btn-refresh" onClick={() => window.print()}>
-                  <Printer size={14} style={{ opacity: 0.6 }} /> Imprimir
-                </button>
-                <button className="oa-btn-refresh" onClick={fetchPagos}>
-                  <RefreshCw size={14} /> Actualizar
-                </button>
-              </div>
-            </div>
-          </header>
 
-          <div className="tabs-card-group">
-            <MovTabs onFirstActive={setFirstActive} />
-            <div className={`gestion-content-card${firstActive ? ' first-tab-active' : ''}`} style={{ marginTop: 0 }}>
 
               {/* Toolbar búsqueda */}
               <div className="rp-toolbar">
@@ -189,10 +157,6 @@ const RelacionPagosView: React.FC = () => {
                 </span>
               </div>
 
-            </div>
-          </div>
-        </div>
-      </main>
     </div>
   );
 };

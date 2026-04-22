@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Sidebar from '../../components/Sidebar';
+
 import api from '../../api/api';
 import {
   ChevronRight,
@@ -133,10 +133,7 @@ const DatosBasicos: React.FC = () => {
   };
 
   return (
-    <div className="main-layout">
-      <Sidebar />
-      <main className="main-content">
-        <div className="db-container">
+    <div className="db-container">
 
           {/* ── Header ── */}
           <header className="db-header">
@@ -578,9 +575,6 @@ const DatosBasicos: React.FC = () => {
               </div>
             </div>
           )}
-
-        </div>
-      </main>
     </div>
   );
 };

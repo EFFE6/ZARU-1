@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import Sidebar from '../../components/Sidebar';
+
 import MovTabs from './MovTabs';
 import api from '../../api/api';
 import {
@@ -385,52 +385,13 @@ const OrdenAtencionView: React.FC = () => {
   };
 
   return (
-    <div className="main-layout">
-      <Sidebar />
-      <main className="main-content">
-        <div className="gestion-container">
+    <>
+      <div className="oa-table-container">
 
           {/* ── Header ── */}
-          <header className="gestion-header">
-            <div className="gestion-header-top">
-              <nav className="breadcrumb">
-                <div className="breadcrumb-item"><Home size={14} /></div>
-                <div className="breadcrumb-sep"><ChevronRight size={13} /></div>
-                <div className="breadcrumb-item">Movimientos</div>
-                <div className="breadcrumb-sep"><ChevronRight size={13} /></div>
-                <div className="breadcrumb-item active">Orden de atención</div>
-              </nav>
-            </div>
-            <div className="gestion-header-bottom">
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-                <h1 className="gestion-title" style={{ margin: 0 }}>Órdenes de Atención</h1>
-                {/* Badge: filtradas de total — sólo visible con datos cargados */}
-                {!loading && (
-                  <span className="oa-count-badge">
-                    {filtered.length} de {ordenes.length}
-                  </span>
-                )}
-              </div>
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                <button
-                  className="oa-btn-nueva-orden"
-                  disabled
-                  title="Próximamente disponible"
-                >
-                  + Nueva Orden
-                </button>
-                <button className="oa-btn-refresh" onClick={fetchOrdenes}>
-                  <RefreshCw size={14} /> Actualizar
-                </button>
-              </div>
-            </div>
-            <p className="oa-subtitle">Gestionar órdenes médicas para beneficiarios</p>
-          </header>
 
-          {/* ── Tabs + Card ── */}
-          <div className="tabs-card-group">
-            <MovTabs onFirstActive={setFirstActive} />
-            <div className={`gestion-content-card${firstActive ? ' first-tab-active' : ''}`} style={{ marginTop: 0 }}>
+
+
 
               {/* Barra de advertencia — siempre visible */}
               <div className="oa-warning-bar">
@@ -563,14 +524,10 @@ const OrdenAtencionView: React.FC = () => {
                 </div>
                 <div className="page-info-total">{currentPage} - de {totalPages} páginas</div>
               </div>
-            </div>
-          </div>
-        </div>
-      </main>
-
+    </div>
       {detallesOrden && <DetallesModal orden={detallesOrden} onClose={() => setDetallesOrden(null)} />}
       {editOrden && <EditarOrdenModal orden={editOrden} onClose={() => setEditOrden(null)} onSave={handleSaveEdit} />}
-    </div>
+    </>
   );
 };
 
