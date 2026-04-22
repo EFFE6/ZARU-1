@@ -19,7 +19,7 @@ import {
   Eye,
   Ban
 } from 'lucide-react';
-import '../../styles/DatosBasicos.css';
+import '../../styles/DatosBasicos/DatosBasicos.css';
 
 // Importación de componentes de cada pestaña
 import Funcionarios, { Funcionario, Beneficiario } from './tabs/Funcionarios';
@@ -151,8 +151,20 @@ const DatosBasicos: React.FC = () => {
             </div>
             <div className="db-header-bottom">
               <div className="db-header-bottom-left">
-                <h1 className="db-title">Gestión de {activeTab}</h1>
-                <p className="db-subtitle">Administre los {activeTab.toLowerCase()} del SENA</p>
+                <h1 className="db-title">
+                  {activeTab === 'Funcionarios' ? 'Datos básicos' : `Gestión de ${activeTab.toLowerCase()}`}
+                </h1>
+              </div>
+              <div className="db-header-bottom-right">
+                <div className="db-search-container-header">
+                  <input type="text" placeholder="Busca el nombre de usuario o radicado" className="db-search-input-header" />
+                  <button className="db-search-btn-header">
+                    <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="7" cy="7" r="4.2" stroke="#002c4d" strokeWidth="2" />
+                      <line x1="10.2" y1="10.5" x2="15.5" y2="15.8" stroke="#002c4d" strokeWidth="2" strokeLinecap="round" />
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
           </header>

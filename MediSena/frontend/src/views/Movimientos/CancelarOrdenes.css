@@ -1,0 +1,191 @@
+/* =============================================================
+   CANCELAR ÓRDENES — MediSENA
+   ============================================================= */
+
+.cancel-card {
+  background: white;
+  border-radius: 14px;
+  padding: 28px 32px;
+  box-shadow: 0 2px 12px rgba(28, 62, 87, 0.06);
+  min-height: 460px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ─── Header ── */
+.cancel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.cancel-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.cancel-title-icon {
+  width: 2rem;
+  height: 2rem;
+  background: #1e3a52;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cancel-title {
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: #1e3a52;
+  margin: 0;
+  letter-spacing: -0.03em;
+}
+
+.cancel-subtitle {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 0;
+  padding-left: 3rem;
+}
+
+/* ─── Buscador ── */
+.cancel-search-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.cancel-search-input {
+  flex: 1;
+  padding: 10px 16px;
+  border: 1.5px solid #dde8f0;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #1e3a52;
+  outline: none;
+  transition: border-color 0.2s;
+  background: #f8fafc;
+}
+
+.cancel-search-input:focus {
+  border-color: #002c4d;
+  background: white;
+}
+
+.cancel-search-input::placeholder {
+  color: #94a3b8;
+}
+
+.cancel-search-btn {
+  display: flex;
+  align-items: center;
+  padding: 10px 24px;
+  background: #94a3b8;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.cancel-search-btn:hover {
+  background: #64748b;
+}
+
+/* ─── Warning banner ── */
+.cancel-warning-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 13.5px;
+  color: #92400e;
+  line-height: 1.5;
+}
+
+.cancel-warning-banner strong {
+  color: #b45309;
+}
+
+/* ─── Empty state ── */
+.cancel-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #94a3b8;
+  font-size: 14px;
+  padding: 40px 0;
+}
+
+/* ─── Resultado ── */
+.cancel-result-card {
+  background: #f8fafc;
+  border: 1.5px solid #dde8f0;
+  border-radius: 12px;
+  padding: 20px 24px;
+}
+
+.cancel-result-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.cancel-result-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cancel-result-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cancel-result-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e3a52;
+}
+
+.cancel-result-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.cancel-btn-cancel-order {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.cancel-btn-cancel-order:hover {
+  background: #b91c1c;
+}

@@ -5,7 +5,7 @@ import {
   ChevronRight, Plus, ChevronLeft, Home, X, Trash2, EyeOff, Eye, Save,
   AlertTriangle,
 } from 'lucide-react';
-import '../../styles/GestionResoluciones.css';
+import '../../styles/GestionResoluciones/GestionResoluciones.css';
 import ResolucionesIcon from '../../assets/img/icons/resoluciones-tags.png';
 import CampanaSvg from '../../assets/img/icons/campana.svg';
 
@@ -33,6 +33,7 @@ import {
 import { ParametrosToolbar, ParametrosHead, ParametrosTabla, EditParametroModal } from './Parametros';
 import { SubEspecialidadesToolbar, SubEspecialidadesHead, SubEspecialidadesTabla, EditSubModal } from './SubEspecialidades';
 import AbrirVigencia from './AbrirVigencia';
+import Footer from '../../components/Footer';
 
 /* ════════════════════════════════════════════════════════════
    COMPONENTE PRINCIPAL – Gestión
@@ -591,6 +592,9 @@ const Gestion: React.FC = () => {
                   <div className="page-info-total">{currentPage} - de {totalPages} páginas</div>
                 </div>
               )}
+              
+              {/* Footer para Niveles */}
+              {activeTab === 'Niveles' && <Footer />}
             </div>
           </div>
 

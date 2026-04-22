@@ -7,7 +7,6 @@ import {
   ChevronRight,
   ChevronDown,
   ChevronUp,
-  LogOut
 } from 'lucide-react';
 import {
   DashboardIcon,
@@ -19,9 +18,15 @@ import {
   ReportesIcon,
   ReportesNacionalesIcon
 } from './SidebarIcons';
-import '../styles/Sidebar.css';
+import '../styles/Sidebar/Sidebar.css';
 
-import logo from '../assets/img/Sidebar.png';
+/* ── Assets logos ── */
+import logoExpanded  from '../assets/img/Sidebar/Sidebar.svg';
+import logoCollapsed from '../assets/img/Sidebar/Sidebar-colapsado.svg';
+
+/* ── Assets perfil ── */
+import iconoFace    from '../assets/img/perfil/icono-face.svg';
+import botonSalir   from '../assets/img/perfil/boton-salir.svg';
 
 /* ── Tipos ── */
 interface SubItem {
@@ -84,8 +89,6 @@ const Sidebar = () => {
   /* Detectar ruta activa */
   useEffect(() => {
     const path = location.pathname;
-
-    // Revisar subitems
     for (const item of navItems) {
       if (item.children) {
         const sub = item.children.find(c => c.path === path);
@@ -142,15 +145,21 @@ const Sidebar = () => {
           <X size={22} />
         </button>
 
-        {/* Botón de retraer menú en la parte superior derecha */}
-        <button className="desktop-collapse-toggle" onClick={() => setIsCollapsed(!isCollapsed)}>
-          {isCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+        {/* Botón colapso */}
+        <button
+          className="desktop-collapse-toggle"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          aria-label={isCollapsed ? 'Expandir menú' : 'Colapsar menú'}
+        >
+          {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
         </button>
 
         {/* Logo */}
         <div className="sidebar-logo">
-          {!isCollapsed && <img src={logo} alt="MediSENA Logo" />}
-          {isCollapsed && <span className="logo-collapsed-text">MS</span>}
+          {isCollapsed
+            ? <img src={logoCollapsed} alt="MediSENA" className="sidebar-logo-collapsed" />
+            : <img src={logoExpanded}  alt="MediSENA" className="sidebar-logo-expanded"  />
+          }
         </div>
 
         {/* Navegación */}
@@ -163,7 +172,6 @@ const Sidebar = () => {
 
               return (
                 <li key={item.id} className="nav-item-group">
-                  {/* Item principal */}
                   <div
                     className={`nav-item ${isActive && !activeSubItem ? 'active' : ''} ${isActive && hasChildren ? 'parent-active' : ''}`}
                     onClick={() => handleNavClick(item)}
@@ -202,23 +210,35 @@ const Sidebar = () => {
           </ul>
         </nav>
 
-        {/* Perfil */}
+        {/* Sección perfil */}
         <div className="user-profile-section">
-          <div className="profile-card">
-            <div className="profile-info">
-              <div className="profile-avatar">
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Paula" alt="Paula" />
-              </div>
-              {!isCollapsed && (
-                <div className="profile-text">
-                  <span className="profile-name">Paula<br />Chaparro</span>
+          <div className={`profile-card ${isCollapsed ? 'profile-card--collapsed' : ''}`}>
+            {isCollapsed ? (
+              /* Modo colapsado: solo avatar centrado + botón salir */
+              <>
+                <div className="profile-avatar">
+                  <img src={iconoFace} alt="Usuario" />
                 </div>
-              )}
-            </div>
-            <button className="logout-button" onClick={handleLogout} title="Cerrar sesión">
-              <LogOut size={isCollapsed ? 18 : 14} style={{ margin: isCollapsed ? '0 auto' : '0' }} />
-              {!isCollapsed && <span>Cerrar sesión</span>}
-            </button>
+                <button className="logout-icon-btn" onClick={handleLogout} title="Cerrar sesión">
+                  <img src={botonSalir} alt="Salir" className="logout-icon-img" />
+                </button>
+              </>
+            ) : (
+              /* Modo expandido: avatar + nombre + botón */
+              <div className="profile-inner">
+                <div className="profile-info">
+                  <div className="profile-avatar">
+                    <img src={iconoFace} alt="Usuario" />
+                  </div>
+                  <div className="profile-text">
+                    <span className="profile-name">Paula<br />Chaparro</span>
+                  </div>
+                </div>
+                <button className="logout-icon-btn" onClick={handleLogout} title="Cerrar sesión">
+                  <img src={botonSalir} alt="Salir" className="logout-icon-img" />
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

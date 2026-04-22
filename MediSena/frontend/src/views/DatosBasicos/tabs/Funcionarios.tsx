@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../../api/api';
 import {
-  Search,
   Plus,
   RefreshCw,
   ArrowUpDown,
-  Eye,
-  Pencil,
-  Ban,
   Users,
   Check,
   X,
@@ -20,6 +16,13 @@ import {
   ChevronsRight,
   Info
 } from 'lucide-react';
+
+// Iconos SVG personalizados
+import iconBotonVer from '../../../assets/img/datosbasicos/icons/funcionarios/botonver.svg';
+import iconBotonEdit from '../../../assets/img/datosbasicos/icons/funcionarios/botonedit.svg';
+import iconCargoAmarillo from '../../../assets/img/datosbasicos/icons/funcionarios/cargoamarillo.svg';
+import iconCargoAzul from '../../../assets/img/datosbasicos/icons/funcionarios/cargoazul.svg';
+import iconRegional from '../../../assets/img/datosbasicos/icons/funcionarios/regional.svg';
 
 export interface Funcionario {
   id: number;
@@ -152,34 +155,25 @@ const Funcionarios: React.FC<FuncionariosProps> = ({ onOpenBeneficiarios, onEdit
       {/* Toolbar */}
       <div className="db-toolbar">
         <div className="db-toolbar-filters">
-          <div className="db-search-wrapper" style={{ flex: 2 }}>
-            <div className="db-search-container">
-              <Search size={16} color="#3f607d" />
-              <input
-                type="text"
-                placeholder="Buscar por identificación, nombre o cargo..."
-                className="db-search-input"
-                value={searchQuery}
-                onChange={e => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-              />
-            </div>
-          </div>
           <div className="db-filter-group">
-            <label className="db-filter-label">Estado</label>
             <select className="db-filter-select" value={estadoFilter} onChange={e => { setEstadoFilter(e.target.value); setCurrentPage(1); }}>
-              <option>Todos</option>
-              <option>ACTIVO</option>
-              <option>INACTIVO</option>
+              <option value="Todos">Estado</option>
+              <option value="ACTIVO">ACTIVO</option>
+              <option value="INACTIVO">INACTIVO</option>
             </select>
           </div>
           <div className="db-filter-group">
-            <label className="db-filter-label">Regional</label>
             <select className="db-filter-select" value={regionalFilter} onChange={e => { setRegionalFilter(e.target.value); setCurrentPage(1); }}>
-              <option>Todas</option>
-              <option>15</option>
-              <option>63</option>
+              <option value="Todas">Regional</option>
+              <option value="15">15</option>
+              <option value="63">63</option>
             </select>
           </div>
+          {regionalFilter === 'Todas' && (
+            <div className="db-active-filter-tag">
+              Todas <X size={13} className="db-filter-tag-x" onClick={() => setRegionalFilter('')} />
+            </div>
+          )}
         </div>
         <div className="db-toolbar-right" style={{ marginLeft: '16px' }}>
           <button className="db-btn-refresh" onClick={fetchFuncionarios}>
@@ -198,14 +192,14 @@ const Funcionarios: React.FC<FuncionariosProps> = ({ onOpenBeneficiarios, onEdit
         <table className="db-table">
           <thead>
             <tr>
-              <th>IDENTIFICACIÓN <ArrowUpDown size={13} className="db-sort-icon" /></th>
-              <th>NOMBRE COMPLETOS <ArrowUpDown size={13} className="db-sort-icon" /></th>
+              <th>ID</th>
+              <th>NOMBRE COMPLETO <ArrowUpDown size={13} className="db-sort-icon" /></th>
               <th>CARGO</th>
               <th>DEPENDENCIA</th>
               <th>REGIONAL</th>
               <th>BENEFICIARIOS</th>
               <th>ESTADO</th>
-              <th>ACCIONES</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -216,42 +210,62 @@ const Funcionarios: React.FC<FuncionariosProps> = ({ onOpenBeneficiarios, onEdit
             ) : (
               paginatedData.map(f => (
                 <tr key={f.id}>
-                  <td>{f.identificacion}</td>
+                  <td className="db-col-id">{f.identificacion}</td>
                   <td>
-                    <div className="db-avatar-container">
-                      <div className="db-avatar-circle">
+                    <div className="db-user-cell">
+                      <div className="db-user-avatar">
                         {f.nombre.split(' ').map(n => n[0]).join('').slice(0, 2)}
                       </div>
-                      <span className="db-name-text">{f.nombre}</span>
+                      <span className="db-user-name">{f.nombre}</span>
                     </div>
                   </td>
-                  <td><span className="db-cargo-text">{f.cargo}</span></td>
+                  <td>
+                    <span className={`db-cargo-pill ${f.cargo?.toLowerCase().includes('instructor') ? 'amarillo' : 'azul'}`}>
+                      <img
+                        src={f.cargo?.toLowerCase().includes('instructor') ? iconCargoAmarillo : iconCargoAzul}
+                        alt="cargo"
+                        className="db-cargo-icon"
+                      />
+                      {f.cargo}
+                    </span>
+                  </td>
                   <td>{f.dependencia}</td>
-                  <td>{f.regional}</td>
                   <td>
-                    <div className="db-beneficiarios-td">
-                      <Users size={18} className="db-beneficiarios-icon" style={{ cursor: 'pointer' }} onClick={() => onOpenBeneficiarios(f)} />
-                      <div className="db-beneficiarios-grid">
-                        <div className="db-beneficiario-stat">
-                          {f.beneficiarios.activos} <Check size={11} className="db-stat-check" />
-                        </div>
-                        <div className="db-beneficiario-stat">
-                          {f.beneficiarios.inactivos} <X size={11} className="db-stat-x" />
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <span className={`db-status-badge ${f.estado === 'ACTIVO' ? 'activo' : 'inactivo'}`}>
-                      <Check size={14} style={{ marginRight: '4px' }} />
-                      {f.estado}
+                    <span className="db-regional-pill">
+                      <img src={iconRegional} alt="regional" className="db-cargo-icon" />
+                      {f.regional}
                     </span>
                   </td>
                   <td>
+                    <div className="db-beneficiarios-td">
+                      <div className="db-beneficiarios-grid">
+                        <div className="db-beneficiario-stat bene-check">
+                          <Check size={11} /> {f.beneficiarios.activos}
+                        </div>
+                        <div className="db-beneficiario-stat bene-x">
+                          <X size={11} /> {f.beneficiarios.inactivos}
+                        </div>
+                      </div>
+                      <span className="db-bene-count" onClick={() => onOpenBeneficiarios(f)}>
+                        {f.beneficiarios.activos + f.beneficiarios.inactivos}
+                      </span>
+                    </div>
+                  </td>
+                  <td>
+                    <div className={`db-toggle-switch ${f.estado === 'ACTIVO' ? 'active' : ''}`}>
+                      <div className="db-toggle-thumb">
+                        {f.estado === 'ACTIVO' ? <Check size={10} color="#059669" /> : <X size={10} color="#9ca3af" />}
+                      </div>
+                    </div>
+                  </td>
+                  <td>
                     <div className="db-row-actions">
-                      <button className="db-icon-btn db-icon-eye" title="Ver" onClick={() => onViewOfficial(f)}><Eye size={16} /></button>
-                      <button className="db-icon-btn db-icon-pencil" title="Editar" onClick={() => onEditOfficial(f)}><Pencil size={16} /></button>
-                      <button className="db-icon-btn db-icon-ban" title="Restringir" onClick={() => { setItemToDelete(f); setIsDeleteModalOpen(true); }}><Ban size={16} /></button>
+                      <button className="db-icon-btn-svg" title="Ver" onClick={() => onViewOfficial(f)}>
+                        <img src={iconBotonVer} alt="ver" className="db-action-icon" />
+                      </button>
+                      <button className="db-icon-btn-svg" title="Editar" onClick={() => onEditOfficial(f)}>
+                        <img src={iconBotonEdit} alt="editar" className="db-action-icon" />
+                      </button>
                     </div>
                   </td>
                 </tr>
