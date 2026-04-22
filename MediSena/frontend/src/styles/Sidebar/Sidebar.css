@@ -249,11 +249,11 @@
   gap: 8px;
 }
 
-/* Card colapsada: centrada con solo avatar + icono */
+/* Card colapsada: centrada con solo avatar */
 .profile-card--collapsed {
   align-items: center;
-  padding: 10px 6px;
-  gap: 10px;
+  padding: 10px 0;
+  background-color: transparent;
 }
 
 /* Fila interna expandida: avatar+nombre a la izquierda, icono a la derecha */
