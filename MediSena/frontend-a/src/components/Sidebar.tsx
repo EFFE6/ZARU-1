@@ -21,12 +21,12 @@ import {
 import '../styles/Sidebar/Sidebar.css';
 
 /* ── Assets logos ── */
-import logoExpanded from '../assets/img/Sidebar/Sidebar.svg';
+import logoExpanded  from '../assets/img/Sidebar/Sidebar.svg';
 import logoCollapsed from '../assets/img/Sidebar/Sidebar-colapsado.svg';
 
 /* ── Assets perfil ── */
-import iconoFace from '../assets/img/perfil/icono-face.svg';
-import botonSalir from '../assets/img/perfil/boton-salir.svg';
+import iconoFace    from '../assets/img/perfil/icono-face.svg';
+import botonSalir   from '../assets/img/perfil/boton-salir.svg';
 
 /* ── Tipos ── */
 interface SubItem {
@@ -55,8 +55,18 @@ const Sidebar = () => {
   const navItems: NavItem[] = [
     { id: 'Dashboard', icon: DashboardIcon, label: 'Dashboard', path: '/' },
     { id: 'Gestion', icon: MaestrasIcon, label: 'Gestión', path: '/gestion' },
-    { id: 'DatosBasicos', icon: DatosBasicosIcon, label: 'Datos Básicos', path: '/datos-basicos' },
-    { id: 'Movimientos', icon: MovimientosIcon, label: 'Movimientos', path: '/movimientos' },
+    {
+      id: 'DatosBasicos',
+      icon: DatosBasicosIcon,
+      label: 'Datos Básicos',
+      children: [
+        { id: 'Funcionarios', label: 'Funcionarios', path: '/datos-basicos' },
+        { id: 'Contratistas', label: 'Contratistas', path: '/datos-basicos' },
+        { id: 'Medicos', label: 'Médicos', path: '/datos-basicos' },
+        { id: 'Contratos', label: 'Contratos', path: '/datos-basicos' },
+      ],
+    },
+
     { id: 'Excedentes', icon: ExcedentesIcon, label: 'Excedentes', path: '/excedentes' },
     { id: 'Consultas', icon: ConsultasIcon, label: 'Consultas', path: '/consultas' },
     { id: 'Reportes', icon: ReportesIcon, label: 'Reportes', path: '/reportes' },
@@ -66,15 +76,13 @@ const Sidebar = () => {
   /* Detectar ruta activa */
   useEffect(() => {
     const path = location.pathname;
-
-    // 1. Intentar match exacto
     for (const item of navItems) {
       if (item.children) {
         const sub = item.children.find(c => c.path === path);
         if (sub) {
           setActiveItem(item.id);
           setActiveSubItem(sub.id);
-          setOpenMenus(prev => prev[item.id] ? prev : { ...prev, [item.id]: true });
+          setOpenMenus(prev => ({ ...prev, [item.id]: true }));
           return;
         }
       }
@@ -84,25 +92,6 @@ const Sidebar = () => {
         return;
       }
     }
-
-    // 2. Intentar match parcial (si la ruta contiene subrutas no definidas en el menú)
-    for (const item of navItems) {
-      if (item.children) {
-        const sub = item.children.find(c => path.startsWith(c.path));
-        if (sub) {
-          setActiveItem(item.id);
-          setActiveSubItem(sub.id);
-          setOpenMenus(prev => prev[item.id] ? prev : { ...prev, [item.id]: true });
-          return;
-        }
-      }
-      if (item.path && item.path !== '/' && path.startsWith(item.path)) {
-        setActiveItem(item.id);
-        setActiveSubItem('');
-        return;
-      }
-    }
-
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
 
@@ -156,7 +145,7 @@ const Sidebar = () => {
         <div className="sidebar-logo">
           {isCollapsed
             ? <img src={logoCollapsed} alt="MediSENA" className="sidebar-logo-collapsed" />
-            : <img src={logoExpanded} alt="MediSENA" className="sidebar-logo-expanded" />
+            : <img src={logoExpanded}  alt="MediSENA" className="sidebar-logo-expanded"  />
           }
         </div>
 
@@ -229,7 +218,7 @@ const Sidebar = () => {
                     <img src={iconoFace} alt="Usuario" />
                   </div>
                   <div className="profile-text">
-                    <span className="profile-name">Alfonzo<br />Murillo</span>
+                    <span className="profile-name">Paula<br />Chaparro</span>
                   </div>
                 </div>
                 <button className="logout-icon-btn" onClick={handleLogout} title="Cerrar sesión">
