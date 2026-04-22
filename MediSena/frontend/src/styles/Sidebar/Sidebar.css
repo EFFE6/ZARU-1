@@ -237,6 +237,7 @@
   margin-top: auto;
   padding-top: 14px;
   flex-shrink: 0;
+
 }
 
 /* Card expandida */
@@ -254,6 +255,7 @@
   align-items: center;
   padding: 10px 6px;
   gap: 10px;
+  background: none;
 }
 
 /* Fila interna expandida: avatar+nombre a la izquierda, icono a la derecha */
