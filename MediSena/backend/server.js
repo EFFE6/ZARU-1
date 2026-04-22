@@ -62,11 +62,13 @@ app.get('/api/dashboard/stats', authenticateToken, (req, res) => {
 
 app.get('/api/dashboard/citas', authenticateToken, (req, res) => {
   console.log('Hit: /api/dashboard/citas');
-  const citas = [
-    { id: 1, medico: "Dr. Juan Pérez", beneficiario: "Carlos Valencia", hora: "11:20 a.m", estado: "Activo" },
-    { id: 2, medico: "Dra. Maria López", beneficiario: "Ana Garcia", hora: "02:00 p.m", estado: "Activo" },
-    { id: 3, medico: "Dr. Roberto Diaz", beneficiario: "Lucas Gomez", hora: "08:30 a.m", estado: "Completado" },
-  ];
+  const citas = Array.from({ length: 15 }, (_, i) => ({
+    id: i + 1,
+    medico: `Dr. Médico ${i + 1}`,
+    beneficiario: `Beneficiario ${i + 1}`,
+    hora: "11:20 a.m",
+    estado: "Activo"
+  }));
   res.json(citas);
 });
 
@@ -361,58 +363,58 @@ app.get('/api/relacion-pagos', (req, res) => {
 // 📁 Datos Básicos: Funcionarios
 // ──────────────────────────────────────────────
 let funcionariosData = [
-  { 
-    id: 1, 
+  {
+    id: 1,
     tipoDocumento: 'Cédula de Ciudadanía',
-    identificacion: '9526609', 
-    nombre: 'LUIS ALEJANDRO', 
+    identificacion: '9526609',
+    nombre: 'LUIS ALEJANDRO',
     apellido: 'AGUIRRE CAMACHO',
     fechaNacimiento: '1985-05-15',
     telefono: '3151234567',
     emailInstitucional: 'luis.aguirre@sena.edu.co',
-    cargo: 'INSTRUCTOR 16', 
-    dependencia: '9101', 
-    regional: '15', 
+    cargo: 'INSTRUCTOR 16',
+    dependencia: '9101',
+    regional: '15',
     tipoVinculacion: 'Planta - Carrera Administrativa',
     fechaIngreso: '2010-02-01',
     ciudad: 'Bogotá',
     departamento: 'Cundinamarca',
     direccion: 'Calle 100 #15-30',
     observaciones: 'Funcionario destacado del área de tecnología.',
-    beneficiarios: { activos: 0, inactivos: 2 }, 
-    estado: 'ACTIVO' 
+    beneficiarios: { activos: 0, inactivos: 2 },
+    estado: 'ACTIVO'
   },
-  { 
-    id: 2, 
+  {
+    id: 2,
     tipoDocumento: 'Cédula de Ciudadanía',
-    identificacion: '9514642', 
-    nombre: 'SALOMON', 
+    identificacion: '9514642',
+    nombre: 'SALOMON',
     apellido: 'ALARCON',
     fechaNacimiento: '1970-11-20',
     telefono: '3208700268',
     emailInstitucional: 'salarcon@sena.edu.co',
-    cargo: 'PENSION COMPLEMENTO 1', 
-    dependencia: '9502', 
-    regional: '15', 
+    cargo: 'PENSION COMPLEMENTO 1',
+    dependencia: '9502',
+    regional: '15',
     tipoVinculacion: 'Establecimiento',
     fechaIngreso: '2026-02-25',
     ciudad: 'Sogamoso',
     departamento: 'Boyacá',
     direccion: 'CALLE 6 No. 4-45 BARRIO EL SOL SOGAMOSO',
     observaciones: '',
-    beneficiarios: { activos: 1, inactivos: 1 }, 
-    estado: 'ACTIVO' 
+    beneficiarios: { activos: 1, inactivos: 1 },
+    estado: 'ACTIVO'
   },
-  { 
-    id: 3, 
-    identificacion: '7217095', 
-    nombre: 'ENRIQUE DE JESUS', 
+  {
+    id: 3,
+    identificacion: '7217095',
+    nombre: 'ENRIQUE DE JESUS',
     apellido: 'ALBARRACIN ESTUPIÑAN',
-    cargo: 'INSTRUCTOR 12', 
-    dependencia: '9102', 
-    regional: '15', 
-    beneficiarios: { activos: 1, inactivos: 4 }, 
-    estado: 'ACTIVO' 
+    cargo: 'INSTRUCTOR 12',
+    dependencia: '9102',
+    regional: '15',
+    beneficiarios: { activos: 1, inactivos: 4 },
+    estado: 'ACTIVO'
   },
   { id: 4, identificacion: '6768496', nombre: 'ALFONSO BARON FLORIBERTO', cargo: 'Trabajador de Campo G10 10', dependencia: '9102', regional: '15', beneficiarios: { activos: 2, inactivos: 2 }, estado: 'ACTIVO' },
   { id: 5, identificacion: '1022345678', nombre: 'MARTINEZ DUARTE ANDREA', cargo: 'COORDINADOR REGIONAL', dependencia: '1000', regional: '63', beneficiarios: { activos: 3, inactivos: 0 }, estado: 'ACTIVO' },
@@ -536,6 +538,7 @@ app.post('/api/funcionarios/:id/beneficiarios', authenticateToken, (req, res) =>
   beneficiariosData[id].push(nuevo);
   res.status(201).json(nuevo);
 });
+
 
 
 

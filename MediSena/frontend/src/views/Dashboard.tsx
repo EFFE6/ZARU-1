@@ -61,13 +61,6 @@ const Dashboard: React.FC = () => {
     return parts.join(' ');
   };
 
-const mockCitas: Cita[] = [
-  { id: 1, medico: "Nombre del médico", beneficiario: "Nombre del beneficiario", hora: "11:20 a.m" },
-  { id: 2, medico: "Nombre del médico", beneficiario: "Nombre del beneficiario", hora: "11:20 a.m" },
-  { id: 3, medico: "Nombre del médico", beneficiario: "Nombre del beneficiario", hora: "11:20 a.m" },
-  { id: 4, medico: "Nombre del médico", beneficiario: "Nombre del beneficiario", hora: "11:20 a.m" },
-];
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -76,11 +69,10 @@ const mockCitas: Cita[] = [
           api.get('/dashboard/citas')
         ]);
         setStats(statsRes.data);
-        // Usamos los mockCitas para coincidir exactamente con el diseño
-        setCitas(mockCitas);
+        setCitas(citasRes.data);
       } catch (err) {
         console.error("Error al cargar datos del dashboard:", err);
-        setCitas(mockCitas);
+        setCitas([]);
       } finally {
         setLoading(false);
       }
