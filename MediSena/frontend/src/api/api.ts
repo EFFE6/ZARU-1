@@ -28,9 +28,8 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      // Opcional: Cerrar sesión si el token no es válido
-      // localStorage.removeItem('token');
-      // window.location.href = '/login';
+      localStorage.removeItem('token');
+      window.location.href = '/login';
     }
     return Promise.reject(error);
   }

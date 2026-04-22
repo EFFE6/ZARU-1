@@ -14,6 +14,8 @@ import CancelarOrdenes from './views/Movimientos/CancelarOrdenes';
 import ConsultarOrdenes from './views/Movimientos/ConsultarOrdenes';
 import './App.css';
 
+import MainLayout from './components/MainLayout';
+
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const token = localStorage.getItem('token');
   if (!token) {
@@ -26,33 +28,32 @@ function App() {
   return (
     <>
       <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route 
-        path="/" 
-        element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        } 
-      />
-      <Route path="/dashboard" element={<Navigate to="/" replace />} />
-      <Route path="/gestion" element={<ProtectedRoute><Gestion /></ProtectedRoute>} />
-      <Route path="/datos-basicos" element={<ProtectedRoute><DatosBasicos /></ProtectedRoute>} />
-      <Route path="/movimientos" element={<Navigate to="/movimientos/orden-atencion" replace />} />
-      <Route path="/movimientos/orden-atencion" element={<ProtectedRoute><OrdenAtencion /></ProtectedRoute>} />
-      <Route path="/movimientos/cuenta-cobro" element={<ProtectedRoute><CuentaCobro /></ProtectedRoute>} />
-      <Route path="/movimientos/relacion-pagos" element={<ProtectedRoute><RelacionPagos /></ProtectedRoute>} />
-      <Route path="/movimientos/programar-agenda" element={<ProtectedRoute><ProgramarAgendaView /></ProtectedRoute>} />
-      <Route path="/movimientos/agendas" element={<ProtectedRoute><GestionAgendasView /></ProtectedRoute>} />
-      <Route path="/movimientos/cancelar-ordenes" element={<ProtectedRoute><CancelarOrdenes /></ProtectedRoute>} />
-      <Route path="/movimientos/consultar-ordenes" element={<ProtectedRoute><ConsultarOrdenes /></ProtectedRoute>} />
-      <Route path="/excedentes" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-      <Route path="/consultas" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-      <Route path="/reportes" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-      <Route path="/reportes-nacionales" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-      {/* Redirección por defecto */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+        <Route path="/login" element={<Login />} />
+
+        {/* Protected Routes inside MainLayout */}
+        <Route element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/gestion" element={<Gestion />} />
+          <Route path="/datos-basicos" element={<DatosBasicos />} />
+          <Route path="/movimientos/orden-atencion" element={<OrdenAtencion />} />
+          <Route path="/movimientos/cuenta-cobro" element={<CuentaCobro />} />
+          <Route path="/movimientos/relacion-pagos" element={<RelacionPagos />} />
+          <Route path="/movimientos/programar-agenda" element={<ProgramarAgendaView />} />
+          <Route path="/movimientos/agendas" element={<GestionAgendasView />} />
+          <Route path="/movimientos/cancelar-ordenes" element={<CancelarOrdenes />} />
+          <Route path="/movimientos/consultar-ordenes" element={<ConsultarOrdenes />} />
+          <Route path="/excedentes" element={<Dashboard />} />
+          <Route path="/consultas" element={<Dashboard />} />
+          <Route path="/reportes" element={<Dashboard />} />
+          <Route path="/reportes-nacionales" element={<Dashboard />} />
+        </Route>
+
+        <Route path="/dashboard" element={<Navigate to="/" replace />} />
+        <Route path="/movimientos" element={<Navigate to="/movimientos/orden-atencion" replace />} />
+
+        {/* Redirección por defecto */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </>
   );
 }
