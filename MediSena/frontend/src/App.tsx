@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './views/Login';
 import Dashboard from './views/Dashboard';
@@ -15,12 +15,42 @@ import ConsultarOrdenes from './views/Movimientos/ConsultarOrdenes';
 import MovimientosWrapper from './views/Movimientos/MovimientosWrapper';
 import './App.css';
 import MainLayout from './components/MainLayout';
+import api from './api/api';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const token = localStorage.getItem('token');
-  if (!token) {
+  const [status, setStatus] = useState<'checking' | 'ok' | 'fail'>('checking');
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setStatus('fail');
+      return;
+    }
+    // Validar token contra el backend
+    api.get('/auth/verify')
+      .then(() => setStatus('ok'))
+      .catch(() => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setStatus('fail');
+      });
+  }, []);
+
+  if (status === 'checking') {
+    return (
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        height: '100vh', background: '#EDF0F9', color: '#013156', fontSize: '1rem'
+      }}>
+        Verificando sesión...
+      </div>
+    );
+  }
+
+  if (status === 'fail') {
     return <Navigate to="/login" replace />;
   }
+
   return children;
 };
 
@@ -52,7 +82,8 @@ function App() {
 
         <Route path="/dashboard" element={<Navigate to="/" replace />} />
 
-        <Route path="*" element={<Navigate to="/" replace />} />
+        {/* Cualquier ruta desconocida → login */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </>
   );

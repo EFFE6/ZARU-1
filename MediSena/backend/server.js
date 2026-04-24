@@ -45,6 +45,14 @@ app.post('/api/auth/login', (req, res) => {
 });
 
 // ──────────────────────────────────────────────
+// 🔒 Verificar token (usado por el frontend al cargar)
+// ──────────────────────────────────────────────
+app.get('/api/auth/verify', authenticateToken, (req, res) => {
+  console.log('Hit: /api/auth/verify — token válido para:', req.user);
+  res.json({ valid: true, user: req.user });
+});
+
+// ──────────────────────────────────────────────
 // 🏥 Test de conexión
 // ──────────────────────────────────────────────
 app.get('/api/test', (req, res) => {

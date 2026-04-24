@@ -19,7 +19,8 @@
 }
 
 .govco-header-img {
-  height: 12px;
+  height: 0.63vw;
+  /* 12px @ 1920px viewport */
   /* Ajusta la altura de la imagen dentro de la barra azul */
   object-fit: contain;
   opacity: 0.95;
@@ -115,8 +116,9 @@
 
 /* Logo & Headers */
 .login-logo-img {
-  width: 247px;
-  height: 149px;
+  width: 12.86vw;
+  /* 247px @ 1920px viewport */
+  height: auto;
   margin-bottom: 0.5rem;
   object-fit: contain;
 }
@@ -296,8 +298,9 @@
 }
 
 .sena-logo-img {
-  width: 67.36px;
-  height: 65px;
+  width: 3.51vw;
+  /* 67.36px @ 1920px viewport */
+  height: auto;
   object-fit: contain;
 }
 
@@ -327,7 +330,8 @@
   position: absolute;
   top: 15%;
   right: -1%;
-  width: 380px;
+  width: 19.79vw;
+  /* 380px @ 1920px viewport */
   opacity: 2.65;
   /* Súper visible */
   z-index: 2;
@@ -335,48 +339,16 @@
   pointer-events: none;
 }
 
-.login-doctor {
+.login-doc {
   position: absolute;
   bottom: 0;
-  right: 6%;
-  height: 92%;
-  max-height: 950px;
+  right: 4%;
+  height: 100%;
+  width: auto;
   object-fit: contain;
-  object-position: bottom;
+  object-position: bottom right;
   z-index: 3;
-}
-
-/* Floating Elements */
-.login-floating {
-  position: absolute;
-  z-index: 4;
-  animation: float 6s ease-in-out infinite;
   pointer-events: none;
-}
-
-.login-estetoscopio {
-  top: 22%;
-  left: 32%;
-  /* Más cerca del doctor */
-  width: 150px;
-  animation-delay: 0s;
-}
-
-.login-termometro {
-  top: 30%;
-  /* Más arriba */
-  right: 2%;
-  width: 150px;
-  animation-delay: 1s;
-}
-
-.login-adn {
-  bottom: 12%;
-  top: 83%;
-  left: 21%;
-  /* Más cerca del doctor */
-  width: 150px;
-  animation-delay: 2s;
 }
 
 @keyframes float {
@@ -398,11 +370,14 @@
   .login-left {
     flex: 0 0 45%;
   }
+
   .login-bg-shape {
     width: 40vw;
   }
+
   .login-watermark {
-    width: 320px;
+    width: 26.67vw;
+    /* 320px @ 1200px viewport */
     right: 5%;
   }
 }
@@ -412,39 +387,26 @@
     flex: 0 0 50%;
     padding: 1rem 1rem;
   }
-  
+
   .login-logo-img {
-    width: 200px;
+    width: 19.53vw;
+    /* 200px @ 1024px viewport */
     height: auto;
   }
-  
+
   .sena-logo-img {
-     width: 55px;
-     height: auto;
+    width: 5.37vw;
+    /* 55px @ 1024px viewport */
+    height: auto;
   }
 
   .login-watermark {
-    width: 250px;
+    width: 24.41vw;
+    /* 250px @ 1024px viewport */
     top: 20%;
   }
 
-  .login-estetoscopio {
-    width: 100px;
-    left: 15%;
-  }
-
-  .login-termometro {
-    width: 80px;
-    right: 5%;
-  }
-
-  .login-adn {
-    width: 100px;
-    left: 15%;
-  }
-  
-  .login-doctor {
-    right: -5%;
+  .login-doc {
     height: 80%;
   }
 }
@@ -453,12 +415,13 @@
   .login-left {
     flex: 0 0 55%;
   }
+
   .login-bg-shape {
     width: 45vw;
   }
-  .login-doctor {
+
+  .login-doc {
     height: 75%;
-    right: -10%;
   }
 }
 
@@ -475,8 +438,10 @@
     padding: 2rem;
     display: flex;
     justify-content: center;
-    background: white; /* Asegurar fondo sólido */
-    min-height: 100vh; /* Que ocupe toda la pantalla al hacer scroll si es necesario */
+    background: white;
+    /* Asegurar fondo sólido */
+    min-height: 100vh;
+    /* Que ocupe toda la pantalla al hacer scroll si es necesario */
   }
 
   .login-form-container {
@@ -485,11 +450,11 @@
 
   /* Ocultar elementos gráficos complejos en móviles para limpieza */
   .login-right {
-    display: none; 
+    display: none;
   }
-  
+
   .login-bg-line {
-     display: none;
+    display: none;
   }
 }
 
@@ -497,26 +462,28 @@
   .login-left {
     padding: 1.5rem;
   }
-  
+
   .login-logo-img {
-    width: 160px;
+    width: 33.33vw;
+    /* 160px @ 480px viewport */
     height: auto;
   }
-  
+
   .login-title-text {
     font-size: 1.2rem;
   }
-  
+
   .login-form {
     gap: 0.9rem;
   }
-  
+
   .login-input {
     padding: 0.75rem 2.5rem;
   }
-  
+
   .sena-logo-img {
-    width: 50px;
+    width: 10.42vw;
+    /* 50px @ 480px viewport */
     height: auto;
   }
-}
+}

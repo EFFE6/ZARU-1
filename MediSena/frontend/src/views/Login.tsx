@@ -10,10 +10,7 @@ import logoMedisena from '../assets/img/login/logo-medisena-login.svg';
 import senaLogo from '../assets/img/login/sena-logo.svg';
 import azulBg from '../assets/img/login/azul.svg';
 import marcaAgua from '../assets/img/login/medicina-marca-agua.svg';
-import hombreDr from '../assets/img/login/hombre.svg';
-import estetoscopio from '../assets/img/login/estetoscopio.svg';
-import termometro from '../assets/img/login/termometro.svg';
-import adn from '../assets/img/login/adn.svg';
+import docImg from '../assets/img/login/doc.svg';
 import linea1 from '../assets/img/login/linea1.svg';
 import linea2 from '../assets/img/login/linea2.svg';
 import linea3 from '../assets/img/login/linea3.svg';
@@ -31,9 +28,14 @@ const Login = () => {
 
   React.useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
-      navigate('/');
-    }
+    if (!token) return;
+    // Verificar si el token sigue siendo válido en el backend
+    api.get('/auth/verify')
+      .then(() => navigate('/'))
+      .catch(() => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+      });
   }, [navigate]);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -150,11 +152,7 @@ const Login = () => {
           <img src={azulBg} alt="Background Shape" className="login-bg-shape" />
           <img src={marcaAgua} alt="Watermark" className="login-watermark" />
 
-          <img src={hombreDr} alt="Doctor" className="login-doctor" />
-
-          <img src={estetoscopio} alt="Estetoscopio" className="login-floating login-estetoscopio" />
-          <img src={termometro} alt="Termometro" className="login-floating login-termometro" />
-          <img src={adn} alt="ADN" className="login-floating login-adn" />
+          <img src={docImg} alt="Doctor" className="login-doc" />
         </div>
 
       </div>

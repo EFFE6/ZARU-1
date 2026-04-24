@@ -60,15 +60,15 @@
 }
 
 .sidebar-logo-expanded {
-  width: 247px;
-  height: 149px;
+  width: 12.86vw; /* 247px @ 1920px viewport */
+  height: auto;
   object-fit: contain;
 }
 
 /* ── Logo colapsado: 67 × 65 (Figma — icono SENA solo) ── */
 .sidebar-logo-collapsed {
-  width: 67px;
-  height: 65px;
+  width: 3.49vw; /* 67px @ 1920px viewport */
+  height: auto;
   object-fit: contain;
 }
 
@@ -335,8 +335,8 @@
 }
 
 .logout-icon-img {
-  width: 20px;
-  height: 20px;
+  width: 1.04vw; /* 20px @ 1920px viewport */
+  height: auto;
   object-fit: contain;
 }
 
@@ -407,7 +407,7 @@
   }
 
   .sidebar-logo-expanded {
-    width: 200px;
+    width: 200px; /* En mobile se mantiene px fijo, vw sería demasiado pequeño */
     height: auto;
   }
 
@@ -433,7 +433,7 @@
   }
 
   .sidebar-logo-expanded {
-    width: 160px;
+    width: 160px; /* En pantallas bajas se mantiene px fijo */
     height: auto;
   }
 
